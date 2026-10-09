@@ -64,10 +64,50 @@ def dong_of(addr):
     return m.group(1).split(",")[0].strip() if m else ""
 
 
+def road_of(addr):
+    m = re.search(r"용인시\s*\S+구\s+(?:\S+[읍면]\s+)?(\S+?(?:로|길))(\S*)", addr)
+    if not m:
+        return None, None
+    full = m.group(1) + m.group(2)
+    base = re.sub(r"\d+번?길$", "", full) or full
+    return full, base
+
+
+def dong_finder():
+    """주소에 동이 없을 때: 같은 도로명을 쓰는 학원·학교 주소에서 가장 많이 나온 동으로 채움"""
+    votes = {}
+    def add(gu, addr, dong):
+        if not dong:
+            return
+        full, base = road_of(addr)
+        for key in {(gu, full), (gu, base)} - {(gu, None)}:
+            votes.setdefault(key, {}).setdefault(dong, 0)
+            votes[key][dong] += 1
+    try:
+        for a in json.load(open("output/academies.json", encoding="utf-8"))["academies"]:
+            add(a.get("gu"), a.get("a", ""), a.get("dong"))
+    except Exception as e:
+        print("  학원 주소 참고 못함:", e)
+    try:
+        for sc in json.load(open("output/latest.json", encoding="utf-8"))["schools"]:
+            add(sc.get("gu"), sc.get("address", ""), sc.get("dong"))
+    except Exception as e:
+        print("  학교 주소 참고 못함:", e)
+    def find(gu, addr):
+        full, base = road_of(addr)
+        for key in ((gu, full), (gu, base)):
+            v = votes.get(key)
+            if v:
+                return max(v, key=v.get)
+        return ""
+    return find
+
+
 def main():
     if not KEY:
         raise SystemExit("KINDER_KEY가 없습니다. 저장소 Secrets에 KINDER_KEY를 넣어 주세요.")
     out = {}
+    guess = dong_finder()
     for gu, code in SGG.items():
         basic = call("basicInfo2.do", code)
         if basic is None:
@@ -95,7 +135,7 @@ def main():
                 "n": clean(g("kindername")),
                 "type": clean(g("establish")),
                 "gu": gu,
-                "dong": dong_of(addr),
+                "dong": dong_of(addr) or guess(gu, addr),
                 "addr": addr,
                 "tel": clean(g("telno")),
                 "hp": clean(g("hpaddr")),
