@@ -417,7 +417,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.4 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.5 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -1126,7 +1126,7 @@ function viewAbout() {
       ["아이 별명 · 학교 · 학년 · 학원, 관심 지역", "<b>사용하시는 분 본인의 휴대폰(또는 컴퓨터)</b> 브라우저 안. 다른 기기나 다른 브라우저에서는 보이지 않아요.", "홈 화면에 우리 아이 학교 일정, 학원, 고입 시기를 보여 주는 데만 써요. 서버로 보내지 않아서 <b>개발자도 볼 수 없어요.</b>", "직접 지우거나 앱·브라우저 데이터를 지울 때까지"]
     ].map(([what, where, why, keep]) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)"><div style="font-weight:800;margin-bottom:6px">${what}</div>
       <div style="display:grid;grid-template-columns:64px 1fr;gap:4px 10px;font-size:13px"><span style="color:var(--muted)">저장 위치</span><span>${where}</span><span style="color:var(--muted)">쓰는 곳</span><span>${why}</span><span style="color:var(--muted)">보관</span><span>${keep}</span></div></div>`).join("")
-      + `<div style="padding-top:10px;font-size:13px">${li(["모은 정보를 <b>다른 사람이나 회사에 팔거나 넘기지 않아요.</b>", "광고에 쓰지 않아요.", "앱 안의 링크(학교 홈페이지, 공고 원문 등)를 누르면 그 사이트의 개인정보 정책이 적용돼요."])}</div>`)}
+      + `<div style="padding-top:10px;font-size:13px">${li(["광고에 쓰지 않아요.", "앱 안의 링크(학교 홈페이지, 공고 원문 등)를 누르면 그 사이트의 개인정보 정책이 적용돼요."])}</div>`)}
     ${sec("정보의 출처와 정확성", li([
       "나이스 교육정보 개방포털, 유치원 알리미, 용인시도서관, 용인시청 문화달력, 경기도교육청 구인구직, 경기육아종합지원센터 등 <b>공공 자료</b>를 하루에 한두 번 자동으로 가져와요.",
       "원래 자료에 늦게 반영되거나 틀린 내용이 있을 수 있어요. 학사일정, 접수 마감, 입학 전형처럼 중요한 내용은 <b>꼭 학교나 기관의 원문</b>을 함께 확인해 주세요.",
