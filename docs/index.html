@@ -31,6 +31,11 @@ a{color:var(--indigo);text-decoration:none}
 .t-coral{background:linear-gradient(155deg,#FFBBA5,#FF7A59 50%,#DD4E33);--sh:rgba(255,122,89,.6)}
 .t-mint{background:linear-gradient(155deg,#9BF0DC,#2FC4A4 50%,#16917A);--sh:rgba(43,181,154,.55)}
 .t-sun{background:linear-gradient(155deg,#FFE9A6,#FFC53D 50%,#E79B00);--sh:rgba(240,170,20,.55)}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;padding:18px 10px}
+.mgrid button{border:0;background:none;font:inherit;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;padding:0;position:relative}
+.mgrid .tile{width:48px;height:48px;font-size:22px}
+.mgrid b{font-size:12px;font-weight:700;line-height:1.3;text-align:center;word-break:keep-all}
+.mgrid i{position:absolute;top:-6px;right:4px;font-style:normal;font-size:9px;font-weight:800;color:#8A5300;background:#FFE3A3;border-radius:6px;padding:1px 5px}
 .t-lilac{background:linear-gradient(155deg,#E3C9FF,#AE7BFA 50%,#7E4ED8);--sh:rgba(167,116,242,.55)}
 .orb-sun{border-radius:50%;background:radial-gradient(circle at 30% 26%,#fff 0%,#FFF1C4 14%,#FFD15A 45%,#F2A900 78%,#C98500 100%);box-shadow:0 18px 26px -12px rgba(30,10,80,.55)}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
@@ -137,7 +142,7 @@ a.ev{color:inherit;text-decoration:none}
   <button class="navi" data-tab="library"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg></span>도서관</button>
   <button class="navi" data-tab="acas"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 5l9 5-9 5z"/><path d="M7 12.5V17c0 1.2 2.2 2.5 5 2.5s5-1.3 5-2.5v-4.5"/><path d="M21 10v5"/></svg></span>학원</button>
   <button class="navi" data-tab="kinders"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 21v-2.5A4.5 4.5 0 0 1 10 14h4a4.5 4.5 0 0 1 4.5 4.5V21"/><path d="M9 3.6 12 2l3 1.6"/></svg></span>유아</button>
-  <button class="navi" data-tab="my"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>마이</button>
+  <button class="navi" data-tab="my"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg></span>전체</button>
 </nav>
 <div class="toast" id="toast" role="status"></div>
 
@@ -390,10 +395,12 @@ function viewMy() {
   const kidRows = ks.map(k => { const sc = kidSchool(k);
     return `<button class="school" onclick="go('kid/${k.id}')"><span class="tile ${KID_TILES[k.color % 5]}" style="width:42px;height:42px;font-weight:800">${esc(k.name[0] || "?")}</span>
       <div style="flex:1;min-width:0"><div class="nm">${esc(k.name)}</div><div class="ad">${sc ? esc((kidGradeText(k, sc) ? levelShort(sc).replace("등", "") + " " + kidGradeText(k, sc) : levelShort(sc)) + " · " + sc.name) : "학교 정보 없음"}${k.acas && k.acas.length ? ` · 학원 ${k.acas.length}곳` : ""}${sc && !k.grade ? ` · <b style="color:var(--coral-ink)">학년을 넣어 주세요</b>` : ""}</div></div><span style="font-size:13px;color:var(--indigo);font-weight:700">수정</span></button>`; }).join("");
-  $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">마이</h1>
-    <button class="lift" onclick="go('premium')" style="width:100%;border:0;cursor:pointer;text-align:left;padding:16px 18px;display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#FFF6E0,#FFE7EE);margin-bottom:14px">
-      <span class="tile t-sun" style="width:44px;height:44px">${icon.star}</span>
-      <div style="flex:1;min-width:0"><div style="font-weight:800">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">시범 기간 무료</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">엄마 일자리 · 수강료 비교 · 인기 학원 순위 · 알림</div></div><span style="color:var(--muted)">›</span></button>
+  const M = [["events", "🎪", "t-coral", "아이와<br>함께 가요"], ["elite", "🎓", "t-indigo", "특목·<br>자사고", 1], ["jobs", "💼", "t-mint", "엄마<br>일자리", 1], ["premium", "📊", "t-sun", "수강료<br>비교", 1],
+    ["schools", "🏫", "t-lilac", "학교<br>일정"], ["library", "📚", "t-mint", "도서관<br>빈자리"], ["books", "📖", "t-coral", "대출<br>베스트"], ["acas", "✏️", "t-indigo", "학원<br>찾기"],
+    ["kinders", "🧸", "t-sun", "유치원"], ["region", "📍", "t-lilac", "관심<br>지역"]];
+  $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">전체</h1>
+    <div class="lift mgrid">${M.map(([r, e, t, l, p]) => `<button onclick="go('${r}')"><span class="tile ${t}">${e}</span><b>${l}</b>${p ? "<i>P</i>" : ""}</button>`).join("")}</div>
+    <p style="font-size:11px;color:var(--muted);margin:8px 2px 0"><span style="color:#8A5300;background:#FFE3A3;border-radius:6px;padding:1px 5px;font-weight:800;font-size:9px">P</span> 프리미엄 · 시범 기간에는 모두 무료예요</p>
     <section class="section" style="margin-top:0"><div class="sec-head"><h2>우리 아이</h2><span style="font-size:12px;color:var(--muted)">${ks.length}/${MAX_KIDS}명</span></div>
       <div class="lift list">${kidRows || `<div class="empty">아직 등록한 아이가 없어요.</div>`}</div>
       ${ks.length < MAX_KIDS ? `<button class="btn btn-soft" style="width:100%;height:50px" onclick="go('kid/new')">+ 아이 추가</button>` : ""}
@@ -410,7 +417,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.9.1 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
@@ -1018,6 +1025,14 @@ function jobRow(j, care) {
   return `<a class="ev" href="${esc(j.link)}" target="_blank" rel="noopener" onclick="trackEvent('일자리-${care ? "어린이집" : "학교"}')">
     <div class="ev-body"><div class="ev-name">${esc(j.title)}</div><div class="ev-sub">${esc(sub)}</div><div class="ev-tags">${tags}</div></div></a>`;
 }
+function homeJobs() {
+  if (!JOBS) { loadJobs().then(() => { if ((location.hash || "#home") === "#home") render(); }).catch(() => {}); return ""; }
+  const t = isoToday(), n = (JOBS.school || []).filter(j => !j.applyEnd || j.applyEnd >= t).length + (JOBS.care || []).filter(j => !j.applyEnd || j.applyEnd >= t).length;
+  if (!n) return "";
+  return `<section class="section"><button class="lift" onclick="go('jobs')" style="width:100%;border:0;cursor:pointer;text-align:left;padding:16px 18px;display:flex;gap:14px;align-items:center;font:inherit;color:var(--ink)">
+    <span class="tile t-mint" style="width:44px;height:44px;font-size:20px">💼</span>
+    <div style="flex:1;min-width:0"><div style="font-weight:800">엄마 일자리 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">프리미엄</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">용인 학교·유치원·어린이집 채용 ${n}건 모집 중</div></div><span style="color:var(--muted)">›</span></button></section>`;
+}
 function pickJob(k, v) { const y = window.scrollY; jobF[k] = v; render(); window.scrollTo(0, y); }
 function viewJobs() {
   const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
@@ -1043,6 +1058,57 @@ function viewJobs() {
     : `<div class="lift empty">조건에 맞는 공고가 지금은 없어요. 지역을 넓혀 보세요.</div>`;
   $view.innerHTML = back + seg + guChips + extra + `<p style="font-size:12px;color:var(--muted);margin:2px 0 10px">마감 안 된 공고 ${list.length}건 · 마감 임박 순</p>` + body
     + `<div class="foot">공고를 누르면 원문에서 자격·서류·접수 방법을 확인할 수 있어요.<br>데이터 · 경기도교육청 구인구직 · 경기육아종합지원센터 인력뱅크 (하루 한 번 갱신${JOBS.updated_at ? " · " + esc(JOBS.updated_at.slice(0, 10)) + " 기준" : ""})</div>`;
+}
+
+// ---------- 특목·자사고 (나이스 학교기본정보) ----------
+let ELITE = null, eliteLoading = null, eliteF = { kind: "", near: true };
+function loadElite() {
+  if (ELITE) return Promise.resolve(ELITE);
+  if (!eliteLoading) eliteLoading = dataFetch("elite.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => (ELITE = j)).catch(e => { eliteLoading = null; throw e; });
+  return eliteLoading;
+}
+const ELITE_KINDS = [["영재학교", "영재학교", "t-lilac"], ["과학고", "과학고", "t-mint"], ["자사고(전국)", "전국 자사고", "t-indigo"], ["외고", "외고", "t-coral"], ["국제고", "국제고", "t-sun"], ["자사고(광역)", "광역 자사고", "t-indigo"]];
+// 예년 기준 대략적인 시기 (학교별 입학요강에서 꼭 확인)
+const ELITE_CAL = [
+  { k: "영재학교", m: [4, 7], steps: "원서 4월 · 1단계 서류 5월 · 영재성 검사 5~6월 · 캠프 6~7월" },
+  { k: "과학고", m: [8, 11], steps: "원서 8월 말~9월 초 · 면접 10월 · 합격 발표 11월" },
+  { k: "외고·국제고·자사고", m: [12, 12], steps: "원서 12월 초(일반고와 같은 시기) · 면접 12월 · 발표 12월 말" },
+  { k: "일반고 배정", m: [12, 2], steps: "원서 12월 · 배정 발표 1~2월" }];
+function eliteNear(s) { return s.kind === "영재학교" || s.kind === "자사고(전국)" || s.sido === "경기"; }
+function pickElite(k, v) { const y = window.scrollY; eliteF[k] = v; render(); window.scrollTo(0, y); }
+function viewElite() {
+  const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">특목·자사고 <span class="pill" style="color:#8A5300;background:#FFE3A3;font-size:12px;vertical-align:middle">프리미엄</span></h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">영재학교·과학고·외고·국제고·자사고 전국 목록과 입시 시기를 모았어요.</p>`;
+  // 우리 아이 고입 시기
+  const now = new Date(), sy = schoolYear();
+  const mine = kids().map(k => ({ k, sc: kidSchool(k), g: kidGrade(k) })).filter(x => x.sc && levelOf(x.sc) === "중학교" && x.g >= 1 && x.g <= 3);
+  const mineHtml = mine.length ? `<div class="lift card-pad" style="margin-top:16px">${mine.map(x => { const y = sy + (3 - x.g);
+      return `<div class="row"><span><b>${esc(x.k.name)}</b> <span style="color:var(--muted);font-size:13px">중${x.g}</span></span><span class="val">${y}년 겨울 고입 원서 · ${y + 1}년 3월 입학</span></div>`; }).join("")}</div>` : "";
+  const m = now.getMonth() + 1;
+  const cal = `<section class="section"><div class="sec-head"><h2>입시 시기 한눈에</h2></div><div class="lift card-pad">${ELITE_CAL.map(c => {
+      const on = c.m[0] <= c.m[1] ? (m >= c.m[0] && m <= c.m[1]) : (m >= c.m[0] || m <= c.m[1]);
+      const soon = !on && ((c.m[0] - m + 12) % 12) <= 2;
+      return `<div class="ev"><div class="ev-body"><div class="ev-name">${esc(c.k)} ${on ? '<span class="pill pill-coral" style="font-size:11px;padding:3px 8px">지금 진행</span>' : soon ? '<span class="pill pill-indigo" style="font-size:11px;padding:3px 8px">곧 시작</span>' : ""}</div><div class="ev-sub">${esc(c.steps)}</div></div></div>`; }).join("")}
+      <p style="font-size:11px;color:var(--muted);margin:8px 0 0">예년 기준 대략적인 시기예요. 정확한 날짜는 학교별 입학요강을 꼭 확인하세요.</p></div></section>`;
+  if (!ELITE) { $view.innerHTML = back + mineHtml + cal + `<div class="lift empty" style="margin-top:16px">학교 목록을 불러오는 중이에요…</div>`; loadElite().then(() => { if (location.hash === "#elite") render(); }).catch(() => {}); return; }
+  const chip = (label, on, fn) => `<button class="btn ${on ? "btn-3d" : "btn-soft"}" style="height:36px;font-size:13px;padding:0 13px;flex:0 0 auto" onclick="${fn}">${esc(label)}</button>`;
+  const base = ELITE.schools.filter(s => !eliteF.near || eliteNear(s));
+  const list = base.filter(s => !eliteF.kind || (eliteF.kind === "자사고" ? s.kind.startsWith("자사고") : s.kind === eliteF.kind));
+  const cnt = k => base.filter(s => k === "자사고" ? s.kind.startsWith("자사고") : s.kind === k).length;
+  const kinds = [["", "전체", base.length], ["영재학교", "영재학교", cnt("영재학교")], ["과학고", "과학고", cnt("과학고")], ["외고", "외고", cnt("외고")], ["국제고", "국제고", cnt("국제고")], ["자사고", "자사고", cnt("자사고")]].filter(x => !x[0] || x[2]);
+  const groups = ELITE_KINDS.map(([k, label, t]) => [k, label, t, list.filter(s => s.kind === k)]).filter(g => g[3].length);
+  const row = s => {
+    const link = /^https?:/.test(s.hp) ? s.hp : (s.hp ? "http://" + s.hp : "https://search.naver.com/search.naver?query=" + encodeURIComponent(s.n));
+    const sub = [s.sido + (s.sigungu && s.sigungu !== s.sido ? "" : ""), (s.addr.match(/^\S+\s+(\S+[시군구])/) || [])[1] || "", s.fond, s.coedu].filter(Boolean).join(" · ");
+    return `<a class="ev" href="${esc(link)}" target="_blank" rel="noopener" onclick="trackEvent('특목-학교')"><div class="ev-body"><div class="ev-name">${esc(s.short)}${s.n.includes("용인") || s.addr.includes("용인") ? ' <span class="pill pill-mint" style="font-size:11px;padding:3px 8px">용인</span>' : ""}</div><div class="ev-sub">${esc(sub)}</div></div></a>`; };
+  $view.innerHTML = back + mineHtml + cal
+    + `<section class="section"><div class="sec-head"><h2>학교 목록</h2><button onclick="pickElite('near', ${!eliteF.near})">${eliteF.near ? "전국 보기" : "용인에서 지원 가능만"}</button></div>
+      <p style="font-size:12px;color:var(--muted);margin:-4px 0 8px">${eliteF.near ? "용인 학생이 지원할 수 있는 곳: 영재학교·전국 자사고 + 경기도 과학고·외고·국제고" : "전국 모든 특목고·자사고"}</p>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px">${kinds.map(([k, l, n]) => chip(`${l} ${n}`, eliteF.kind === k, `pickElite('kind','${k}')`)).join("")}</div>
+      ${groups.map(([k, label, t, arr]) => `<div class="lift card-pad" style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><span class="tile ${t}" style="width:28px;height:28px;border-radius:9px"></span><b>${esc(label)}</b><span style="color:var(--muted);font-size:13px">${arr.length}곳</span></div>${arr.map(row).join("")}</div>`).join("") || `<div class="lift empty">조건에 맞는 학교가 없어요.</div>`}</section>
+    <div class="foot">학교를 누르면 학교 홈페이지로 이동해요. 모집 인원·전형은 학교 입학요강을 확인하세요.<br>데이터 · 나이스 교육정보 개방포털 학교기본정보 (매달 갱신${ELITE.updated_at ? " · " + esc(ELITE.updated_at.slice(0, 10)) + " 기준" : ""})</div>`;
 }
 
 // ---------- 관리자 (숨은 화면: 마이 > 버전 5번 누르기) ----------
@@ -1191,7 +1257,7 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r === "jobs" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r === "jobs" || r === "elite" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r !== "admin") { adminOpen = false; ADMIN = null; }
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
@@ -1208,6 +1274,7 @@ function render() {
   else if (r === "books") viewBooks();
   else if (r === "events") viewEvents();
   else if (r === "jobs") viewJobs();
+  else if (r === "elite") viewElite();
   else if (r.startsWith("library/")) viewLibraryDetail(r.slice(8));
   else if (r === "my") viewMy();
   else viewHome();
