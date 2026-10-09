@@ -9,7 +9,7 @@ KST = timezone(timedelta(hours=9))
 API = "https://open.neis.go.kr/hub/"
 KEY = os.environ.get("NEIS_KEY", "")
 OFFICE = "J10"            # 경기도교육청
-AREA = "용인시"            # 주소에 이 글자가 들어간 학교만 (수지구·기흥구·처인구 전체)
+AREA = "용인시"            # 주소에 이 글자가 들어간 학교만 (수지구·기흥구·처인구 전체, 초·중·고)
 DAYS_AHEAD = 60           # 오늘부터 며칠 뒤까지 일정을 모을지
 SKIP_EVENTS = {"토요휴업일"}
 PUBLIC_HOLIDAYS = {"한글날", "개천절", "추석", "설날", "성탄절", "기독탄신일", "신정",
@@ -37,10 +37,18 @@ def call(service, **params):
     return []
 
 
+LEVELS = ["초등학교", "중학교", "고등학교"]
+
+
 def find_schools():
-    rows = call("schoolInfo", ATPT_OFCDC_SC_CODE=OFFICE, SCHUL_KND_SC_NM="초등학교")
-    schools = []
+    rows = []
+    for level in LEVELS:
+        rows += call("schoolInfo", ATPT_OFCDC_SC_CODE=OFFICE, SCHUL_KND_SC_NM=level)
+    schools, seen = [], set()
     for r in rows:
+        if r["SD_SCHUL_CODE"] in seen:
+            continue
+        seen.add(r["SD_SCHUL_CODE"])
         address = r.get("ORG_RDNMA") or ""
         detail = r.get("ORG_RDNDA") or ""
         if AREA in address:
@@ -48,11 +56,13 @@ def find_schools():
             schools.append({
                 "code": r["SD_SCHUL_CODE"],
                 "name": r["SCHUL_NM"],
+                "level": r.get("SCHUL_KND_SC_NM") or "",
                 "address": address,
                 "gu": gu,
                 "dong": dong,
             })
-    return sorted(schools, key=lambda s: (s["gu"], s["name"]))
+    order = {lv: i for i, lv in enumerate(LEVELS)}
+    return sorted(schools, key=lambda s: (order.get(s["level"], 9), s["gu"], s["name"]))
 
 
 def parse_area(address, detail):
@@ -98,7 +108,8 @@ def main():
     end = (now + timedelta(days=DAYS_AHEAD)).strftime("%Y%m%d")
 
     schools = find_schools()
-    print(f"{AREA} 초등학교 {len(schools)}곳 발견")
+    for lv in LEVELS:
+        print(f"{AREA} {lv} {sum(1 for s in schools if s['level'] == lv)}곳")
 
     highlights, public_map = [], {}
     for s in schools:
@@ -111,7 +122,7 @@ def main():
             public_map[(p["date"], p["name"])] = p
         for ev in s["events"]:
             if ev["holiday"] or any(w in ev["name"] for w in HIGHLIGHT_WORDS):
-                highlights.append({"school": s["name"], "gu": s["gu"], **ev})
+                highlights.append({"school": s["name"], "level": s["level"], "gu": s["gu"], **ev})
         print(f"  {s['name']}: 학교 일정 {len(s['events'])}건")
 
     highlights.sort(key=lambda h: (h["date"], h["school"]))
@@ -138,7 +149,7 @@ def main():
 def write_summary(r):
     """사람이 보기 쉬운 요약 파일 (GitHub에서 표로 보임)"""
     lines = [
-        f"# {r['region']} 초등학교 주요 일정",
+        f"# {r['region']} 초·중·고등학교 주요 일정",
         "",
         f"- 업데이트: {r['updated_at']} (한국시간)",
         f"- 대상 학교: {r['school_count']}곳 · 기간: 앞으로 {DAYS_AHEAD}일",
@@ -148,20 +159,20 @@ def write_summary(r):
     ]
     if r["highlights"]:
         lines += ["| 날짜 | 구 | 학교 | 일정 | 휴업 |", "|---|---|---|---|---|"]
-        for h in r["highlights"]:
+        for h in r["highlights"][:300]:
             lines.append(f"| {h['date']} | {h['gu']} | {h['school']} | {h['name']} | {'휴업' if h['holiday'] else ''} |")
     else:
         lines.append("등록된 주요 일정이 없습니다.")
     lines += ["", "## 공휴일 (모든 학교 공통)", ""]
     lines += [f"- {p['date']} {p['name']}" for p in r["public_holidays"]] or ["- 없음"]
-    lines += ["", "## 지역별 학교 수", "", "| 구 | 읍·면·동 | 학교 수 | 일정 등록 |", "|---|---|---|---|"]
+    lines += ["", "## 지역별 학교 수", "", "| 구 | 읍·면·동 | 초 | 중 | 고 |", "|---|---|---|---|---|"]
     areas = {}
     for s in r["schools"]:
-        a = areas.setdefault((s["gu"], s["dong"] or "(동 미확인)"), [0, 0])
-        a[0] += 1
-        a[1] += 1 if s["events"] else 0
-    for (gu, dong), (n, e) in sorted(areas.items()):
-        lines.append(f"| {gu} | {dong} | {n} | {e} |")
+        a = areas.setdefault((s["gu"], s["dong"] or "(동 미확인)"), {lv: 0 for lv in LEVELS})
+        if s["level"] in a:
+            a[s["level"]] += 1
+    for (gu, dong), c in sorted(areas.items()):
+        lines.append(f"| {gu} | {dong} | {c['초등학교']} | {c['중학교']} | {c['고등학교']} |")
     with open("output/summary.md", "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
 
