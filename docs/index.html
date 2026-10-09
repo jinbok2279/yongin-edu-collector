@@ -156,13 +156,43 @@ function inRegion(s) { const r = region(); return levelOf(s) === level() && (!r.
 function regionLabel() { const r = region(); return r.gu ? `용인 ${r.gu}${r.dong ? " " + r.dong : ""}` : "용인시 전체"; }
 function regionSchools() { return DATA.schools.filter(inRegion); }
 
-function mySchool() { const c = store(KEY_SCHOOL); return DATA && DATA.schools.find(s => s.code === c); }
+// ---------- 우리 아이(여러 명) ----------
+const KEY_KIDS = "edu.kids";
+const KID_TILES = ["t-indigo", "t-coral", "t-mint", "t-sun", "t-lilac"];
+const KID_PILLS = [["#3442C9", "#ECEEFF"], ["#C93D22", "#FFE9E2"], ["#13795F", "#E2F6F0"], ["#8A5300", "#FFF1CC"], ["#6436BE", "#F1E8FF"]];
+const ORD = ["첫째", "둘째", "셋째", "넷째", "다섯째"];
+const MAX_KIDS = 5;
+let homeKid = "all";
+let kidForm = null;
+function saveKids(list) { store(KEY_KIDS, JSON.stringify(list)); }
+function kids() {
+  let list = [];
+  try { list = JSON.parse(store(KEY_KIDS) || "[]"); } catch (e) { list = []; }
+  if (!list.length) {                      // 예전 버전의 "우리 아이 학교"를 첫 번째 아이로 옮기기
+    const c = store(KEY_SCHOOL);
+    if (c) { list = [{ id: "k" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: "우리 아이", code: c, color: 0 }]; saveKids(list); store(KEY_SCHOOL, ""); }
+  }
+  return list;
+}
+function kidSchool(k) { return DATA.schools.find(s => s.code === k.code); }
+function nextColor(list) { for (let i = 0; i < KID_TILES.length; i++) if (!list.some(k => k.color === i)) return i; return list.length % KID_TILES.length; }
+function kidPill(k) { const [c, b] = KID_PILLS[k.color % KID_PILLS.length]; return `<span class="pill" style="color:${c};background:${b};margin-right:6px">${esc(k.name)}</span>`; }
+function levelShort(s) { return { "초등학교": "초등", "중학교": "중등", "고등학교": "고등" }[levelOf(s)] || ""; }
+function kidEvents(filter) {
+  const rows = [];
+  kids().filter(k => filter === "all" || k.id === filter).forEach(k => {
+    const s = kidSchool(k); if (!s) return;
+    upcoming(group(s.events || [])).forEach(g => rows.push({ ...g, kid: k, school: s.name }));
+  });
+  upcoming(group((DATA.public_holidays || []).map(p => ({ ...p, holiday: true, pub: true })))).forEach(g => rows.push(g));
+  return rows.sort((a, b) => a.date.localeCompare(b.date) || ((a.kid ? a.kid.color : -1) - (b.kid ? b.kid.color : -1)));
+}
 function schoolEvents(s) {
   const pub = (DATA.public_holidays || []).map(p => ({ ...p, holiday: true, pub: true }));
   return upcoming(group([...(s.events || []), ...pub]));
 }
 
-function evRow(g, sub) {
+function evRow(g, sub, tag) {
   const n = dday(g.date);
   const range = g.end !== g.date ? `${mdw(g.date)} ~ ${md(g.end)}` : mdw(g.date);
   const d = parseDate(g.date);
@@ -170,7 +200,7 @@ function evRow(g, sub) {
     : `<span class="pill ${n <= 7 ? "pill-indigo" : "pill-gray"}">${ddayText(n)}</span>`;
   return `<div class="ev">
     <div class="datebox ${g.holiday ? "hol" : ""}"><b>${d.getDate()}</b><span>${d.getMonth() + 1}월 ${WD[d.getDay()]}</span></div>
-    <div class="ev-body"><div class="ev-name">${esc(g.name)}</div><div class="ev-sub">${esc(sub || range)}</div></div>
+    <div class="ev-body"><div class="ev-name">${esc(g.name)}</div><div class="ev-sub">${tag || ""}${esc(sub || range)}</div></div>
     ${pill}
   </div>`;
 }
@@ -196,35 +226,42 @@ function footer() {
 
 // ---------- 화면: 홈 ----------
 function viewHome() {
-  const s = mySchool();
+  const ks = kids();
+  if (homeKid !== "all" && !ks.some(k => k.id === homeKid)) homeKid = "all";
   const now = new Date();
   const dateStr = `${now.getMonth() + 1}월 ${now.getDate()}일 ${WD[now.getDay()]}요일`;
-  let hero;
-  if (s) {
-    const next = schoolEvents(s).find(g => !g.pub) || schoolEvents(s)[0];
+  let hero, mine = "";
+  if (ks.length) {
+    const evs = kidEvents(homeKid);
+    const next = evs.find(g => !g.pub);
+    const one = homeKid !== "all" ? ks.find(k => k.id === homeKid) : ks.length === 1 ? ks[0] : null;
+    const oneSchool = one && kidSchool(one);
+    const title = one ? `${one.name}\n${oneSchool ? oneSchool.name : "학교 정보 없음"}` : `우리 아이 ${ks.length}명\n다가오는 일정`;
+    const nextTxt = next ? `다음 일정 · ${one ? "" : next.kid.name + " "}${next.name}` : "예정된 학교 일정이 없어요";
+    const cta = one && oneSchool ? `<button class="cta" onclick="go('school/${oneSchool.code}')">학교 일정 전체 보기 →</button>` : `<button class="cta" onclick="go('my')">아이 관리 →</button>`;
     hero = `<section class="hero"><div class="glow"></div>
       <div class="date">${dateStr}</div>
-      <h1>${esc(s.name)}</h1>
-      <p class="next">${next ? "다음 일정 · " + esc(next.name) : "예정된 일정이 없어요"}</p>
-      <button class="cta" onclick="go('school/${s.code}')">전체 일정 보기 →</button>
+      <h1>${esc(title)}</h1>
+      <p class="next">${esc(nextTxt)}</p>
+      ${cta}
       ${next ? `<div class="dday"><b>${ddayText(dday(next.date))}</b><span>${mdw(next.date)}</span></div>` : `<div class="deco fl"><div class="orb-sun" style="width:56px;height:56px"></div></div>`}
     </section>`;
+    const chip = (id, label, extra = "") => `<button class="btn ${homeKid === id ? "btn-3d" : "btn-soft"}" style="height:38px;font-size:13px;padding:0 14px;flex:0 0 auto" onclick="pickKid('${id}')">${extra}${esc(label)}</button>`;
+    const chips = ks.length > 1 ? `<div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px">${chip("all", "전체")}${ks.map(k => chip(k.id, k.name, `<span class="tile ${KID_TILES[k.color % 5]}" style="width:18px;height:18px;border-radius:6px"></span>`)).join("")}</div>` : "";
+    const list = evs.slice(0, 8);
+    const ownCount = ks.filter(k => homeKid === "all" || k.id === homeKid).reduce((n, k) => n + (((kidSchool(k) || {}).events || []).length), 0);
+    mine = `<section class="section"><div class="sec-head"><h2>우리 아이 다가오는 일정</h2>${ks.length < MAX_KIDS ? `<button onclick="go('kid/new')">+ 아이 추가</button>` : ""}</div>
+      ${chips}
+      <div class="lift card-pad">${list.map(g => g.kid ? evRow(g, `${g.school} · ${g.end !== g.date ? mdw(g.date) + " ~ " + md(g.end) : mdw(g.date)}`, ks.length > 1 ? kidPill(g.kid) : "") : evRow(g)).join("")}
+      ${ownCount ? "" : `<div class="empty">학교가 아직 나이스에 학사일정을 많이 등록하지 않았어요. 등록되면 자동으로 여기에 나타나요.</div>`}</div></section>`;
   } else {
     hero = `<section class="hero"><div class="glow"></div>
       <div class="date">${dateStr}</div>
-      <h1>우리 아이 학교를\n선택해 주세요</h1>
-      <button class="cta" onclick="go('schools')">학교 고르기 →</button>
+      <h1>우리 아이를\n등록해 주세요</h1>
+      <p class="next">형제자매가 여러 명이어도 한 번에 볼 수 있어요</p>
+      <button class="cta" onclick="go('kid/new')">아이 등록하기 →</button>
       <div class="deco fl"><div class="orb-sun" style="width:58px;height:58px"></div></div>
     </section>`;
-  }
-
-  let mine = "";
-  if (s) {
-    const list = schoolEvents(s).slice(0, 5);
-    const own = (s.events || []).length;
-    mine = `<section class="section"><div class="sec-head"><h2>우리 학교 다가오는 일정</h2><button onclick="go('school/${s.code}')">전체보기</button></div>
-      <div class="lift card-pad">${list.map(g => evRow(g)).join("") || ""}
-      ${own ? "" : `<div class="empty">학교가 아직 나이스에 학사일정을 많이 등록하지 않았어요. 등록되면 자동으로 여기에 나타나요.</div>`}</div></section>`;
   }
 
   const hl = regionHighlights().slice(0, 8);
@@ -245,14 +282,15 @@ function viewHome() {
 
 // ---------- 화면: 학교 목록 ----------
 function viewSchools(q = "") {
-  const code = store(KEY_SCHOOL);
+  const kidCodes = new Set(kids().map(k => k.code));
   const base = q ? levelSchools() : regionSchools();
   const list = base.filter(s => !q || s.name.includes(q) || s.address.includes(q) || (s.dong || "").includes(q));
   const tileCls = { "수지구": "t-mint", "기흥구": "t-indigo", "처인구": "t-coral" };
   const rows = list.map(s => {
     const next = upcoming(group(s.events || []))[0];
-    const tile = s.code === code ? `<span class="tile t-sun" style="width:40px;height:40px">${icon.star}</span>` : `<span class="tile ${tileCls[s.gu] || "t-lilac"}" style="width:40px;height:40px;font-weight:800">${esc(s.name.replace("용인", "")[0])}</span>`;
-    return `<button class="school ${s.code === code ? "mine" : ""}" onclick="go('school/${s.code}')">${tile}
+    const mineS = kidCodes.has(s.code);
+    const tile = mineS ? `<span class="tile t-sun" style="width:40px;height:40px">${icon.star}</span>` : `<span class="tile ${tileCls[s.gu] || "t-lilac"}" style="width:40px;height:40px;font-weight:800">${esc(s.name.replace("용인", "")[0])}</span>`;
+    return `<button class="school ${mineS ? "mine" : ""}" onclick="go('school/${s.code}')">${tile}
       <div style="flex:1;min-width:0"><div class="nm">${esc(s.name)}</div><div class="ad">${esc(s.gu || "")}${s.dong ? " " + esc(s.dong) : ""} · ${next ? esc(mdw(next.date) + " " + next.name) : "등록된 일정 없음"}</div></div>
       <span style="color:#8A91A5">›</span></button>`;
   }).join("");
@@ -270,13 +308,14 @@ function viewSchools(q = "") {
 function viewSchool(code) {
   const s = DATA.schools.find(x => x.code === code);
   if (!s) return go("schools");
-  const mine = store(KEY_SCHOOL) === code;
+  const here = kids().filter(k => k.code === code);
   const list = schoolEvents(s);
   $view.innerHTML = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
     <div class="lift" style="padding:20px;margin-top:14px">
       <h1 style="font-size:23px;font-weight:800">${esc(s.name)}</h1>
-      <p style="margin:6px 0 16px;font-size:13px;color:var(--muted)">${esc(s.address)}</p>
-      ${mine ? `<span class="pill pill-mint">내 학교로 설정됨</span>` : `<button class="btn btn-3d" onclick="setSchool('${s.code}')">${icon.star} 우리 아이 학교로 설정</button>`}
+      <p style="margin:6px 0 16px;font-size:13px;color:var(--muted)">${levelShort(s)} · ${esc(s.address)}</p>
+      ${here.length ? `<div style="margin-bottom:12px">${here.map(kidPill).join("")}<span style="font-size:13px;color:var(--muted)">의 학교예요</span></div>` : ""}
+      ${kids().length < MAX_KIDS ? `<button class="btn ${here.length ? "btn-soft" : "btn-3d"}" onclick="go('kid/new/${s.code}')">${icon.star} 이 학교로 아이 추가</button>` : ""}
     </div>
     <section class="section"><div class="sec-head"><h2>다가오는 일정</h2></div>
       <div class="lift card-pad">${list.map(g => evRow(g)).join("")}
@@ -285,12 +324,19 @@ function viewSchool(code) {
 
 // ---------- 화면: 마이 ----------
 function viewMy() {
-  const s = mySchool();
+  const ks = kids();
+  const kidRows = ks.map(k => { const sc = kidSchool(k);
+    return `<button class="school" onclick="go('kid/${k.id}')"><span class="tile ${KID_TILES[k.color % 5]}" style="width:42px;height:42px;font-weight:800">${esc(k.name[0] || "?")}</span>
+      <div style="flex:1;min-width:0"><div class="nm">${esc(k.name)}</div><div class="ad">${sc ? esc(levelShort(sc) + " · " + sc.name) : "학교 정보 없음"}</div></div><span style="font-size:13px;color:var(--indigo);font-weight:700">수정</span></button>`; }).join("");
   $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">마이</h1>
+    <section class="section" style="margin-top:0"><div class="sec-head"><h2>우리 아이</h2><span style="font-size:12px;color:var(--muted)">${ks.length}/${MAX_KIDS}명</span></div>
+      <div class="lift list">${kidRows || `<div class="empty">아직 등록한 아이가 없어요.</div>`}</div>
+      ${ks.length < MAX_KIDS ? `<button class="btn btn-soft" style="width:100%;height:50px" onclick="go('kid/new')">+ 아이 추가</button>` : ""}
+    </section>
+    <section class="section"><div class="sec-head"><h2>설정</h2></div>
     <div class="lift card-pad">
-      <div class="row"><span>우리 아이 학교</span><button class="btn btn-soft" style="height:38px;font-size:13px" onclick="go('schools')">${s ? esc(s.name) + " · 변경" : "선택하기"}</button></div>
       <div class="row"><span>관심 지역</span><button class="btn btn-soft" style="height:38px;font-size:13px" onclick="go('region')">${levelLabel()} · ${esc(regionLabel())} · 변경</button></div>
-    </div>
+    </div></section>
     <section class="section"><div class="sec-head"><h2>앱처럼 쓰기</h2></div>
       <div class="lift" style="padding:18px;font-size:14px;line-height:1.75">
         ${installEvt ? `<button class="btn btn-3d" onclick="doInstall()" style="width:100%;margin-bottom:12px">홈 화면에 설치하기</button>` : ""}
@@ -300,7 +346,7 @@ function viewMy() {
       <div class="lift card-pad">
         <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row"><span>버전</span><span class="val">0.1 (시범 운영)</span></div>
+        <div class="row"><span>버전</span><span class="val">0.2 (시범 운영)</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -340,15 +386,64 @@ function pickGu(gu) { setRegion(gu, ""); render(); }
 function pickLevel(k) { store(KEY_LEVEL, k); const r = region(); if (r.dong && !levelSchools().some(s => s.gu === r.gu && dongOf(s) === r.dong)) setRegion(r.gu, ""); render(); }
 function pickDong(d) { setRegion(region().gu, d); render(); }
 
+// ---------- 화면: 아이 추가 / 수정 ----------
+function viewKid(arg, pre) {
+  const list = kids();
+  const editing = list.find(k => k.id === arg);
+  if (!editing && list.length >= MAX_KIDS) { toast(`아이는 ${MAX_KIDS}명까지 등록할 수 있어요`); return go("my"); }
+  if (!kidForm || kidForm.key !== location.hash) kidForm = { key: location.hash, name: editing ? editing.name : (ORD[list.length] || "아이"), code: editing ? editing.code : (pre || ""), q: "", arm: false };
+  const sc = kidForm.code && DATA.schools.find(s => s.code === kidForm.code);
+  $view.innerHTML = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">${editing ? "아이 정보 수정" : "아이 추가"}</h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">이름 대신 첫째·둘째 같은 별명도 괜찮아요. 이 휴대폰에만 저장돼요.</p>
+    <section class="section"><div class="sec-head"><h2>이름(별명)</h2></div>
+      <label class="search lift"><input id="kname" maxlength="10" value="${esc(kidForm.name)}" aria-label="아이 이름 또는 별명"></label></section>
+    <section class="section"><div class="sec-head"><h2>학교</h2></div>
+      ${sc ? `<div class="lift" style="padding:16px;display:flex;align-items:center;gap:12px"><span class="tile t-sun" style="width:40px;height:40px">${icon.star}</span>
+        <div style="flex:1;min-width:0"><div style="font-weight:700">${esc(sc.name)}</div><div style="font-size:12px;color:var(--muted)">${levelShort(sc)} · ${esc(sc.gu || "")} ${esc(sc.dong || "")}</div></div></div>` : ""}
+      <label class="search lift">${icon.search}<input id="kq" placeholder="${sc ? "다른 학교로 바꾸기 (학교 이름 검색)" : "학교 이름 검색 (예: 마성, 수지중)"}" value="${esc(kidForm.q)}" aria-label="학교 이름 검색"></label>
+      <div class="lift list" id="kres"></div></section>
+    <button class="btn btn-3d" style="width:100%;height:54px;margin-top:24px;font-size:15px" onclick="saveKid('${editing ? editing.id : ""}')">${editing ? "저장하기" : "등록하기"}</button>
+    ${editing ? `<button class="btn btn-soft" style="width:100%;height:46px;margin-top:12px;color:var(--coral-ink)" onclick="deleteKid('${editing.id}')">${kidForm.arm ? "한 번 더 누르면 삭제돼요" : "이 아이 삭제"}</button>` : ""}`;
+  document.getElementById("kname").addEventListener("input", e => { kidForm.name = e.target.value; });
+  document.getElementById("kq").addEventListener("input", e => { kidForm.q = e.target.value; kidResults(); });
+  kidResults();
+}
+function kidResults() {
+  const box = document.getElementById("kres"); if (!box) return;
+  const q = kidForm.q.trim();
+  if (!q) { box.style.display = "none"; return; }
+  box.style.display = "";
+  const res = DATA.schools.filter(s => s.name.includes(q)).slice(0, 20);
+  box.innerHTML = res.map(s => `<button class="school ${s.code === kidForm.code ? "mine" : ""}" onclick="pickKidSchool('${s.code}')">
+      <span class="pill pill-gray">${levelShort(s)}</span><div style="flex:1;min-width:0"><div class="nm">${esc(s.name)}</div><div class="ad">${esc(s.gu || "")} ${esc(s.dong || "")}</div></div></button>`).join("") || `<div class="empty">검색 결과가 없어요.</div>`;
+}
+function pickKidSchool(code) { kidForm.code = code; kidForm.q = ""; render(); }
+function saveKid(id) {
+  if (!kidForm.code) { toast("학교를 골라 주세요"); return; }
+  const list = kids();
+  const name = (kidForm.name || "").trim() || ORD[list.length] || "아이";
+  const k = list.find(x => x.id === id);
+  if (k) { k.name = name; k.code = kidForm.code; }
+  else list.push({ id: "k" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, code: kidForm.code, color: nextColor(list) });
+  saveKids(list); kidForm = null; homeKid = "all";
+  toast(k ? "저장했어요" : `${name}을(를) 등록했어요`); go("home");
+}
+function deleteKid(id) {
+  if (!kidForm.arm) { kidForm.arm = true; render(); return; }
+  saveKids(kids().filter(k => k.id !== id)); kidForm = null; toast("삭제했어요"); go("my");
+}
+function pickKid(id) { homeKid = id; render(); }
+
 // ---------- 이동 / 동작 ----------
-function setSchool(code) { store(KEY_SCHOOL, code); toast("우리 아이 학교로 설정했어요"); go("home"); }
 function go(route) { if (location.hash === "#" + route) render(); else location.hash = route; }
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "schools" : r === "my" || r === "region" ? "my" : "home";
+  const tab = r.startsWith("school") ? "schools" : r === "my" || r === "region" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
-  if (r === "region") viewRegion();
+  if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
+  else if (r === "region") viewRegion();
   else if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
   else if (r === "schools") viewSchools();
   else if (r === "my") viewMy();
