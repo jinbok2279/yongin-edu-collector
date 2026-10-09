@@ -58,6 +58,10 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 .hero .dday span{font-size:11px;opacity:.9}
 .ev{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .ev:last-child{border-bottom:none}
+a.ev{color:inherit;text-decoration:none}
+.ev-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.ev-tags .pill{font-size:11px;padding:3px 8px}
+.datebox.city{background:var(--mint-bg)}.datebox.city b,.datebox.city span{color:var(--mint-ink)}
 .datebox{width:54px;height:54px;border-radius:16px;flex:0 0 auto;background:linear-gradient(180deg,#fff,#EEF0FA);box-shadow:inset 0 -3px 0 #DDE1F0,0 6px 12px -6px rgba(43,52,120,.35);display:flex;flex-direction:column;align-items:center;justify-content:center}
 .datebox b{font-size:18px;font-weight:800;color:var(--indigo-ink);line-height:1.1}
 .datebox span{font-size:10px;font-weight:700;color:var(--muted)}
@@ -158,6 +162,9 @@ const KEY_SCHOOL = "edu.school";
 const SEATS_URL = "seats.json";
 const KEY_SEATS = "edu.seats";
 let SEATS = null;
+const EVENTS_URL = "events.json";
+const KEY_EVENTS = "edu.events";
+let EVENTS = null, evTab = "city";
 const BOOKS_URL = "books.json";
 const KEY_BOOKS = "edu.books";
 let BOOKS = null;
@@ -328,20 +335,10 @@ function viewHome() {
     </section>`;
   }
 
-  const hl = regionHighlights().slice(0, 8);
-  const r = region();
-  const regionTitle = r.dong || r.gu || "용인시";
-  const regionSec = `<section class="section"><div class="sec-head"><h2>${esc(regionTitle)} 학교 주요 일정</h2><button onclick="go('schools')">학교별 보기</button></div>
-    <div class="lift card-pad">${hl.length ? hl.map(g => evRow(g, `${g.school} · ${g.end !== g.date ? mdw(g.date) + " ~ " + md(g.end) : mdw(g.date)}`)).join("") : `<div class="empty">이 지역에는 앞으로 두 달 안에 등록된 주요 일정이 없어요.</div>`}</div></section>`;
-
-  const soon = `<section class="section"><div class="sec-head"><h2>곧 추가돼요</h2></div>
-    <div class="lift soon"><span class="tile t-mint" style="width:44px;height:44px">공</span><div><b>도서관·교육지원청 공고</b><p>무료 체험·강좌·캠프 모집과 마감일 알림</p></div></div>
-    <div class="lift soon"><span class="tile t-lilac" style="width:44px;height:44px">뉴</span><div><b>오늘의 교육 뉴스</b><p>전국·경기·용인 교육 소식을 한 줄 요약으로</p></div></div></section>`;
-
   const install = installEvt ? `<button class="btn btn-soft" style="height:40px;font-size:12px" onclick="doInstall()">앱으로 설치</button>` : "";
   $view.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <button class="chip glass" onclick="go('region')">${icon.pin} ${esc(regionLabel())} · ${levelLabel()} ▾</button>${install}</div>
-    ${hero}${mine}${homeLibrary()}${homeBooks()}${regionSec}${soon}${footer()}`;
+    ${hero}${mine}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
 }
 
 // ---------- 화면: 학교 목록 ----------
@@ -414,7 +411,7 @@ function viewMy() {
       <div class="lift card-pad">
         <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.7 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.8 (시범 운영)</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -601,6 +598,62 @@ function homeLibrary() {
       <span style="font-size:13px;color:var(--muted);white-space:nowrap"><b style="font-size:17px;color:${ink}">${r.left}</b>석 남음</span></button>`; }).join("");
   return `<section class="section"><div class="sec-head"><h2>${esc(g || "용인")} 도서관 빈자리</h2><button onclick="go('library')">전체보기</button></div>
     <div class="lift list">${rows}</div></section>`;
+}
+
+// ---------- 아이와 함께 갈 만한 행사 (용인시청 문화달력 · 용인시도서관 프로그램) ----------
+function isoToday() { const d = today(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+function cityEvents() { const t = isoToday(); return ((EVENTS && EVENTS.city) || []).filter(e => (e.end || e.start) >= t); }
+function libEvents() { const t = isoToday(); return ((EVENTS && EVENTS.lib) || []).filter(e => !e.applyEnd || e.applyEnd >= t || e.status === "접수전"); }
+function evOpen(e) { trackEvent("행사-" + (e.src === "lib" ? "도서관" : "시청")); }
+function cityRow(e) {
+  const t = isoToday(), going = e.start <= t;
+  const d = parseDate(going ? t : e.start);
+  const when = e.start === e.end ? mdw(e.start) : `${md(e.start)} ~ ${md(e.end)}`;
+  const tags = [e.free ? `<span class="pill pill-mint">무료</span>` : e.price ? `<span class="pill pill-gray">${esc(e.price.length > 14 ? "유료" : e.price)}</span>` : "",
+    going ? `<span class="pill pill-indigo">진행 중</span>` : `<span class="pill ${dday(e.start) <= 7 ? "pill-indigo" : "pill-gray"}">${ddayText(dday(e.start))}</span>`,
+    e.grade ? `<span class="pill pill-gray">${esc(e.grade.length > 12 ? e.grade.slice(0, 12) + "…" : e.grade)}</span>` : ""].join("");
+  return `<a class="ev" href="${esc(e.link)}" target="_blank" rel="noopener" onclick='evOpen({src:"city"})'>
+    <div class="datebox city"><b>${d.getDate()}</b><span>${d.getMonth() + 1}월 ${WD[d.getDay()]}</span></div>
+    <div class="ev-body"><div class="ev-name">${esc(e.title)}</div><div class="ev-sub">${esc(when)}${e.place ? " · " + esc(e.place) : ""}${e.time ? " · " + esc(e.time) : ""}</div><div class="ev-tags">${tags}</div></div></a>`;
+}
+function libRow(e) {
+  const d = e.start ? parseDate(e.start) : null;
+  const open = e.status === "접수중";
+  const left = (e.count || "").match(/(\d+)\s*\/\s*(\d+)/);
+  const full = left && +left[1] >= +left[2];
+  const tags = [`<span class="pill ${open ? (full ? "pill-gray" : "pill-coral") : "pill-gray"}">${open ? (full ? "정원 마감·대기" : "접수 중") : "접수 예정"}</span>`,
+    e.target ? `<span class="pill pill-gray">${esc(e.target.length > 14 ? e.target.slice(0, 14) + "…" : e.target)}</span>` : "",
+    left ? `<span class="pill pill-gray">신청 ${left[1]}/${left[2]}</span>` : ""].join("");
+  const apply = e.applyEnd ? (open ? `접수 ~${md(e.applyEnd)}` : e.applyStart ? `접수 ${md(e.applyStart)}부터` : "") : "";
+  return `<a class="ev" href="${esc(e.link)}" target="_blank" rel="noopener" onclick='evOpen({src:"lib"})'>
+    <div class="datebox"><b>${d ? d.getDate() : "-"}</b><span>${d ? `${d.getMonth() + 1}월 ${WD[d.getDay()]}` : ""}</span></div>
+    <div class="ev-body"><div class="ev-name">${esc(e.title)}</div><div class="ev-sub">${esc(e.lib || "")}${apply ? " · " + esc(apply) : ""}</div><div class="ev-tags">${tags}</div></div></a>`;
+}
+function homeEvents() {
+  if (!EVENTS) return "";
+  const c = cityEvents(), l = libEvents().filter(e => e.status === "접수중");
+  if (!c.length && !l.length) return "";
+  const rows = [...c.slice(0, 3).map(cityRow), ...l.slice(0, 3).map(libRow)].join("");
+  return `<section class="section"><div class="sec-head"><h2>아이와 함께 가요</h2><button onclick="go('events')">전체보기</button></div>
+    <p style="font-size:12px;color:var(--muted);margin:-4px 0 10px">용인시 공연·축제와 도서관 어린이·가족 프로그램</p>
+    <div class="lift card-pad">${rows}</div></section>`;
+}
+function pickEvTab(t) { evTab = t; render(); }
+function viewEvents() {
+  const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">아이와 함께 가요</h1>`;
+  if (!EVENTS) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">행사 정보를 불러오는 중이에요…</div>`; return; }
+  const c = cityEvents(), l = libEvents();
+  const seg = `<div class="seg" role="tablist"><button class="${evTab === "city" ? "on" : ""}" role="tab" onclick="pickEvTab('city')">공연·축제 ${c.length}</button><button class="${evTab === "lib" ? "on" : ""}" role="tab" onclick="pickEvTab('lib')">도서관 프로그램 ${l.length}</button></div>`;
+  let body;
+  if (evTab === "city") body = c.length ? `<div class="lift card-pad">${c.map(cityRow).join("")}</div>` : `<div class="lift empty">앞으로 두 달 안에 열리는 가족 행사가 아직 없어요.</div>`;
+  else {
+    const o = l.filter(e => e.status === "접수중"), r = l.filter(e => e.status !== "접수중");
+    body = (o.length ? `<section class="section" style="margin-top:0"><div class="sec-head"><h2>지금 신청할 수 있어요</h2></div><div class="lift card-pad">${o.map(libRow).join("")}</div></section>` : "")
+      + (r.length ? `<section class="section"><div class="sec-head"><h2>곧 접수 시작</h2></div><div class="lift card-pad">${r.map(libRow).join("")}</div></section>` : "")
+      || `<div class="lift empty">지금 접수 중인 어린이·가족 프로그램이 없어요.</div>`;
+  }
+  $view.innerHTML = back + seg + body + `<div class="foot">누르면 용인시청·용인시도서관 페이지에서 자세한 내용과 신청 방법을 볼 수 있어요.<br>데이터 · 용인시청 문화달력 · 용인시도서관 문화행사 (하루 한 번 갱신${EVENTS.updated_at ? " · " + esc(EVENTS.updated_at.slice(0, 10)) + " 기준" : ""})</div>`;
 }
 
 // ---------- 화면: 아이 추가 / 수정 ----------
@@ -1093,6 +1146,7 @@ function render() {
   else if (r === "schools") viewSchools();
   else if (r === "library") viewLibrary();
   else if (r === "books") viewBooks();
+  else if (r === "events") viewEvents();
   else if (r.startsWith("library/")) viewLibraryDetail(r.slice(8));
   else if (r === "my") viewMy();
   else viewHome();
@@ -1121,8 +1175,16 @@ async function loadBooks() {
   } catch (e) { try { BOOKS = JSON.parse(store(KEY_BOOKS) || "null"); } catch (e2) { BOOKS = null; } }
   if (DATA) render();
 }
+async function loadEvents() {
+  try {
+    const res = await dataFetch(EVENTS_URL);
+    if (!res.ok) throw new Error(res.status);
+    EVENTS = await res.json(); store(KEY_EVENTS, JSON.stringify(EVENTS));
+  } catch (e) { try { EVENTS = JSON.parse(store(KEY_EVENTS) || "null"); } catch (e2) { EVENTS = null; } }
+  if (DATA) render();
+}
 async function load() {
-  loadSeats(); loadBooks();
+  loadSeats(); loadBooks(); loadEvents();
   try {
     const res = await dataFetch(DATA_URL);
     if (!res.ok) throw new Error(res.status);
