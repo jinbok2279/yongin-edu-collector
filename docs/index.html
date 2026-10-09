@@ -394,6 +394,9 @@ function viewMy() {
     return `<button class="school" onclick="go('kid/${k.id}')"><span class="tile ${KID_TILES[k.color % 5]}" style="width:42px;height:42px;font-weight:800">${esc(k.name[0] || "?")}</span>
       <div style="flex:1;min-width:0"><div class="nm">${esc(k.name)}</div><div class="ad">${sc ? esc((kidGradeText(k, sc) ? levelShort(sc).replace("등", "") + " " + kidGradeText(k, sc) : levelShort(sc)) + " · " + sc.name) : "학교 정보 없음"}${k.acas && k.acas.length ? ` · 학원 ${k.acas.length}곳` : ""}${sc && !k.grade ? ` · <b style="color:var(--coral-ink)">학년을 넣어 주세요</b>` : ""}</div></div><span style="font-size:13px;color:var(--indigo);font-weight:700">수정</span></button>`; }).join("");
   $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">마이</h1>
+    <button class="lift" onclick="go('premium')" style="width:100%;border:0;cursor:pointer;text-align:left;padding:16px 18px;display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#FFF6E0,#FFE7EE);margin-bottom:14px">
+      <span class="tile t-sun" style="width:44px;height:44px">${icon.star}</span>
+      <div style="flex:1;min-width:0"><div style="font-weight:800">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">시범 기간 무료</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">우리 동네 수강료 비교 · 인기 학원 순위 · 알림</div></div><span style="color:var(--muted)">›</span></button>
     <section class="section" style="margin-top:0"><div class="sec-head"><h2>우리 아이</h2><span style="font-size:12px;color:var(--muted)">${ks.length}/${MAX_KIDS}명</span></div>
       <div class="lift list">${kidRows || `<div class="empty">아직 등록한 아이가 없어요.</div>`}</div>
       ${ks.length < MAX_KIDS ? `<button class="btn btn-soft" style="width:100%;height:50px" onclick="go('kid/new')">+ 아이 추가</button>` : ""}
@@ -411,7 +414,7 @@ function viewMy() {
       <div class="lift card-pad">
         <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.6 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.7 (시범 운영)</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -750,9 +753,9 @@ function viewAcaList() {
       <div style="text-align:right"><div style="font-size:12px;color:var(--muted)">월 수강료 중간값</div><div style="font-size:20px;font-weight:800;color:var(--indigo)">${feeVals.length ? won(median(feeVals)) : "-"}</div><div style="font-size:11px;color:var(--muted)">공개 ${feeCount}곳 기준</div></div></div>
     <div class="lift list" style="margin-top:14px">${rows || `<div class="empty">조건에 맞는 학원이 없어요.</div>`}</div>
     ${list.length > acaShow ? `<button class="btn btn-soft" style="width:100%;height:46px;margin-top:12px" onclick="acaMore()">더 보기 (${(list.length - acaShow).toLocaleString()}곳 더)</button>` : ""}
-    <section class="section"><div class="lift" style="padding:18px;display:flex;gap:14px;align-items:center">
+    <section class="section"><button class="lift" onclick="go('premium')" style="width:100%;border:0;cursor:pointer;text-align:left;padding:16px 18px;display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#FFF6E0,#FFE7EE);margin-bottom:0">
       <span class="tile t-sun" style="width:44px;height:44px">${icon.star}</span>
-      <div><div style="font-weight:800">우리 동네 인기 학원 순위</div><div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5">같은 학교·동네 아이들이 많이 다니는 학원을 익명 통계로 보여 드릴 예정이에요. <b>프리미엄 · 준비 중</b></div></div></div></section>
+      <div style="flex:1;min-width:0"><div style="font-weight:800">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">시범 기간 무료</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">우리 동네 수강료 비교 · 인기 학원 순위 · 알림</div></div><span style="color:var(--muted)">›</span></button></section>
     <div class="foot">데이터 · 나이스 교육정보 개방포털 학원교습소정보 (매주 갱신)<br>수강료는 학원이 교육청에 신고한 금액이라 실제와 다를 수 있어요.</div>`;
   const qi = document.getElementById("acaq");
   qi.addEventListener("input", e => { f.q = e.target.value; acaShow = 40; clearTimeout(qi._t); qi._t = setTimeout(() => { const pos = qi.selectionStart; render(); const n = document.getElementById("acaq"); n.focus(); try { n.setSelectionRange(pos, pos); } catch (er) {} }, 350); });
@@ -859,6 +862,76 @@ function viewKinder(id) {
     <div class="foot">데이터 · 유치원 알리미 ${esc(kTerm(k.term))}<br>원비(교육비)는 유치원 알리미에서 확인해 주세요.</div>`;
 }
 
+
+// ---------- 화면: 프리미엄 (시범 기간 무료) ----------
+let premF = null;
+const FEE_LEVELS = [["초등", /초등|초[1-6]|초저|초고|유아|키즈|kids/i], ["중등", /중등|중[1-3]|중학/], ["고등", /고등|고[1-3]|고교|수능|입시|재수/]];
+function feeLevel(name) { for (const [l, re] of FEE_LEVELS) if (re.test(name)) return l; return ""; }
+function premWant(key) { return store("edu.want." + key) === "1"; }
+function premAsk(key, ev) { if (premWant(key)) return; store("edu.want." + key, "1"); trackEvent(ev); toast("출시되면 가장 먼저 알려 드릴게요"); render(); }
+function feeStats(list) {
+  const v = list.flatMap(a => (a.f || []).map(x => x[1]).filter(x => x >= 30000 && x <= 3000000));
+  if (!v.length) return null;
+  const sorted = [...v].sort((a, b) => a - b), q = p => sorted[Math.min(sorted.length - 1, Math.floor(p * sorted.length))];
+  return { n: list.filter(a => a.f && a.f.length).length, cnt: v.length, med: median(v), lo: q(0.1), hi: q(0.9), vals: v };
+}
+function viewPremium() {
+  const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>`;
+  const head = `${back}<h1 style="font-size:26px;font-weight:800;margin-top:14px">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;font-size:12px;vertical-align:middle">시범 기간 무료</span></h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 4px">앱 정식 출시 전까지는 모든 분이 무료로 쓸 수 있어요.</p>`;
+  if (!ACAS) { $view.innerHTML = head + `<div class="lift empty" style="margin-top:16px">학원 정보를 불러오는 중이에요…</div>`; loadAcas().then(() => { if (location.hash === "#premium") render(); }).catch(() => {}); return; }
+  if (!premF) {
+    const k = kids().find(x => kidSchool(x)); const sc = k && kidSchool(k);
+    const lv = sc ? levelShort(sc) : (level() === "초등학교" ? "초등" : level() === "중학교" ? "중등" : "고등");
+    premF = { gu: (sc && sc.gu) || region().gu || "", dong: (sc && sc.dong) || region().dong || "", cat: "수학", lv };
+    trackEvent("리포트-보기");
+  }
+  const f = premF;
+  const catFn = (ACA_CATS.find(c => c[0] === f.cat) || [])[1] || (() => true);
+  const pick = (scope) => ACAS.academies.filter(a => catFn(a) && (scope === "all" || (scope === "gu" ? a.gu === f.gu : a.gu === f.gu && a.dong === f.dong)))
+    .map(a => ({ ...a, f: (a.f || []).filter(x => !f.lv || feeLevel(x[0]) === f.lv || (!feeLevel(x[0]) && (a.f || []).every(y => !feeLevel(y[0])))) }));
+  const scopes = [f.dong && ["dong", f.dong], f.gu && ["gu", f.gu], ["all", "용인시"]].filter(Boolean).map(([k, label]) => ({ label, s: feeStats(pick(k)), list: pick(k) }));
+  const maxMed = Math.max(1, ...scopes.map(x => x.s ? x.s.hi : 0));
+  const main = scopes[0];
+  const bands = [[0, 150000, "15만 미만"], [150000, 250000, "15~25만"], [250000, 350000, "25~35만"], [350000, 500000, "35~50만"], [500000, 1e9, "50만 이상"]];
+  const bandCnt = main.s ? bands.map(([lo, hi, l]) => [l, main.s.vals.filter(v => v >= lo && v < hi).length]) : [];
+  const bandMax = Math.max(1, ...bandCnt.map(b => b[1]));
+  const cheap = main.list.filter(a => a.f && a.f.length).map(a => ({ a, m: Math.min(...a.f.map(x => x[1]).filter(x => x >= 30000)) })).filter(x => isFinite(x.m)).sort((x, y) => x.m - y.m).slice(0, 5);
+  const chip = (label, on, fn) => `<button class="btn ${on ? "btn-3d" : "btn-soft"}" style="height:36px;font-size:13px;padding:0 13px;flex:0 0 auto" onclick="${fn}">${esc(label)}</button>`;
+  const dongs = [...new Set(ACAS.academies.filter(a => a.gu === f.gu).map(a => a.dong).filter(Boolean))].sort((x, y) => x.localeCompare(y));
+  const wantCard = (key, ev, title, desc, icon2) => `<div class="lift" style="padding:18px;margin-top:12px">
+      <div style="display:flex;gap:12px;align-items:center"><span class="tile t-lilac" style="width:42px;height:42px;font-size:18px">${icon2}</span>
+      <div style="flex:1"><div style="font-weight:800">${title} <span class="pill pill-gray" style="margin-left:4px">준비 중</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5">${desc}</div></div></div>
+      <button class="btn ${premWant(key) ? "btn-soft" : "btn-3d"}" style="width:100%;height:44px;margin-top:12px;font-size:14px" onclick="premAsk('${key}','${ev}')">${premWant(key) ? "✓ 출시 알림 신청됨" : "출시되면 알려 주세요"}</button></div>`;
+  $view.innerHTML = `${head}
+    <section class="section"><div class="sec-head"><h2>우리 동네 수강료 비교</h2></div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px">${GUS.map(g => chip(g, f.gu === g, `premSet('gu','${g}')`)).join("")}</div>
+      ${f.gu ? `<select id="premdong" class="lift" style="width:100%;height:44px;border:0;border-radius:14px;padding:0 14px;font:inherit;font-size:14px;background:#fff;margin:4px 0" aria-label="동 선택"><option value="">${esc(f.gu)} 전체</option>${dongs.map(d => `<option value="${esc(d)}" ${d === f.dong ? "selected" : ""}>${esc(d)}</option>`).join("")}</select>` : ""}
+      <div style="display:flex;gap:8px;overflow-x:auto;padding:6px 2px">${ACA_CATS.slice(1, 8).map(([c]) => chip(c, f.cat === c, `premSet('cat','${c}')`)).join("")}</div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px">${["초등", "중등", "고등"].map(l => chip(l, f.lv === l, `premSet('lv','${l}')`)).join("")}${chip("학년 무관", !f.lv, "premSet('lv','')")}</div>
+      <div class="lift" style="padding:18px">
+        <div style="font-size:13px;color:var(--muted)">${esc(main.label)} · ${esc(f.cat)} · ${esc(f.lv || "전체")} · 1인 월 수강료</div>
+        ${main.s ? `<div style="display:flex;align-items:baseline;gap:8px;margin-top:6px"><b style="font-size:34px;font-weight:800;color:var(--indigo)">${won(main.s.med)}</b><span style="color:var(--muted);font-size:13px">중간값</span></div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px">보통 ${won(main.s.lo)} ~ ${won(main.s.hi)} · 공개 ${main.s.n}곳 (수강료 ${main.s.cnt}건)</div>` : `<div class="empty" style="padding:14px 0 4px">이 조건은 수강료를 공개한 곳이 없어요. 동을 넓혀 보세요.</div>`}
+      </div>
+      <div class="lift" style="padding:16px 18px;margin-top:12px"><div style="font-weight:800;margin-bottom:10px">지역별 비교 (중간값)</div>
+        ${scopes.map(x => `<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${esc(x.label)}</span><b>${x.s ? won(x.s.med) : "-"}</b></div>
+          <div class="seatbar" style="height:10px;margin-top:6px"><i style="width:${x.s ? Math.round(x.s.med / maxMed * 100) : 0}%;background:linear-gradient(180deg,#8C97FF,var(--indigo))"></i></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">${x.s ? `공개 ${x.s.n}곳 · 보통 ${won(x.s.lo)}~${won(x.s.hi)}` : "공개 정보 없음"}</div></div>`).join("")}</div>
+      ${bandCnt.length ? `<div class="lift" style="padding:16px 18px;margin-top:12px"><div style="font-weight:800;margin-bottom:10px">${esc(main.label)} 가격대 분포</div>
+        ${bandCnt.map(([l, c]) => `<div style="display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px"><span style="width:70px;color:var(--muted)">${l}</span><div class="seatbar" style="flex:1;height:12px"><i style="width:${Math.round(c / bandMax * 100)}%;background:#2FC4A4"></i></div><b style="width:28px;text-align:right">${c}</b></div>`).join("")}</div>` : ""}
+      ${cheap.length ? `<div class="lift list" style="margin-top:12px"><div style="padding:14px 18px 4px;font-weight:800">수강료가 낮은 곳 (공개 기준)</div>${cheap.map(({ a, m }) => `<button class="school" onclick="go('aca/${esc(a.id)}')"><div style="flex:1;min-width:0"><div class="nm">${esc(a.n)}</div><div class="ad">${esc(a.dong || a.gu)} · ${esc(acaKind(a))}</div></div><b style="color:var(--indigo);white-space:nowrap">${won(m)}~</b></button>`).join("")}</div>` : ""}
+    </section>
+    <section class="section"><div class="sec-head"><h2>곧 열려요</h2></div>
+      ${wantCard("rank", "관심-인기학원", "동네 인기 학원 순위", "같은 학교·학년 아이들이 많이 다니는 학원을 이름 없이 통계로 보여 드려요.", "🏆")}
+      ${wantCard("alert", "관심-알림", "알림 (휴업일 · 유치원 빈자리)", "아이 학교 휴업일 전날, 관심 유치원에 빈자리가 생기면 휴대폰으로 알려 드려요.", "🔔")}
+    </section>
+    <div class="foot">수강료는 학원이 교육청에 신고한 금액(나이스 학원교습소정보) 기준이에요.<br>공개한 학원만 계산해서 실제 시세와 다를 수 있어요.</div>`;
+  const ds = document.getElementById("premdong");
+  if (ds) ds.addEventListener("change", e => { premSet("dong", e.target.value); });
+}
+function premSet(k, v) { const y = window.scrollY; premF[k] = v; if (k === "gu") premF.dong = ""; render(); window.scrollTo(0, y); }
+
 // ---------- 관리자 (숨은 화면: 마이 > 버전 5번 누르기) ----------
 const GC_SITE = "https://yongin-edu-app.goatcounter.com";
 const KEY_ADMIN = "edu.admin";
@@ -883,7 +956,7 @@ function adminTap() {
   adminTaps++; clearTimeout(adminTapTimer); adminTapTimer = setTimeout(() => adminTaps = 0, 1500);
   if (adminTaps >= 5) { adminTaps = 0; go("admin"); }
 }
-const PATH_NAMES = { "/kinders": "유치원 찾기", "/acas": "학원 찾기", "/home": "홈", "/schools": "학교 일정", "/library": "도서관 좌석", "/books": "인기 도서", "/my": "마이", "/region": "지역 설정",
+const PATH_NAMES = { "/premium": "프리미엄", "/kinders": "유치원 찾기", "/acas": "학원 찾기", "/home": "홈", "/schools": "학교 일정", "/library": "도서관 좌석", "/books": "인기 도서", "/my": "마이", "/region": "지역 설정",
   "/kid/new": "아이 추가 화면", "/kid/edit": "아이 수정 화면", "/admin": "관리자" };
 function pathName(p) {
   if (PATH_NAMES[p]) return PATH_NAMES[p];
@@ -980,7 +1053,7 @@ function viewAdmin() {
   const hits = (A.hits || {}).hits || [];
   const pages = hits.filter(h => !h.event), events = hits.filter(h => h.event);
   const list = (rows, label) => rows.length ? `<div class="lift card-pad">${rows.map(([k, v]) => `<div class="row"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(k)}</span><span class="val"><b>${v.toLocaleString()}</b></span></div>`).join("")}</div>` : `<div class="lift empty">${label}</div>`;
-  const evName = { "아이-등록": "아이 등록", "아이-수정": "아이 정보 수정", "학원-추가": "학원 추가", "책-클릭": "인기 도서 클릭", "앱-설치": "홈 화면에 설치" };
+  const evName = { "아이-등록": "아이 등록", "아이-수정": "아이 정보 수정", "학원-추가": "학원 추가", "책-클릭": "인기 도서 클릭", "앱-설치": "홈 화면에 설치", "관심-인기학원": "★ 인기 학원 순위 알림 신청", "관심-알림": "★ 알림 기능 알림 신청", "리포트-보기": "수강료 리포트 보기" };
   $view.innerHTML = `${head}
     ${A.warn ? `<div class="lift empty" style="margin:10px 0">일부 통계를 못 불러왔어요: ${esc(A.warn)}</div>` : ""}
     <p style="font-size:12px;color:var(--muted);margin:6px 0 14px">방문자 수 기준 · ${A.at.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })} 불러옴 · <a href="#admin" onclick="ADMIN=null;render();return false">새로고침</a></p>
@@ -1005,12 +1078,13 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r !== "admin") { adminOpen = false; ADMIN = null; }
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
   else if (r === "region") viewRegion();
   else if (r === "admin") viewAdmin();
+  else if (r === "premium") viewPremium();
   else if (r.startsWith("aca/")) viewAca(r.slice(4));
   else if (r === "acas") viewAcaList();
   else if (r === "kinders") viewKinders();
