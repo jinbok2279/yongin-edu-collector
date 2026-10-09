@@ -417,8 +417,9 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.1 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
+        <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -1111,6 +1112,27 @@ function viewElite() {
     <div class="foot">학교를 누르면 학교 홈페이지로 이동해요. 모집 인원·전형은 학교 입학요강을 확인하세요.<br>데이터 · 나이스 교육정보 개방포털 학교기본정보 (매달 갱신${ELITE.updated_at ? " · " + esc(ELITE.updated_at.slice(0, 10)) + " 기준" : ""})</div>`;
 }
 
+// ---------- 이용 안내 · 개인정보 ----------
+function viewAbout() {
+  const sec = (t, body) => `<section class="section"><div class="sec-head"><h2 style="font-size:17px">${t}</h2></div><div class="lift card-pad" style="font-size:14px;line-height:1.75;color:var(--ink)">${body}</div></section>`;
+  const li = a => `<ul style="margin:0;padding-left:18px">${a.map(x => `<li style="margin:4px 0">${x}</li>`).join("")}</ul>`;
+  $view.innerHTML = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">이용 안내</h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">2026년 10월 · 시범 운영</p>
+    ${sec("이 서비스는", `용인에 사는 학부모에게 꼭 필요한 정보를 한곳에서 볼 수 있으면 좋겠다는 생각으로, 용인 시민 한 사람이 직접 만든 <b>학부모 통합 정보 서비스</b>예요.<br>학교 일정, 도서관, 학원, 유치원, 아이와 갈 행사, 일자리 정보를 공공 자료에서 모아 보여 드려요.`)}
+    ${sec("무료로 운영해요", li(["모든 기능을 <b>무료</b>로 제공해요. 회원가입이나 결제가 없어요.", "용인시청, 교육청 등 <b>공공기관이 운영하는 서비스가 아니에요.</b> 개인이 공공 자료를 모아 보여 드리는 서비스예요."]))}
+    ${sec("개인정보를 받지 않아요", li([
+      "이름, 전화번호, 이메일, 주소 같은 <b>개인을 알아볼 수 있는 정보는 받지도, 저장하지도 않아요.</b>",
+      "아이 별명, 학교, 학년, 학원처럼 직접 입력한 내용은 <b>이 휴대폰 안에만</b> 저장되고 어디로도 보내지 않아요. 앱(브라우저 데이터)을 지우면 함께 지워져요.",
+      "서비스를 고치는 데 참고하려고 <b>쿠키 없이 방문 수와 많이 본 화면만</b> 집계해요(GoatCounter). 이 기록으로는 누가 방문했는지 알 수 없어요."]))}
+    ${sec("정보의 출처와 정확성", li([
+      "나이스 교육정보 개방포털, 유치원 알리미, 용인시도서관, 용인시청 문화달력, 경기도교육청 구인구직, 경기육아종합지원센터 등 <b>공공 자료</b>를 하루에 한두 번 자동으로 가져와요.",
+      "원래 자료에 늦게 반영되거나 틀린 내용이 있을 수 있어요. 학사일정, 접수 마감, 입학 전형처럼 중요한 내용은 <b>꼭 학교나 기관의 원문</b>을 함께 확인해 주세요.",
+      "이 정보를 믿고 생긴 손해에 대해서는 책임지기 어려워요. 각 자료의 저작권은 해당 기관에 있어요."]))}
+    ${sec("시범 운영 중이에요", `지금은 테스트 단계라 <b>버그나 틀린 정보가 있을 수 있어요.</b> 너그러이 양해 부탁드려요.<br>불편한 점이나 바라는 기능은 아래 메일로 알려 주시면 빠르게 고칠게요.<div style="margin-top:10px;font-weight:700;color:var(--indigo);user-select:all">jinbok2279.lee@gmail.com</div>`)}
+    <div class="foot">이 안내는 서비스가 바뀌면 함께 고쳐질 수 있어요.</div>`;
+}
+
 // ---------- 관리자 (숨은 화면: 마이 > 버전 5번 누르기) ----------
 const GC_SITE = "https://yongin-edu-app.goatcounter.com";
 const KEY_ADMIN = "edu.admin";
@@ -1257,7 +1279,7 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r === "jobs" || r === "elite" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r === "jobs" || r === "elite" || r === "about" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r !== "admin") { adminOpen = false; ADMIN = null; }
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
@@ -1275,6 +1297,7 @@ function render() {
   else if (r === "events") viewEvents();
   else if (r === "jobs") viewJobs();
   else if (r === "elite") viewElite();
+  else if (r === "about") viewAbout();
   else if (r.startsWith("library/")) viewLibraryDetail(r.slice(8));
   else if (r === "my") viewMy();
   else viewHome();
