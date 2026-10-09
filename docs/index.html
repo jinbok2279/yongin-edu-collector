@@ -393,7 +393,7 @@ function viewMy() {
   $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">마이</h1>
     <button class="lift" onclick="go('premium')" style="width:100%;border:0;cursor:pointer;text-align:left;padding:16px 18px;display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#FFF6E0,#FFE7EE);margin-bottom:14px">
       <span class="tile t-sun" style="width:44px;height:44px">${icon.star}</span>
-      <div style="flex:1;min-width:0"><div style="font-weight:800">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">시범 기간 무료</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">우리 동네 수강료 비교 · 인기 학원 순위 · 알림</div></div><span style="color:var(--muted)">›</span></button>
+      <div style="flex:1;min-width:0"><div style="font-weight:800">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">시범 기간 무료</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">엄마 일자리 · 수강료 비교 · 인기 학원 순위 · 알림</div></div><span style="color:var(--muted)">›</span></button>
     <section class="section" style="margin-top:0"><div class="sec-head"><h2>우리 아이</h2><span style="font-size:12px;color:var(--muted)">${ks.length}/${MAX_KIDS}명</span></div>
       <div class="lift list">${kidRows || `<div class="empty">아직 등록한 아이가 없어요.</div>`}</div>
       ${ks.length < MAX_KIDS ? `<button class="btn btn-soft" style="width:100%;height:50px" onclick="go('kid/new')">+ 아이 추가</button>` : ""}
@@ -411,7 +411,7 @@ function viewMy() {
       <div class="lift card-pad">
         <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.8 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.9 (시범 운영)</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -809,7 +809,7 @@ function viewAcaList() {
     ${list.length > acaShow ? `<button class="btn btn-soft" style="width:100%;height:46px;margin-top:12px" onclick="acaMore()">더 보기 (${(list.length - acaShow).toLocaleString()}곳 더)</button>` : ""}
     <section class="section"><button class="lift" onclick="go('premium')" style="width:100%;border:0;cursor:pointer;text-align:left;padding:16px 18px;display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#FFF6E0,#FFE7EE);margin-bottom:0">
       <span class="tile t-sun" style="width:44px;height:44px">${icon.star}</span>
-      <div style="flex:1;min-width:0"><div style="font-weight:800">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">시범 기간 무료</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">우리 동네 수강료 비교 · 인기 학원 순위 · 알림</div></div><span style="color:var(--muted)">›</span></button></section>
+      <div style="flex:1;min-width:0"><div style="font-weight:800">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">시범 기간 무료</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">엄마 일자리 · 수강료 비교 · 인기 학원 순위 · 알림</div></div><span style="color:var(--muted)">›</span></button></section>
     <div class="foot">데이터 · 나이스 교육정보 개방포털 학원교습소정보 (매주 갱신)<br>수강료는 학원이 교육청에 신고한 금액이라 실제와 다를 수 있어요.</div>`;
   const qi = document.getElementById("acaq");
   qi.addEventListener("input", e => { f.q = e.target.value; acaShow = 40; clearTimeout(qi._t); qi._t = setTimeout(() => { const pos = qi.selectionStart; render(); const n = document.getElementById("acaq"); n.focus(); try { n.setSelectionRange(pos, pos); } catch (er) {} }, 350); });
@@ -958,6 +958,9 @@ function viewPremium() {
       <div style="flex:1"><div style="font-weight:800">${title} <span class="pill pill-gray" style="margin-left:4px">준비 중</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5">${desc}</div></div></div>
       <button class="btn ${premWant(key) ? "btn-soft" : "btn-3d"}" style="width:100%;height:44px;margin-top:12px;font-size:14px" onclick="premAsk('${key}','${ev}')">${premWant(key) ? "✓ 출시 알림 신청됨" : "출시되면 알려 주세요"}</button></div>`;
   $view.innerHTML = `${head}
+    <button class="lift" style="display:flex;gap:14px;align-items:center;width:100%;padding:18px;margin-top:16px;border:0;text-align:left;cursor:pointer;font:inherit;color:var(--ink)" onclick="go('jobs')">
+      <span class="tile t-mint" style="width:44px;height:44px;font-size:20px">💼</span>
+      <div style="flex:1;min-width:0"><div style="font-weight:800">엄마 일자리</div><div style="font-size:12px;color:var(--muted);margin-top:4px">학교 시간강사·방과후·기간제 · 유치원 · 어린이집 채용</div></div><span style="color:var(--muted)">›</span></button>
     <section class="section"><div class="sec-head"><h2>우리 동네 수강료 비교</h2></div>
       <div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px">${GUS.map(g => chip(g, f.gu === g, `premSet('gu','${g}')`)).join("")}</div>
       ${f.gu ? `<select id="premdong" class="lift" style="width:100%;height:44px;border:0;border-radius:14px;padding:0 14px;font:inherit;font-size:14px;background:#fff;margin:4px 0" aria-label="동 선택"><option value="">${esc(f.gu)} 전체</option>${dongs.map(d => `<option value="${esc(d)}" ${d === f.dong ? "selected" : ""}>${esc(d)}</option>`).join("")}</select>` : ""}
@@ -985,6 +988,62 @@ function viewPremium() {
   if (ds) ds.addEventListener("change", e => { premSet("dong", e.target.value); });
 }
 function premSet(k, v) { const y = window.scrollY; premF[k] = v; if (k === "gu") premF.dong = ""; render(); window.scrollTo(0, y); }
+
+// ---------- 프리미엄: 엄마 일자리 (경기도교육청 구인구직 · 경기육아종합지원센터) ----------
+let JOBS = null, jobsLoading = null, jobF = { tab: "school", gu: "", kind: "" };
+function loadJobs() {
+  if (JOBS) return Promise.resolve(JOBS);
+  if (!jobsLoading) jobsLoading = dataFetch("jobs.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => (JOBS = j)).catch(e => { jobsLoading = null; throw e; });
+  return jobsLoading;
+}
+function jobSchool(j) {
+  if (!DATA || !DATA.schools) return null;
+  const nm = (j.org || "").replace(/병설유치원$/, "");
+  return DATA.schools.find(s => s.name === nm) || null;
+}
+function jobDday(d) { if (!d) return ""; const n = dday(d); return n < 0 ? "마감" : n === 0 ? "오늘 마감" : `D-${n}`; }
+function jobRow(j, care) {
+  const sc = care ? null : jobSchool(j);
+  const where = care ? [j.gu, j.dong].filter(Boolean).join(" ") : sc ? [sc.gu, sc.dong].filter(Boolean).join(" ") : "용인시";
+  const n = j.applyEnd ? dday(j.applyEnd) : 99;
+  const tags = [care ? `<span class="pill pill-indigo">${esc(j.job || "보육교사")}</span>` : `<span class="pill ${j.kinder ? "pill-mint" : "pill-indigo"}">${j.kinder ? "유치원 · " : ""}${esc(j.kind)}</span>`,
+    j.applyEnd ? `<span class="pill ${n <= 3 ? "pill-coral" : "pill-gray"}">${jobDday(j.applyEnd)}</span>` : "",
+    !care && j.field ? `<span class="pill pill-gray">${esc(j.field.length > 14 ? j.field.slice(0, 14) + "…" : j.field)}</span>` : "",
+    care && j.type ? `<span class="pill pill-gray">${esc(j.type)}</span>` : "",
+    care && j.extended ? `<span class="pill pill-gray">연장반</span>` : ""].join("");
+  const sub = care
+    ? [j.org, where, j.qual].filter(Boolean).join(" · ")
+    : [j.org, where, j.workStart ? `근무 ${md(j.workStart)}~${j.workEnd ? md(j.workEnd) : ""}` : "", j.pay].filter(Boolean).join(" · ");
+  return `<a class="ev" href="${esc(j.link)}" target="_blank" rel="noopener" onclick="trackEvent('일자리-${care ? "어린이집" : "학교"}')">
+    <div class="ev-body"><div class="ev-name">${esc(j.title)}</div><div class="ev-sub">${esc(sub)}</div><div class="ev-tags">${tags}</div></div></a>`;
+}
+function pickJob(k, v) { const y = window.scrollY; jobF[k] = v; render(); window.scrollTo(0, y); }
+function viewJobs() {
+  const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">엄마 일자리 <span class="pill" style="color:#8A5300;background:#FFE3A3;font-size:12px;vertical-align:middle">프리미엄</span></h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">용인 학교·유치원·어린이집 채용 공고를 매일 모아 드려요.</p>`;
+  if (!JOBS) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">채용 정보를 불러오는 중이에요…</div>`; loadJobs().then(() => { if (location.hash === "#jobs") render(); }).catch(() => { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">채용 정보를 불러오지 못했어요. 잠시 후 다시 열어 주세요.</div>`; }); return; }
+  if (!jobF.gu && region().gu) jobF.gu = region().gu;
+  const t = isoToday();
+  const open = l => (l || []).filter(j => !j.applyEnd || j.applyEnd >= t);
+  const school = open(JOBS.school), care = open(JOBS.care);
+  const seg = `<div class="seg" role="tablist"><button class="${jobF.tab === "school" ? "on" : ""}" role="tab" onclick="pickJob('tab','school')">학교·유치원 ${school.length}</button><button class="${jobF.tab === "care" ? "on" : ""}" role="tab" onclick="pickJob('tab','care')">어린이집 ${care.length}</button></div>`;
+  const chip = (label, on, fn) => `<button class="btn ${on ? "btn-3d" : "btn-soft"}" style="height:36px;font-size:13px;padding:0 13px;flex:0 0 auto" onclick="${fn}">${esc(label)}</button>`;
+  const guChips = `<div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px">${chip("용인 전체", !jobF.gu, "pickJob('gu','')")}${GUS.map(g => chip(g, jobF.gu === g, `pickJob('gu','${g}')`)).join("")}</div>`;
+  let list, extra = "";
+  if (jobF.tab === "school") {
+    extra = `<div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px">${[["", "전체"], ["B", "시간강사·방과후"], ["A", "기간제"], ["C", "교육공무직"], ["K", "유치원"]].map(([k, l]) => chip(l, jobF.kind === k, `pickJob('kind','${k}')`)).join("")}</div>`;
+    list = school.filter(j => (!jobF.kind || (jobF.kind === "K" ? j.kinder : j.cd === jobF.kind)) && (!jobF.gu || ((jobSchool(j) || {}).gu === jobF.gu)));
+  } else {
+    list = care.filter(j => !jobF.gu || j.gu === jobF.gu);
+  }
+  list = list.slice().sort((x, y) => (x.applyEnd || "9").localeCompare(y.applyEnd || "9"));
+  const body = list.length ? `<div class="lift card-pad">${list.slice(0, 80).map(j => jobRow(j, jobF.tab === "care")).join("")}</div>`
+    : `<div class="lift empty">조건에 맞는 공고가 지금은 없어요. 지역을 넓혀 보세요.</div>`;
+  $view.innerHTML = back + seg + guChips + extra + `<p style="font-size:12px;color:var(--muted);margin:2px 0 10px">마감 안 된 공고 ${list.length}건 · 마감 임박 순</p>` + body
+    + `<div class="foot">공고를 누르면 원문에서 자격·서류·접수 방법을 확인할 수 있어요.<br>데이터 · 경기도교육청 구인구직 · 경기육아종합지원센터 인력뱅크 (하루 한 번 갱신${JOBS.updated_at ? " · " + esc(JOBS.updated_at.slice(0, 10)) + " 기준" : ""})</div>`;
+}
 
 // ---------- 관리자 (숨은 화면: 마이 > 버전 5번 누르기) ----------
 const GC_SITE = "https://yongin-edu-app.goatcounter.com";
@@ -1132,7 +1191,7 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r === "jobs" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r !== "admin") { adminOpen = false; ADMIN = null; }
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
@@ -1148,6 +1207,7 @@ function render() {
   else if (r === "library") viewLibrary();
   else if (r === "books") viewBooks();
   else if (r === "events") viewEvents();
+  else if (r === "jobs") viewJobs();
   else if (r.startsWith("library/")) viewLibraryDetail(r.slice(8));
   else if (r === "my") viewMy();
   else viewHome();
