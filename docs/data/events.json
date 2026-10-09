@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-09 18:35:35",
+ "updated_at": "2026-10-10 06:31:13",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
   {
@@ -27,32 +27,6 @@
    "free": true,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16878"
-  },
-  {
-   "id": "16821",
-   "title": "2026 빅3 “행복한만남” ［강진, 김용임, 진성］",
-   "start": "2026-10-09",
-   "end": "2026-10-09",
-   "place": "용인포은아트홀",
-   "time": "오후 1시 / 5시",
-   "grade": "초등학생 이상",
-   "price": "R석 132,000원 / S석 110,000원",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16821"
-  },
-  {
-   "id": "16913",
-   "title": "2026 찾아가는 문화야시장 < 기흥구>",
-   "start": "2026-10-09",
-   "end": "2026-10-09",
-   "place": "보담공원",
-   "time": "17:00~21:00",
-   "grade": "전체관람등급",
-   "price": "무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16913"
   },
   {
    "id": "16877",
