@@ -408,7 +408,15 @@ function minsAgo(ts) { if (!ts) return null; const [d, t] = ts.split(" "); const
 function agoText(n) { return n === null ? "" : n < 1 ? "방금" : n < 60 ? `${n}분 전` : n < 1440 ? `${Math.floor(n / 60)}시간 전` : `${Math.floor(n / 1440)}일 전`; }
 function seatColor(r) { const p = r.total ? r.left / r.total : 0; return p >= 0.3 ? ["#2FC4A4", "#13795F", "여유"] : p >= 0.1 ? ["#FFC53D", "#8A5300", "보통"] : ["#FF7A59", "#C93D22", "혼잡"]; }
 let libGu = null;
-function libList() { const g = libGu ?? (region().gu || ""); return { g, list: ((SEATS && SEATS.libraries) || []).filter(l => !g || l.gu === g) }; }
+// 실시간 좌석을 공개하지 않는 용인시 공공도서관 (홈페이지만 안내)
+const OTHER_LIBS = [["용인중앙도서관","처인구","yongin"],["남사도서관","처인구","namsa"],["모현도서관","처인구","mohyeon"],["양지해밀도서관","처인구","haemil"],["이동꿈틀도서관","처인구","idong"],
+  ["구갈희망누리도서관","기흥구","gugal"],["보정도서관","기흥구","bojeong"],["영덕도서관","기흥구","yeongdeok"],["청덕도서관","기흥구","cheongdeok"],["동천도서관","수지구","dongcheon"],["성복도서관","수지구","seongbok"]];
+function allLibs() {
+  const seat = (SEATS && SEATS.libraries) || [];
+  const names = new Set(seat.map(l => l.name));
+  return seat.concat(OTHER_LIBS.filter(([n]) => !names.has(n)).map(([name, gu, code]) => ({ name, gu, status: "none", message: "", rooms: [], link: "", home: `https://lib.yongin.go.kr/${code}/index.do` })));
+}
+function libList() { const g = libGu ?? (region().gu || ""); return { g, list: allLibs().filter(l => !g || l.gu === g) }; }
 function roomRow(r) {
   const [bar, ink, label] = seatColor(r);
   const pct = r.total ? Math.round(r.used / r.total * 100) : 0;
@@ -417,7 +425,7 @@ function roomRow(r) {
     <div class="seatbar" role="img" aria-label="${esc(r.name)} ${r.total}석 중 ${r.used}석 사용"><i style="width:${pct}%;background:linear-gradient(180deg,${bar},${ink})"></i></div></div>`;
 }
 function libKey(l) { return encodeURIComponent(l.name); }
-function libStatus(l) { const open = l.status === "open" && l.rooms.length; return { open, text: open ? "운영 중" : (l.message || "정보 없음").replace("입니다.", "").replace(/\.$/, "") }; }
+function libStatus(l) { const open = l.status === "open" && l.rooms.length; return { open, text: open ? "운영 중" : l.status === "none" ? "좌석 정보 없음" : (l.message || "정보 없음").replace("입니다.", "").replace(/\.$/, "") }; }
 function libCard(l) {
   const { open, text } = libStatus(l);
   return `<div class="lift lib-card" role="button" tabindex="0" style="cursor:pointer" onclick="go('library/${libKey(l)}')" onkeydown="if(event.key==='Enter')go('library/${libKey(l)}')">
@@ -453,7 +461,7 @@ function roomDetail(r) {
 }
 function viewLibraryDetail(key) {
   const name = decodeURIComponent(key);
-  const l = SEATS && (SEATS.libraries || []).find(x => x.name === name);
+  const l = allLibs().find(x => x.name === name);
   const back = `<button class="back glass" onclick="go('library')" aria-label="뒤로">${icon.back}</button>`;
   if (!l) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">도서관 정보를 찾지 못했어요.</div>`; return; }
   const { open, text } = libStatus(l);
@@ -461,16 +469,18 @@ function viewLibraryDetail(key) {
   const sum = l.rooms.reduce((a, x) => ({ left: a.left + x.left, total: a.total + x.total, used: a.used + x.used }), { left: 0, total: 0, used: 0 });
   $view.innerHTML = `${back}
     <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-top:14px">
-      <div><h1 style="font-size:26px;font-weight:800">${esc(l.name)}</h1><p style="font-size:13px;color:var(--muted);margin-top:4px">${esc(l.gu)} · ${agoText(ago)} 기준</p></div>
+      <div><h1 style="font-size:26px;font-weight:800">${esc(l.name)}</h1><p style="font-size:13px;color:var(--muted);margin-top:4px">${esc(l.gu)}${l.status === "none" ? "" : " · " + agoText(ago) + " 기준"}</p></div>
       <span class="pill ${open ? "pill-mint" : "pill-gray"}">${esc(text)}</span></div>
     ${ago !== null && ago > 90 && open ? `<div class="lift empty" style="margin-top:14px">정보가 ${agoText(ago)} 것이에요. 지금 좌석은 아래 "좌석 배치도"에서 확인하세요.</div>` : ""}
     ${open ? `<div class="lift" style="margin-top:16px;padding:18px;display:flex;justify-content:space-between;align-items:center">
         <div><div style="font-size:13px;color:var(--muted)">전체 빈자리</div><div style="font-size:30px;font-weight:800">${sum.left}<span style="font-size:15px;color:var(--muted);font-weight:600"> / ${sum.total}석</span></div></div>
         <button class="btn btn-soft" style="height:40px;font-size:13px;padding:0 14px" onclick="refreshSeats()">새로고침</button></div>
       <div style="display:flex;flex-direction:column;gap:14px;margin-top:14px">${l.rooms.map(roomDetail).join("")}</div>`
+    : l.status === "none" ? `<div class="lift empty" style="margin-top:16px">이 도서관은 실시간 좌석 정보를 공개하지 않아요.<br>운영시간·휴관일은 도서관 홈페이지에서 확인해 주세요.</div>`
     : `<div class="lift empty" style="margin-top:16px">${esc(l.message || "지금은 좌석 정보가 없어요.")}<br>운영하는 날 다시 확인해 주세요.</div>`}
     ${l.link ? `<a class="btn btn-soft" style="width:100%;height:48px;margin-top:18px;font-size:14px" href="${esc(l.link)}" target="_blank" rel="noopener">좌석 배치도 보기 (도서관 사이트) ↗</a>` : ""}
-    <div class="foot">좌석 수는 운영시간에 30분마다 모아 와요. 몇 번 자리가 비었는지는 도서관 사이트에서 볼 수 있어요.</div>`;
+    ${l.home ? `<a class="btn btn-soft" style="width:100%;height:48px;margin-top:18px;font-size:14px" href="${esc(l.home)}" target="_blank" rel="noopener">도서관 홈페이지 ↗</a>` : ""}
+    ${l.status === "none" ? "" : `<div class="foot">좌석 수는 운영시간에 30분마다 모아 와요. 몇 번 자리가 비었는지는 도서관 사이트에서 볼 수 있어요.</div>`}`;
 }
 async function refreshSeats() { toast("좌석 정보를 다시 불러와요"); await loadSeats(); }
 function viewLibrary() {
@@ -482,7 +492,10 @@ function viewLibrary() {
     <p style="font-size:13px;color:var(--muted);margin:6px 0 14px">열람실 빈자리 · ${agoText(ago)} 기준 · 운영시간에 30분마다 갱신</p>
     <div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px">${chip("", "전체")}${GUS.map(x => chip(x, x)).join("")}</div>
     ${ago !== null && ago > 90 ? `<div class="lift empty" style="margin-bottom:12px">지금은 운영시간이 아니거나 정보가 갱신되지 않았어요. 정확한 좌석은 "실시간 좌석 보기"로 확인하세요.</div>` : ""}
-    <div style="display:flex;flex-direction:column;gap:14px">${list.map(libCard).join("") || `<div class="lift empty">이 지역에는 좌석 정보를 제공하는 도서관이 없어요.</div>`}</div>
+    <div style="display:flex;flex-direction:column;gap:14px">${list.filter(l => l.status !== "none").map(libCard).join("") || `<div class="lift empty">이 지역에는 좌석 정보를 제공하는 도서관이 없어요.</div>`}</div>
+    ${list.some(l => l.status === "none") ? `<section class="section"><div class="sec-head"><h2>좌석 정보가 없는 도서관</h2></div>
+      <div class="lift list">${list.filter(l => l.status === "none").map(l => `<button class="school" onclick="go('library/${libKey(l)}')"><span class="tile t-lilac" style="width:40px;height:40px">${icon.book}</span>
+        <div style="flex:1;min-width:0"><div class="nm">${esc(l.name)}</div><div class="ad">${esc(l.gu)} · 실시간 좌석 미제공</div></div><span style="color:var(--muted)">›</span></button>`).join("")}</div></section>` : ""}
     <div class="foot">데이터 · <a href="${esc(SEATS.source_url || "https://lib.yongin.go.kr")}" target="_blank" rel="noopener">용인시도서관 좌석현황</a><br>좌석 수는 수집 시점 기준이라 실제와 다를 수 있어요.</div>`;
 }
 function pickLibGu(v) { libGu = v; render(); }
