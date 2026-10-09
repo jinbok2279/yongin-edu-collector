@@ -1,0 +1,30 @@
+name: seats
+
+on:
+  schedule:
+    - cron: "*/30 0-13 * * *"   # 한국시간 09:00~22:30, 30분마다
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seats
+  cancel-in-progress: false
+
+jobs:
+  seats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python seats.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/seats.json
+          git diff --cached --quiet && exit 0
+          git commit -m "도서관 좌석 업데이트"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
