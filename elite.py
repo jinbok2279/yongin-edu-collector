@@ -24,9 +24,10 @@ NATIONAL = ["용인한국외국어대학교부설고등학교", "상산고등학
 GIFTED = ["서울과학고등학교", "경기과학고등학교", "대구과학고등학교", "대전과학고등학교", "광주과학고등학교",
           "한국과학영재학교", "세종과학예술영재학교", "인천과학예술영재학교"]
 # 광역단위 자사고 22곳 (2026학년도: 서울 14 + 서울 밖 8) — 나이스 구분값은 일반고 전환이 늦게 반영돼 목록으로 확인
-REGIONAL = {"경희고", "배재고", "보인고", "선덕고", "세화고", "세화여자고", "신일고", "양정고", "이화여자고", "중동고",
-            "중앙고", "한양대사범대학부속고", "현대고", "휘문고",
-            "해운대고", "부일고", "부일외국어고", "계성고", "대전대성고", "대전대신고", "인천포스코고", "안산동산고", "충남삼성고"}
+REGIONAL = {("서울", n) for n in ["경희고", "배재고", "보인고", "선덕고", "세화고", "세화여자고", "신일고", "양정고", "이화여자고",
+                                   "중동고", "중앙고", "한양대사범대학부속고", "한양대학교사범대학부속고", "현대고", "휘문고"]} | {
+    ("부산", "해운대고"), ("부산", "부일고"), ("부산", "부일외국어고"), ("대구", "계성고"), ("대전", "대전대성고"),
+    ("대전", "대전대신고"), ("인천", "인천포스코고"), ("경기", "안산동산고"), ("충남", "충남삼성고")}
 SHORT = {"용인한국외국어대학교부설고등학교": "외대부고"}
 
 
@@ -55,7 +56,7 @@ def page(office, idx):
     raise RuntimeError(f"{office} 접속 실패")
 
 
-def kind_of(r):
+def kind_of(r, sido=""):
     name = r.get("SCHUL_NM") or ""
     short = name.replace("고등학교", "고")
     hs = r.get("HS_SC_NM") or ""
@@ -66,7 +67,7 @@ def kind_of(r):
         return "영재학교"
     if name in NATIONAL:
         return "자사고(전국)"
-    if short in REGIONAL:
+    if (sido, short) in REGIONAL:
         return "자사고(광역)"
     if name.endswith("외국어고등학교") or (hs == "특목고" and "외국어" in line):
         return "외고"
@@ -86,7 +87,7 @@ def main():
         while True:
             rows, total = page(office, idx)
             for r in rows:
-                k = kind_of(r)
+                k = kind_of(r, sido)
                 if r.get("HS_SC_NM"):
                     seen_kinds[(r.get("HS_SC_NM"), r.get("SPCLY_PURPS_HS_ORD_NM") or "")] = seen_kinds.get((r.get("HS_SC_NM"), r.get("SPCLY_PURPS_HS_ORD_NM") or ""), 0) + 1
                 if not k:
