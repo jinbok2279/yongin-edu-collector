@@ -120,8 +120,13 @@ def lib_events():
                 seen.add(m.group(1))
                 lib = txt(a.find("span")) if a else ""
                 title = txt(a)
-                if lib:
-                    title = " ".join(title.replace(lib, " ", 1).split())
+                if lib and title.endswith(lib):
+                    title = title[: -len(lib)].strip()
+                elif lib and title.startswith(lib):
+                    title = title[len(lib):].strip()
+                # 지점 이름이 빠진 꼬리표 정리: "[ ]" 없애고 "[ _대면]" → "[대면]"
+                title = re.sub(r"\[\s*\]\s*", "", title)
+                title = re.sub(r"\[\s*_\s*", "[", title).strip()
                 f = {}
                 for p in li.find_all("p"):
                     k, _, v = txt(p).partition(":")
