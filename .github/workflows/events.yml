@@ -1,0 +1,31 @@
+name: events
+
+on:
+  schedule:
+    - cron: "20 21 * * *"   # 한국시간 매일 06:20
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: events
+  cancel-in-progress: false
+
+jobs:
+  events:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python events.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p docs/data && cp output/events.json docs/data/
+          git add output/events.json docs/data/events.json
+          git diff --cached --quiet && exit 0
+          git commit -m "아이와 함께 행사 업데이트"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
