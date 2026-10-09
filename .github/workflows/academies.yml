@@ -26,7 +26,8 @@ jobs:
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/academies.json
+          mkdir -p docs/data && cp output/academies.json docs/data/
+          git add output/academies.json docs/data/academies.json
           git diff --cached --quiet && exit 0
           git commit -m "학원 목록 업데이트"
           for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
