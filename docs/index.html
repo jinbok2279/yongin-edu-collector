@@ -644,6 +644,7 @@ function viewEvents() {
     <h1 style="font-size:25px;font-weight:800;margin-top:14px">아이와 함께 가요</h1>`;
   if (!EVENTS) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">행사 정보를 불러오는 중이에요…</div>`; return; }
   const c = cityEvents(), l = libEvents();
+  if (evTab === "city" && !c.length && l.length) evTab = "lib";
   const seg = `<div class="seg" role="tablist"><button class="${evTab === "city" ? "on" : ""}" role="tab" onclick="pickEvTab('city')">공연·축제 ${c.length}</button><button class="${evTab === "lib" ? "on" : ""}" role="tab" onclick="pickEvTab('lib')">도서관 프로그램 ${l.length}</button></div>`;
   let body;
   if (evTab === "city") body = c.length ? `<div class="lift card-pad">${c.map(cityRow).join("")}</div>` : `<div class="lift empty">앞으로 두 달 안에 열리는 가족 행사가 아직 없어요.</div>`;
