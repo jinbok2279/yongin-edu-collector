@@ -132,6 +132,7 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
   <button class="navi" data-tab="home"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg></span>홈</button>
   <button class="navi" data-tab="library"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg></span>도서관</button>
   <button class="navi" data-tab="acas"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 5l9 5-9 5z"/><path d="M7 12.5V17c0 1.2 2.2 2.5 5 2.5s5-1.3 5-2.5v-4.5"/><path d="M21 10v5"/></svg></span>학원</button>
+  <button class="navi" data-tab="kinders"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 21v-2.5A4.5 4.5 0 0 1 10 14h4a4.5 4.5 0 0 1 4.5 4.5V21"/><path d="M9 3.6 12 2l3 1.6"/></svg></span>유아</button>
   <button class="navi" data-tab="my"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>마이</button>
 </nav>
 <div class="toast" id="toast" role="status"></div>
@@ -410,7 +411,7 @@ function viewMy() {
       <div class="lift card-pad">
         <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.5.2 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.6 (시범 운영)</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -762,6 +763,102 @@ function acaMore() { const y = window.scrollY; acaShow += 40; render(); window.s
 function pickAcaGu(g) { const f = acaFilter(); f.gu = g; f.dong = ""; acaShow = 40; render(); }
 function pickAcaCat(c) { acaFilter().cat = c; acaShow = 40; render(); }
 
+
+// ---------- 화면: 유치원 (유치원 알리미 공시정보) ----------
+let KINDER = null, kinderLoading = null, kinF = null, kinShow = 40;
+function loadKinder() {
+  if (KINDER) return Promise.resolve(KINDER);
+  if (!kinderLoading) kinderLoading = dataFetch("kinder.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => (KINDER = j)).catch(e => { kinderLoading = null; throw e; });
+  return kinderLoading;
+}
+const AGES = [["3", "만3세"], ["4", "만4세"], ["5", "만5세"], ["mix", "혼합"], ["sp", "특수"]];
+function kTotal(o) { return Object.values(o || {}).reduce((a, b) => a + (b || 0), 0); }
+// 나이를 고르면 그 나이 반 + 혼합반(3~5세 함께)을 같이 셈
+function kCap(k, age) { return age ? (k.capBy[age] || 0) + (["3", "4", "5"].includes(age) ? (k.capBy.mix || 0) : 0) : (k.cap || kTotal(k.capBy)); }
+function kKids(k, age) { return age ? (k.kids[age] || 0) + (["3", "4", "5"].includes(age) ? (k.kids.mix || 0) : 0) : kTotal(k.kids); }
+function kLeft(k, age, exact) { return exact ? Math.max(0, (k.capBy[age] || 0) - (k.kids[age] || 0)) : Math.max(0, kCap(k, age) - kKids(k, age)); }
+function kPublic(k) { return /공립|국립/.test(k.type); }
+function kTerm(t) { return t && t.length === 5 ? `${t.slice(0, 4)}년 ${t[4]}차 공시` : ""; }
+function kinFilter() { if (!kinF) { const rg = region(); kinF = { gu: rg.gu || "", dong: "", type: "전체", age: "", q: "" }; } return kinF; }
+function viewKinders() {
+  const head = `<h1 style="font-size:27px;font-weight:800">유치원 찾기</h1>
+    <div class="seg" role="tablist"><button class="on" role="tab">유치원</button><button role="tab" onclick="toast('어린이집 정보는 인증키 승인 후 추가돼요')">어린이집 · 준비 중</button></div>`;
+  if (!KINDER) { $view.innerHTML = head + `<div class="lift empty">유치원 정보를 불러오는 중이에요…</div>`; loadKinder().then(() => { if (location.hash === "#kinders") render(); }).catch(() => { $view.innerHTML = head + `<div class="lift empty">유치원 정보를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.</div>`; }); return; }
+  const f = kinFilter();
+  const q = f.q.replace(/\s/g, "");
+  const list = KINDER.kinders.filter(k => (!f.gu || k.gu === f.gu) && (!f.dong || k.dong === f.dong)
+    && (f.type === "전체" || (f.type === "공립" ? kPublic(k) : !kPublic(k)))
+    && (!f.age || kCap(k, f.age) > 0)
+    && (!q || (k.n + k.addr + k.dong).replace(/\s/g, "").includes(q)))
+    .sort((a, b) => f.age ? kLeft(b, f.age) - kLeft(a, f.age) : 0);
+  const dongs = [...new Set(KINDER.kinders.filter(k => !f.gu || k.gu === f.gu).map(k => k.dong).filter(Boolean))].sort((x, y) => x.localeCompare(y));
+  const chip = (label, on, fn) => `<button class="btn ${on ? "btn-3d" : "btn-soft"}" style="height:36px;font-size:13px;padding:0 13px;flex:0 0 auto" onclick="${fn}">${esc(label)}</button>`;
+  const cap = list.reduce((a, k) => a + kCap(k, f.age), 0);
+  const kids = list.reduce((a, k) => a + kKids(k, f.age), 0);
+  const ageLabel = f.age ? (AGES.find(a => a[0] === f.age) || [])[1] : "";
+  const rows = list.slice(0, kinShow).map(k => {
+    const left = kLeft(k, f.age), c = kCap(k, f.age);
+    const pct = c ? Math.round((c - left) / c * 100) : 0;
+    const badge = [k.bus && k.bus.yn === "Y" ? "통학버스" : "", k.after && k.after.cls ? "방과후" : ""].filter(Boolean).map(b => `<span class="pill pill-gray" style="font-size:10px;padding:2px 7px">${b}</span>`).join(" ");
+    return `<button class="school" onclick="go('kinder/${encodeURIComponent(k.id)}')"><span class="pill ${kPublic(k) ? "pill-mint" : "pill-gray"}" style="min-width:44px;text-align:center">${kPublic(k) ? "공립" : "사립"}</span>
+      <div style="flex:1;min-width:0"><div class="nm">${esc(k.n)}</div><div class="ad">${esc(k.dong || k.gu)} · ${ageLabel ? ageLabel + " " : ""}정원 ${c} · <b style="color:${left ? "var(--mint-ink,#13795F)" : "var(--coral-ink)"}">빈자리 ${left}</b> ${badge}</div>
+      <div class="seatbar" style="margin-top:6px;height:6px"><i style="width:${pct}%;background:${pct >= 90 ? "#FF7A59" : pct >= 70 ? "#FFC53D" : "#2FC4A4"}"></i></div></div><span style="color:var(--muted)">›</span></button>`;
+  }).join("");
+  $view.innerHTML = `${head}
+    <label class="search lift">${icon.search}<input id="kinq" placeholder="유치원 이름·동 검색" value="${esc(f.q)}" aria-label="유치원 검색"></label>
+    <div style="display:flex;gap:8px;overflow-x:auto;padding:12px 2px 4px">${chip("용인 전체", !f.gu, "pickKinGu('')")}${GUS.map(g => chip(g, f.gu === g, `pickKinGu('${g}')`)).join("")}</div>
+    ${f.gu && dongs.length ? `<div style="padding:6px 2px 4px"><select id="kindong" class="lift" style="width:100%;height:44px;border:0;border-radius:14px;padding:0 14px;font:inherit;font-size:14px;background:#fff" aria-label="동·읍·면 선택"><option value="">${esc(f.gu)} 전체 동·읍·면</option>${dongs.map(d => `<option value="${esc(d)}" ${d === f.dong ? "selected" : ""}>${esc(d)}</option>`).join("")}</select></div>` : ""}
+    <div style="display:flex;gap:8px;overflow-x:auto;padding:8px 2px 4px">${["전체", "공립", "사립"].map(t => chip(t, f.type === t, `pickKinType('${t}')`)).join("")}</div>
+    <div style="display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px">${chip("모든 나이", !f.age, "pickKinAge('')")}${AGES.slice(0, 3).map(([a, l]) => chip(l + " 빈자리", f.age === a, `pickKinAge('${a}')`)).join("")}</div>
+    <div class="lift" style="padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div><div style="font-size:13px;color:var(--muted)">${esc((f.dong || f.gu || "용인시") + (f.type === "전체" ? "" : " " + f.type))}</div><div style="font-size:24px;font-weight:800">${list.length}<span style="font-size:14px;color:var(--muted);font-weight:600">곳</span></div></div>
+      <div style="text-align:right"><div style="font-size:12px;color:var(--muted)">${ageLabel || "전체"} 정원 ${cap.toLocaleString()} · 현원 ${kids.toLocaleString()}</div><div style="font-size:20px;font-weight:800;color:var(--indigo)">빈자리 ${Math.max(0, cap - kids).toLocaleString()}</div></div></div>
+    <div class="lift list" style="margin-top:14px">${rows || `<div class="empty">조건에 맞는 유치원이 없어요.</div>`}</div>
+    ${list.length > kinShow ? `<button class="btn btn-soft" style="width:100%;height:46px;margin-top:12px" onclick="kinMore()">더 보기 (${list.length - kinShow}곳 더)</button>` : ""}
+    <a class="btn btn-soft" style="width:100%;height:46px;margin-top:16px;font-size:14px" href="https://www.go-firstschool.go.kr" target="_blank" rel="noopener">유치원 입학 신청 · 처음학교로 ↗</a>
+    <div class="foot">데이터 · ${esc(KINDER.source || "유치원 알리미")} · ${esc(kTerm((KINDER.kinders[0] || {}).term))}<br>빈자리 = 정원 − 현원 (공시 시점 기준이라 지금과 다를 수 있어요)${f.age ? "<br>나이를 고르면 혼합반(만3~5세 함께) 자리도 같이 세요." : ""}</div>`;
+  const qi = document.getElementById("kinq");
+  qi.addEventListener("input", e => { f.q = e.target.value; kinShow = 40; clearTimeout(qi._t); qi._t = setTimeout(() => { const pos = qi.selectionStart; render(); const n = document.getElementById("kinq"); n.focus(); try { n.setSelectionRange(pos, pos); } catch (er) {} }, 350); });
+  const ds = document.getElementById("kindong");
+  if (ds) ds.addEventListener("change", e => { f.dong = e.target.value; kinShow = 40; render(); });
+}
+function kinMore() { const y = window.scrollY; kinShow += 40; render(); window.scrollTo(0, y); }
+function pickKinGu(g) { const f = kinFilter(); f.gu = g; f.dong = ""; kinShow = 40; render(); }
+function pickKinType(t) { kinFilter().type = t; kinShow = 40; render(); }
+function pickKinAge(a) { kinFilter().age = a; kinShow = 40; render(); }
+function viewKinder(id) {
+  const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>`;
+  if (!KINDER) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">불러오는 중이에요…</div>`; loadKinder().then(() => { if (location.hash.startsWith("#kinder/")) render(); }).catch(() => {}); return; }
+  const k = KINDER.kinders.find(x => x.id === id);
+  if (!k) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">유치원 정보를 찾지 못했어요.</div>`; return; }
+  const row = (a, b) => b ? `<div class="row"><span>${a}</span><span class="val" style="text-align:right;max-width:65%">${b}</span></div>` : "";
+  const od = k.open && k.open.length === 8 ? `${k.open.slice(0, 4)}.${k.open.slice(4, 6)}.${k.open.slice(6)}` : "";
+  const ageRows = AGES.filter(([a]) => (k.capBy[a] || k.kids[a] || k.cls[a])).map(([a, l]) => `<tr><td>${l}</td><td>${k.cls[a] || 0}</td><td>${k.capBy[a] || 0}</td><td>${k.kids[a] || 0}</td><td><b style="color:${kLeft(k, a, true) ? "#13795F" : "var(--coral-ink)"}">${kLeft(k, a, true)}</b></td></tr>`).join("");
+  const map = "https://map.naver.com/p/search/" + encodeURIComponent(k.n);
+  const hp = k.hp && /^https?:\/\//.test(k.hp) ? k.hp : (k.hp ? "http://" + k.hp : "");
+  $view.innerHTML = `${back}
+    <div style="display:flex;gap:14px;align-items:center;margin-top:14px"><span class="tile ${kPublic(k) ? "t-mint" : "t-lilac"}" style="width:54px;height:54px;font-size:22px;font-weight:800">${esc(k.n[0])}</span>
+      <div style="min-width:0"><h1 style="font-size:23px;font-weight:800;line-height:1.3">${esc(k.n)}</h1><p style="font-size:13px;color:var(--muted);margin-top:4px">${esc(k.type)} · ${esc(k.gu)} ${esc(k.dong)}</p></div></div>
+    <div class="lift" style="margin-top:18px;padding:16px 18px;display:flex;justify-content:space-around;text-align:center">
+      <div><div style="font-size:12px;color:var(--muted)">정원</div><div style="font-size:22px;font-weight:800">${k.cap || kTotal(k.capBy)}</div></div>
+      <div><div style="font-size:12px;color:var(--muted)">현원</div><div style="font-size:22px;font-weight:800">${kTotal(k.kids)}</div></div>
+      <div><div style="font-size:12px;color:var(--muted)">빈자리</div><div style="font-size:22px;font-weight:800;color:var(--indigo)">${kLeft(k)}</div></div></div>
+    <section class="section"><div class="sec-head"><h2>나이별 현황</h2></div>
+      <div class="lift" style="padding:8px 14px"><table style="width:100%;border-collapse:collapse;font-size:14px;text-align:center"><thead><tr style="color:var(--muted);font-size:12px"><th style="padding:8px 0;text-align:center">나이</th><th>학급</th><th>정원</th><th>현원</th><th>빈자리</th></tr></thead><tbody>${ageRows || `<tr><td colspan="5" style="padding:12px;color:var(--muted)">정보 없음</td></tr>`}</tbody></table></div></section>
+    <div class="lift card-pad" style="margin-top:14px">
+      ${row("운영시간", esc(k.time))}${row("방과후 과정", k.after && k.after.cls ? `${k.after.cls}학급 · ${k.after.kids}명${k.after.time ? " · " + esc(k.after.time) : ""}` : "없음")}
+      ${row("통학버스", k.bus ? (k.bus.yn === "Y" ? `운영 (${k.bus.cnt}대)` : "미운영") : "")}${row("원장", esc(k.head))}${row("개원일", od)}
+      ${row("주소", esc(k.addr))}${row("전화", k.tel ? `<a href="tel:${esc(k.tel)}">${esc(k.tel)}</a>` : "")}
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <a class="btn btn-soft" style="flex:1;height:46px;font-size:14px" href="${map}" target="_blank" rel="noopener">지도 ↗</a>
+      ${hp ? `<a class="btn btn-soft" style="flex:1;height:46px;font-size:14px" href="${esc(hp)}" target="_blank" rel="noopener">홈페이지 ↗</a>` : ""}
+    </div>
+    <a class="btn btn-3d" style="width:100%;height:50px;margin-top:10px;font-size:14px" href="https://www.go-firstschool.go.kr" target="_blank" rel="noopener">입학 신청 · 처음학교로 ↗</a>
+    <div class="foot">데이터 · 유치원 알리미 ${esc(kTerm(k.term))}<br>원비(교육비)는 유치원 알리미에서 확인해 주세요.</div>`;
+}
+
 // ---------- 관리자 (숨은 화면: 마이 > 버전 5번 누르기) ----------
 const GC_SITE = "https://yongin-edu-app.goatcounter.com";
 const KEY_ADMIN = "edu.admin";
@@ -786,7 +883,7 @@ function adminTap() {
   adminTaps++; clearTimeout(adminTapTimer); adminTapTimer = setTimeout(() => adminTaps = 0, 1500);
   if (adminTaps >= 5) { adminTaps = 0; go("admin"); }
 }
-const PATH_NAMES = { "/acas": "학원 찾기", "/home": "홈", "/schools": "학교 일정", "/library": "도서관 좌석", "/books": "인기 도서", "/my": "마이", "/region": "지역 설정",
+const PATH_NAMES = { "/kinders": "유치원 찾기", "/acas": "학원 찾기", "/home": "홈", "/schools": "학교 일정", "/library": "도서관 좌석", "/books": "인기 도서", "/my": "마이", "/region": "지역 설정",
   "/kid/new": "아이 추가 화면", "/kid/edit": "아이 수정 화면", "/admin": "관리자" };
 function pathName(p) {
   if (PATH_NAMES[p]) return PATH_NAMES[p];
@@ -908,7 +1005,7 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "my" || r === "region" || r === "admin" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r !== "admin") { adminOpen = false; ADMIN = null; }
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
@@ -916,6 +1013,8 @@ function render() {
   else if (r === "admin") viewAdmin();
   else if (r.startsWith("aca/")) viewAca(r.slice(4));
   else if (r === "acas") viewAcaList();
+  else if (r === "kinders") viewKinders();
+  else if (r.startsWith("kinder/")) viewKinder(decodeURIComponent(r.slice(7)));
   else if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
   else if (r === "schools") viewSchools();
   else if (r === "library") viewLibrary();
