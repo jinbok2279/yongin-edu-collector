@@ -100,6 +100,12 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 .room{display:flex;flex-direction:column;gap:6px}
 .room-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px}
 .room-top b{font-size:20px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:#F5F7FC;border-radius:14px;padding:10px 6px;text-align:center;box-shadow:inset 0 1px 2px rgba(20,26,46,.06)}
+.stat .k{font-size:11px;color:var(--muted)}.stat .v{font-size:18px;font-weight:800;margin-top:2px}
+.dots{display:grid;grid-template-columns:repeat(auto-fill,minmax(11px,1fr));gap:3px}
+.dots i{display:block;aspect-ratio:1;border-radius:3px;border:1.5px solid var(--dot);background:#fff}
+.dots i.u{background:var(--dot);border-color:var(--dot-ink)}
 .loading{padding:60px 0;text-align:center;color:var(--muted);font-size:14px}
 </style>
 </head>
@@ -410,17 +416,63 @@ function roomRow(r) {
     <span><b style="color:${ink}">${r.left}</b><span style="font-size:12px;color:var(--muted)"> / ${r.total}석 남음${r.wait ? " · 대기 " + r.wait : ""}</span></span></div>
     <div class="seatbar" role="img" aria-label="${esc(r.name)} ${r.total}석 중 ${r.used}석 사용"><i style="width:${pct}%;background:linear-gradient(180deg,${bar},${ink})"></i></div></div>`;
 }
+function libKey(l) { return encodeURIComponent(l.name); }
+function libStatus(l) { const open = l.status === "open" && l.rooms.length; return { open, text: open ? "운영 중" : (l.message || "정보 없음").replace("입니다.", "").replace(/\.$/, "") }; }
 function libCard(l) {
-  const open = l.status === "open" && l.rooms.length;
-  return `<div class="lift lib-card">
+  const { open, text } = libStatus(l);
+  return `<div class="lift lib-card" role="button" tabindex="0" style="cursor:pointer" onclick="go('library/${libKey(l)}')" onkeydown="if(event.key==='Enter')go('library/${libKey(l)}')">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
       <div style="display:flex;gap:12px;align-items:center"><span class="tile ${open ? "t-mint" : "t-lilac"}" style="width:42px;height:42px">${icon.book}</span>
         <div><div style="font-size:16px;font-weight:800">${esc(l.name)}</div><div style="font-size:12px;color:var(--muted)">${esc(l.gu)}</div></div></div>
-      <span class="pill ${open ? "pill-mint" : "pill-gray"}">${open ? "운영 중" : esc(l.message || "정보 없음").replace("입니다.", "")}</span></div>
+      <span class="pill ${open ? "pill-mint" : "pill-gray"}">${esc(text)}</span></div>
     ${open ? l.rooms.map(roomRow).join("") : ""}
-    ${l.link ? `<a class="btn btn-soft" style="height:40px;font-size:13px" href="${esc(l.link)}" target="_blank" rel="noopener">실시간 좌석 보기 ↗</a>` : ""}
+    <div class="btn btn-soft" style="height:40px;font-size:13px">자세히 보기 ›</div>
   </div>`;
 }
+// 좌석 칸: 사용 좌석은 채운 칸, 빈 좌석은 빈 칸 (실제 자리 위치는 아님)
+function seatDots(r) {
+  const [bar, ink] = seatColor(r);
+  const total = Math.min(r.total, 400), used = Math.round(r.total ? r.used / r.total * total : 0);
+  let s = "";
+  for (let i = 0; i < total; i++) s += `<i class="${i < used ? "u" : ""}"></i>`;
+  return `<div class="dots" style="--dot:${bar};--dot-ink:${ink}" aria-hidden="true">${s}</div>`;
+}
+function roomDetail(r) {
+  const [bar, ink, label] = seatColor(r);
+  const pct = r.total ? Math.round(r.used / r.total * 100) : 0;
+  const stat = (k, v, c) => `<div class="stat"><div class="k">${k}</div><div class="v" ${c ? `style="color:${c}"` : ""}>${v}</div></div>`;
+  return `<div class="lift lib-card">
+    <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:17px;font-weight:800">${esc(r.name)}</div>
+      <span class="pill" style="color:${ink};background:${bar}22">${label} · ${pct}% 사용</span></div>
+    <div style="display:flex;align-items:baseline;gap:6px"><b style="font-size:40px;font-weight:800;color:${ink};line-height:1">${r.left}</b><span style="color:var(--muted);font-size:14px">석 남음 / 전체 ${r.total}석</span></div>
+    <div class="seatbar" role="img" aria-label="${esc(r.name)} ${r.total}석 중 ${r.used}석 사용"><i style="width:${pct}%;background:linear-gradient(180deg,${bar},${ink})"></i></div>
+    <div class="stats">${stat("전체", r.total)}${stat("사용", r.used)}${stat("잔여", r.left, ink)}${stat("대기", r.wait || 0)}</div>
+    ${seatDots(r)}
+    <div style="font-size:11px;color:var(--muted)">■ 사용 중 &nbsp;□ 빈자리 · 칸은 좌석 수를 나타낸 것으로 실제 자리 위치와는 달라요</div>
+  </div>`;
+}
+function viewLibraryDetail(key) {
+  const name = decodeURIComponent(key);
+  const l = SEATS && (SEATS.libraries || []).find(x => x.name === name);
+  const back = `<button class="back glass" onclick="go('library')" aria-label="뒤로">${icon.back}</button>`;
+  if (!l) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">도서관 정보를 찾지 못했어요.</div>`; return; }
+  const { open, text } = libStatus(l);
+  const ago = minsAgo(SEATS.updated_at);
+  const sum = l.rooms.reduce((a, x) => ({ left: a.left + x.left, total: a.total + x.total, used: a.used + x.used }), { left: 0, total: 0, used: 0 });
+  $view.innerHTML = `${back}
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-top:14px">
+      <div><h1 style="font-size:26px;font-weight:800">${esc(l.name)}</h1><p style="font-size:13px;color:var(--muted);margin-top:4px">${esc(l.gu)} · ${agoText(ago)} 기준</p></div>
+      <span class="pill ${open ? "pill-mint" : "pill-gray"}">${esc(text)}</span></div>
+    ${ago !== null && ago > 90 && open ? `<div class="lift empty" style="margin-top:14px">정보가 ${agoText(ago)} 것이에요. 지금 좌석은 아래 "좌석 배치도"에서 확인하세요.</div>` : ""}
+    ${open ? `<div class="lift" style="margin-top:16px;padding:18px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:13px;color:var(--muted)">전체 빈자리</div><div style="font-size:30px;font-weight:800">${sum.left}<span style="font-size:15px;color:var(--muted);font-weight:600"> / ${sum.total}석</span></div></div>
+        <button class="btn btn-soft" style="height:40px;font-size:13px;padding:0 14px" onclick="refreshSeats()">새로고침</button></div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:14px">${l.rooms.map(roomDetail).join("")}</div>`
+    : `<div class="lift empty" style="margin-top:16px">${esc(l.message || "지금은 좌석 정보가 없어요.")}<br>운영하는 날 다시 확인해 주세요.</div>`}
+    ${l.link ? `<a class="btn btn-soft" style="width:100%;height:48px;margin-top:18px;font-size:14px" href="${esc(l.link)}" target="_blank" rel="noopener">좌석 배치도 보기 (도서관 사이트) ↗</a>` : ""}
+    <div class="foot">좌석 수는 운영시간에 30분마다 모아 와요. 몇 번 자리가 비었는지는 도서관 사이트에서 볼 수 있어요.</div>`;
+}
+async function refreshSeats() { toast("좌석 정보를 다시 불러와요"); await loadSeats(); }
 function viewLibrary() {
   if (!SEATS) { $view.innerHTML = `<h1 style="font-size:27px;font-weight:800">도서관</h1><div class="lift empty" style="margin-top:16px">좌석 정보를 아직 불러오지 못했어요. 잠시 후 다시 열어 주세요.</div>`; return; }
   const { g, list } = libList();
@@ -441,7 +493,7 @@ function homeLibrary() {
   if (!open.length) return "";
   const rows = open.map(l => { const r = l.rooms.reduce((a, x) => ({ left: a.left + x.left, total: a.total + x.total, used: a.used + x.used, wait: 0 }), { left: 0, total: 0, used: 0 });
     const [bar, ink] = seatColor(r);
-    return `<button class="school" onclick="go('library')"><span class="tile t-mint" style="width:40px;height:40px">${icon.book}</span>
+    return `<button class="school" onclick="go('library/${libKey(l)}')"><span class="tile t-mint" style="width:40px;height:40px">${icon.book}</span>
       <div style="flex:1;min-width:0"><div class="nm">${esc(l.name)}</div><div class="seatbar" style="margin-top:8px;height:8px"><i style="width:${r.total ? Math.round(r.used / r.total * 100) : 0}%;background:${bar}"></i></div></div>
       <span style="font-size:13px;color:var(--muted);white-space:nowrap"><b style="font-size:17px;color:${ink}">${r.left}</b>석 남음</span></button>`; }).join("");
   return `<section class="section"><div class="sec-head"><h2>${esc(g || "용인")} 도서관 빈자리</h2><button onclick="go('library')">전체보기</button></div>
@@ -502,13 +554,14 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "schools" : r === "library" ? "library" : r === "my" || r === "region" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "schools" : r.startsWith("library") ? "library" : r === "my" || r === "region" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
   else if (r === "region") viewRegion();
   else if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
   else if (r === "schools") viewSchools();
   else if (r === "library") viewLibrary();
+  else if (r.startsWith("library/")) viewLibraryDetail(r.slice(8));
   else if (r === "my") viewMy();
   else viewHome();
   window.scrollTo(0, 0);
