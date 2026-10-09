@@ -417,7 +417,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.2 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.3 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -1123,7 +1123,7 @@ function viewAbout() {
     ${sec("무료로 운영해요", li(["모든 기능을 <b>무료</b>로 제공해요. 회원가입이나 결제가 없어요.", "용인시청, 교육청 등 <b>공공기관이 운영하는 서비스가 아니에요.</b> 개인이 공공 자료를 모아 보여 드리는 서비스예요."]))}
     ${sec("개인정보를 받지 않아요", `이름, 전화번호, 이메일, 주소처럼 <b>개인을 알아볼 수 있는 정보는 받지도, 저장하지도 않아요.</b> 회원가입도 없어요.`)}
     ${sec("어떤 정보를 어디에, 무엇에 쓰나요", [
-      ["아이 별명 · 학교 · 학년 · 학원, 관심 지역", "<b>이 휴대폰 안</b>(브라우저 저장 공간)", "홈 화면에 우리 아이 학교 일정, 학원, 고입 시기를 보여 주는 데만 써요. 서버로 보내지 않아서 <b>개발자도 볼 수 없어요.</b>", "직접 지우거나 앱·브라우저 데이터를 지울 때까지"],
+      ["아이 별명 · 학교 · 학년 · 학원, 관심 지역", "<b>사용하시는 분 본인의 휴대폰(또는 컴퓨터)</b> 브라우저 안. 다른 기기나 다른 브라우저에서는 보이지 않아요.", "홈 화면에 우리 아이 학교 일정, 학원, 고입 시기를 보여 주는 데만 써요. 서버로 보내지 않아서 <b>개발자도 볼 수 없어요.</b>", "직접 지우거나 앱·브라우저 데이터를 지울 때까지"],
       ["방문 통계: 본 화면, 누른 메뉴, 방문 시각, 브라우저·기기 종류, 화면 크기, 접속 국가, 들어온 경로", "<b>GoatCounter</b>(쿠키를 쓰지 않는 방문 통계 서비스)", "하루 방문자 수와 많이 쓰는 기능을 알아보고 서비스를 고치는 데만 써요. IP 주소와 개인 식별 정보는 저장하지 않아서 누가 봤는지 알 수 없어요.", "통계 집계용으로 보관"],
       ["앱 화면·데이터를 받을 때 생기는 접속 기록(IP 등)", "<b>GitHub Pages</b>(앱이 올라가 있는 곳), <b>Google Fonts</b>(글꼴)", "화면과 글꼴을 보내 주는 과정에서 각 회사가 보안·운영 목적으로 기록할 수 있어요. 개발자는 이 기록을 받지 않아요.", "각 회사의 정책에 따름"]
     ].map(([what, where, why, keep]) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)"><div style="font-weight:800;margin-bottom:6px">${what}</div>
