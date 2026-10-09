@@ -696,7 +696,7 @@ function pickKid(id) { homeKid = id; render(); }
 // ---------- 화면: 학원 찾기 ----------
 const ACA_CATS = [
   ["전체", null],
-  ["수학", a => /수학|매스|math|셈/i.test(acaText(a))],
+  ["수학", a => /(?<!재)수학|매스|math|셈/i.test(acaText(a))],
   ["영어", a => /영어|잉글|english|어학원/i.test(acaText(a))],
   ["국어·논술", a => /국어|논술|독서|글쓰기|한자/.test(acaText(a)) && a.r !== "독서실"],
   ["과학", a => /과학|사이언스|science/i.test(acaText(a))],
