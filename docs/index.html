@@ -94,6 +94,12 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 .navi.on .ic{color:#fff;background:linear-gradient(155deg,#9AA4FF,#5B6BFF 45%,#3B47D6);box-shadow:inset 0 2px 1px rgba(255,255,255,.55),inset 0 -4px 8px rgba(0,0,0,.16),0 8px 14px -6px rgba(75,91,240,.6)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;background:#141A2E;color:#fff;font-size:13px;padding:10px 16px;border-radius:14px;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:.92}
+.seatbar{height:12px;border-radius:6px;background:#EEF0F6;box-shadow:inset 0 2px 3px rgba(20,26,46,.12);overflow:hidden}
+.seatbar i{display:block;height:100%;border-radius:6px}
+.lib-card{padding:18px;display:flex;flex-direction:column;gap:12px}
+.room{display:flex;flex-direction:column;gap:6px}
+.room-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px}
+.room-top b{font-size:20px;font-weight:800}
 .loading{padding:60px 0;text-align:center;color:var(--muted);font-size:14px}
 </style>
 </head>
@@ -104,6 +110,7 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 <nav class="nav glass" aria-label="주요 메뉴">
   <button class="navi" data-tab="home"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg></span>홈</button>
   <button class="navi" data-tab="schools"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>학교 일정</button>
+  <button class="navi" data-tab="library"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg></span>도서관</button>
   <button class="navi" data-tab="my"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>마이</button>
 </nav>
 <div class="toast" id="toast" role="status"></div>
@@ -111,6 +118,9 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 <script>
 const DATA_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/latest.json";
 const KEY_SCHOOL = "edu.school";
+const SEATS_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/seats.json";
+const KEY_SEATS = "edu.seats";
+let SEATS = null;
 const KEY_DATA = "edu.data";
 const KEY_REGION = "edu.region";
 const GUS = ["수지구", "기흥구", "처인구"];
@@ -217,6 +227,7 @@ const icon = {
   pin: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4B5BF0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
   back: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
   search: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B5BF0" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  book: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>',
   star: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>'
 };
 
@@ -277,7 +288,7 @@ function viewHome() {
   const install = installEvt ? `<button class="btn btn-soft" style="height:40px;font-size:12px" onclick="doInstall()">앱으로 설치</button>` : "";
   $view.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <button class="chip glass" onclick="go('region')">${icon.pin} ${esc(regionLabel())} · ${levelLabel()} ▾</button>${install}</div>
-    ${hero}${mine}${regionSec}${soon}${footer()}`;
+    ${hero}${mine}${homeLibrary()}${regionSec}${soon}${footer()}`;
 }
 
 // ---------- 화면: 학교 목록 ----------
@@ -386,6 +397,57 @@ function pickGu(gu) { setRegion(gu, ""); render(); }
 function pickLevel(k) { store(KEY_LEVEL, k); const r = region(); if (r.dong && !levelSchools().some(s => s.gu === r.gu && dongOf(s) === r.dong)) setRegion(r.gu, ""); render(); }
 function pickDong(d) { setRegion(region().gu, d); render(); }
 
+// ---------- 화면: 도서관 ----------
+function minsAgo(ts) { if (!ts) return null; const [d, t] = ts.split(" "); const [y, m, dd] = d.split("-").map(Number); const [hh, mi] = t.split(":").map(Number); return Math.max(0, Math.round((Date.now() - new Date(y, m - 1, dd, hh, mi).getTime()) / 60000)); }
+function agoText(n) { return n === null ? "" : n < 1 ? "방금" : n < 60 ? `${n}분 전` : n < 1440 ? `${Math.floor(n / 60)}시간 전` : `${Math.floor(n / 1440)}일 전`; }
+function seatColor(r) { const p = r.total ? r.left / r.total : 0; return p >= 0.3 ? ["#2FC4A4", "#13795F", "여유"] : p >= 0.1 ? ["#FFC53D", "#8A5300", "보통"] : ["#FF7A59", "#C93D22", "혼잡"]; }
+let libGu = null;
+function libList() { const g = libGu ?? (region().gu || ""); return { g, list: ((SEATS && SEATS.libraries) || []).filter(l => !g || l.gu === g) }; }
+function roomRow(r) {
+  const [bar, ink, label] = seatColor(r);
+  const pct = r.total ? Math.round(r.used / r.total * 100) : 0;
+  return `<div class="room"><div class="room-top"><span>${esc(r.name)} <span class="pill" style="color:${ink};background:${bar}22;margin-left:4px">${label}</span></span>
+    <span><b style="color:${ink}">${r.left}</b><span style="font-size:12px;color:var(--muted)"> / ${r.total}석 남음${r.wait ? " · 대기 " + r.wait : ""}</span></span></div>
+    <div class="seatbar" role="img" aria-label="${esc(r.name)} ${r.total}석 중 ${r.used}석 사용"><i style="width:${pct}%;background:linear-gradient(180deg,${bar},${ink})"></i></div></div>`;
+}
+function libCard(l) {
+  const open = l.status === "open" && l.rooms.length;
+  return `<div class="lift lib-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <div style="display:flex;gap:12px;align-items:center"><span class="tile ${open ? "t-mint" : "t-lilac"}" style="width:42px;height:42px">${icon.book}</span>
+        <div><div style="font-size:16px;font-weight:800">${esc(l.name)}</div><div style="font-size:12px;color:var(--muted)">${esc(l.gu)}</div></div></div>
+      <span class="pill ${open ? "pill-mint" : "pill-gray"}">${open ? "운영 중" : esc(l.message || "정보 없음").replace("입니다.", "")}</span></div>
+    ${open ? l.rooms.map(roomRow).join("") : ""}
+    ${l.link ? `<a class="btn btn-soft" style="height:40px;font-size:13px" href="${esc(l.link)}" target="_blank" rel="noopener">실시간 좌석 보기 ↗</a>` : ""}
+  </div>`;
+}
+function viewLibrary() {
+  if (!SEATS) { $view.innerHTML = `<h1 style="font-size:27px;font-weight:800">도서관</h1><div class="lift empty" style="margin-top:16px">좌석 정보를 아직 불러오지 못했어요. 잠시 후 다시 열어 주세요.</div>`; return; }
+  const { g, list } = libList();
+  const ago = minsAgo(SEATS.updated_at);
+  const chip = (v, label) => `<button class="btn ${g === v ? "btn-3d" : "btn-soft"}" style="height:38px;font-size:13px;padding:0 14px;flex:0 0 auto" onclick="pickLibGu('${v}')">${label}</button>`;
+  $view.innerHTML = `<h1 style="font-size:27px;font-weight:800">도서관</h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 14px">열람실 빈자리 · ${agoText(ago)} 기준 · 운영시간에 30분마다 갱신</p>
+    <div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px">${chip("", "전체")}${GUS.map(x => chip(x, x)).join("")}</div>
+    ${ago !== null && ago > 90 ? `<div class="lift empty" style="margin-bottom:12px">지금은 운영시간이 아니거나 정보가 갱신되지 않았어요. 정확한 좌석은 "실시간 좌석 보기"로 확인하세요.</div>` : ""}
+    <div style="display:flex;flex-direction:column;gap:14px">${list.map(libCard).join("") || `<div class="lift empty">이 지역에는 좌석 정보를 제공하는 도서관이 없어요.</div>`}</div>
+    <div class="foot">데이터 · <a href="${esc(SEATS.source_url || "https://lib.yongin.go.kr")}" target="_blank" rel="noopener">용인시도서관 좌석현황</a><br>좌석 수는 수집 시점 기준이라 실제와 다를 수 있어요.</div>`;
+}
+function pickLibGu(v) { libGu = v; render(); }
+function homeLibrary() {
+  if (!SEATS) return "";
+  const { g, list } = libList();
+  const open = list.filter(l => l.status === "open" && l.rooms.length).slice(0, 3);
+  if (!open.length) return "";
+  const rows = open.map(l => { const r = l.rooms.reduce((a, x) => ({ left: a.left + x.left, total: a.total + x.total, used: a.used + x.used, wait: 0 }), { left: 0, total: 0, used: 0 });
+    const [bar, ink] = seatColor(r);
+    return `<button class="school" onclick="go('library')"><span class="tile t-mint" style="width:40px;height:40px">${icon.book}</span>
+      <div style="flex:1;min-width:0"><div class="nm">${esc(l.name)}</div><div class="seatbar" style="margin-top:8px;height:8px"><i style="width:${r.total ? Math.round(r.used / r.total * 100) : 0}%;background:${bar}"></i></div></div>
+      <span style="font-size:13px;color:var(--muted);white-space:nowrap"><b style="font-size:17px;color:${ink}">${r.left}</b>석 남음</span></button>`; }).join("");
+  return `<section class="section"><div class="sec-head"><h2>${esc(g || "용인")} 도서관 빈자리</h2><button onclick="go('library')">전체보기</button></div>
+    <div class="lift list">${rows}</div></section>`;
+}
+
 // ---------- 화면: 아이 추가 / 수정 ----------
 function viewKid(arg, pre) {
   const list = kids();
@@ -440,12 +502,13 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "schools" : r === "my" || r === "region" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "schools" : r === "library" ? "library" : r === "my" || r === "region" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
   else if (r === "region") viewRegion();
   else if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
   else if (r === "schools") viewSchools();
+  else if (r === "library") viewLibrary();
   else if (r === "my") viewMy();
   else viewHome();
   window.scrollTo(0, 0);
@@ -456,7 +519,16 @@ document.querySelectorAll(".navi").forEach(b => b.addEventListener("click", () =
 window.addEventListener("hashchange", render);
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; render(); });
 
+async function loadSeats() {
+  try {
+    const res = await fetch(SEATS_URL, { cache: "no-cache" });
+    if (!res.ok) throw new Error(res.status);
+    SEATS = await res.json(); store(KEY_SEATS, JSON.stringify(SEATS));
+  } catch (e) { try { SEATS = JSON.parse(store(KEY_SEATS) || "null"); } catch (e2) { SEATS = null; } }
+  if (DATA) render();
+}
 async function load() {
+  loadSeats();
   try {
     const res = await fetch(DATA_URL, { cache: "no-cache" });
     if (!res.ok) throw new Error(res.status);
