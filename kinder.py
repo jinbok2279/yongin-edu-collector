@@ -36,6 +36,17 @@ def call(api, sgg):
     return None
 
 
+def ci(d):
+    """필드 이름 대소문자 구분 없이 꺼내기"""
+    low = {str(k).lower(): v for k, v in (d or {}).items()}
+    return lambda name: low.get(name.lower())
+
+
+def kid(g):
+    """유치원 식별값: 유치원코드가 없으면 이름으로"""
+    return clean(g("kinderCode")) or clean(g("kindercd")) or ("N:" + clean(g("kindername")) if clean(g("kindername")) else "")
+
+
 def num(v):
     try:
         return int(float(str(v).replace(",", "").strip()))
@@ -61,44 +72,47 @@ def main():
         basic = call("basicInfo2.do", code)
         if basic is None:
             raise SystemExit(f"{gu} 일반현황을 가져오지 못했습니다")
-        bus = {b.get("kinderCode"): b for b in (call("schoolBus.do", code) or [])}
-        after = {a.get("kinderCode"): a for a in (call("afterSchoolPresent.do", code) or [])}
+        if basic:
+            print("  필드:", ", ".join(sorted(basic[0].keys()))[:400])
+        bus = {kid(ci(b)): ci(b) for b in (call("schoolBus.do", code) or [])}
+        after = {kid(ci(a)): ci(a) for a in (call("afterSchoolPresent.do", code) or [])}
         print(f"{gu}({code}): 유치원 {len(basic)}곳, 통학차량 {len(bus)}, 방과후 {len(after)}")
-        for k in basic:
-            kc = k.get("kinderCode")
+        for raw in basic:
+            g = ci(raw)
+            kc = kid(g)
             if not kc:
                 continue
-            addr = clean(k.get("addr"))
-            b, a = bus.get(kc, {}), after.get(kc, {})
-            cap = {"3": num(k.get("ag3fpcnt")), "4": num(k.get("ag4fpcnt")), "5": num(k.get("ag5fpcnt")),
-                   "mix": num(k.get("mixfpcnt")), "sp": num(k.get("spcnfpcnt"))}
-            kids = {"3": num(k.get("ppcnt3")), "4": num(k.get("ppcnt4")), "5": num(k.get("ppcnt5")),
-                    "mix": num(k.get("mixppcnt")), "sp": num(k.get("shppcnt"))}
-            cls = {"3": num(k.get("clcnt3")), "4": num(k.get("clcnt4")), "5": num(k.get("clcnt5")),
-                   "mix": num(k.get("mixclcnt")), "sp": num(k.get("shclcnt"))}
+            addr = clean(g("addr"))
+            b, a = bus.get(kc), after.get(kc)
+            cap = {"3": num(g("ag3fpcnt")), "4": num(g("ag4fpcnt")), "5": num(g("ag5fpcnt")),
+                   "mix": num(g("mixfpcnt")), "sp": num(g("spcnfpcnt"))}
+            kids = {"3": num(g("ppcnt3")), "4": num(g("ppcnt4")), "5": num(g("ppcnt5")),
+                    "mix": num(g("mixppcnt")), "sp": num(g("shppcnt"))}
+            cls = {"3": num(g("clcnt3")), "4": num(g("clcnt4")), "5": num(g("clcnt5")),
+                   "mix": num(g("mixclcnt")), "sp": num(g("shclcnt"))}
             out[kc] = {
                 "id": kc,
-                "n": clean(k.get("kindername")),
-                "type": clean(k.get("establish")),
+                "n": clean(g("kindername")),
+                "type": clean(g("establish")),
                 "gu": gu,
                 "dong": dong_of(addr),
                 "addr": addr,
-                "tel": clean(k.get("telno")),
-                "hp": clean(k.get("hpaddr")),
-                "time": clean(k.get("opertime")),
-                "head": clean(k.get("ldgrname")),
-                "open": clean(k.get("odate")),
-                "cap": num(k.get("prmstfcnt")) or sum(cap.values()),
+                "tel": clean(g("telno")),
+                "hp": clean(g("hpaddr")),
+                "time": clean(g("opertime")),
+                "head": clean(g("ldgrname")),
+                "open": clean(g("odate")),
+                "cap": num(g("prmstfcnt")) or sum(cap.values()),
                 "capBy": cap,
                 "kids": kids,
                 "cls": cls,
-                "lat": clean(k.get("lttdcdnt")),
-                "lng": clean(k.get("lngtcdnt")),
-                "bus": {"yn": clean(b.get("vhcl_oprn_yn")), "cnt": num(b.get("opra_vhcnt"))} if b else None,
-                "after": {"cls": num(a.get("inor_clcnt")) + num(a.get("pm_rrgn_clcnt")),
-                          "kids": num(a.get("inor_ptcn_kpcnt")) + num(a.get("pm_rrgn_ptcn_kpcnt")),
-                          "time": clean(a.get("oper_time"))} if a else None,
-                "term": clean(k.get("pbnttmng")),
+                "lat": clean(g("lttdcdnt")),
+                "lng": clean(g("lngtcdnt")),
+                "bus": {"yn": clean(b("vhcl_oprn_yn")), "cnt": num(b("opra_vhcnt"))} if b else None,
+                "after": {"cls": num(a("inor_clcnt")) + num(a("pm_rrgn_clcnt")),
+                          "kids": num(a("inor_ptcn_kpcnt")) + num(a("pm_rrgn_ptcn_kpcnt")),
+                          "time": clean(a("oper_time"))} if a else None,
+                "term": clean(g("pbnttmng")),
             }
     if not out:
         raise SystemExit("유치원 정보를 하나도 가져오지 못했습니다 (시군구 코드를 확인하세요)")
