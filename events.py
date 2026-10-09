@@ -30,12 +30,32 @@ KID_WORDS = re.compile(r"가족|어린이|아이|키즈|kids|유아|아동|동�
 NOT_KID = re.compile(r"19세|청소년\s*관람\s*불가|성인|어르신|트로트|콘서트\s*<|스탠드업|stand-up|장애인|합창단\s*정기", re.I)
 
 
+def legacy_ssl():
+    """용인시청 사이트 전용: 오래된 TLS 방식 허용 (인증서 검증은 그대로 유지)"""
+    import ssl
+    ctx = ssl.create_default_context()
+    try:
+        ctx.set_ciphers("DEFAULT:@SECLEVEL=1")
+    except Exception:
+        pass
+    ctx.options |= getattr(ssl, "OP_LEGACY_SERVER_CONNECT", 0x4)
+    return ctx
+
+
+LEGACY = None
+
+
 def get(url, params=None, tries=3, timeout=40):
     full = url + ("?" + urllib.parse.urlencode(params, doseq=True) if params else "")
     req = urllib.request.Request(full, headers={"User-Agent": "Mozilla/5.0 (yongin-edu-collector)"})
     for i in range(tries):
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as res:
+            ctx = None
+            if urllib.parse.urlparse(url).hostname == "www.yongin.go.kr":
+                global LEGACY
+                LEGACY = LEGACY or legacy_ssl()
+                ctx = LEGACY
+            with urllib.request.urlopen(req, timeout=timeout, context=ctx) as res:
                 return res.read().decode("utf-8", errors="replace")
         except Exception as e:
             print(f"  다시 시도 {i + 1}/{tries}: {e}")
