@@ -144,6 +144,14 @@ let SEATS = null;
 const BOOKS_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/books.json";
 const KEY_BOOKS = "edu.books";
 let BOOKS = null;
+const ACAS_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/academies.json";
+let ACAS = null, acasLoading = null;
+function loadAcas() {
+  if (ACAS) return Promise.resolve(ACAS);
+  if (!acasLoading) acasLoading = fetch(ACAS_URL, { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => (ACAS = j)).catch(e => { acasLoading = null; throw e; });
+  return acasLoading;
+}
 const KEY_DATA = "edu.data";
 const KEY_REGION = "edu.region";
 const GUS = ["수지구", "기흥구", "처인구"];
@@ -361,7 +369,7 @@ function viewMy() {
   const ks = kids();
   const kidRows = ks.map(k => { const sc = kidSchool(k);
     return `<button class="school" onclick="go('kid/${k.id}')"><span class="tile ${KID_TILES[k.color % 5]}" style="width:42px;height:42px;font-weight:800">${esc(k.name[0] || "?")}</span>
-      <div style="flex:1;min-width:0"><div class="nm">${esc(k.name)}</div><div class="ad">${sc ? esc(levelShort(sc) + " · " + sc.name) : "학교 정보 없음"}</div></div><span style="font-size:13px;color:var(--indigo);font-weight:700">수정</span></button>`; }).join("");
+      <div style="flex:1;min-width:0"><div class="nm">${esc(k.name)}</div><div class="ad">${sc ? esc(levelShort(sc) + " · " + sc.name) : "학교 정보 없음"}${k.acas && k.acas.length ? ` · 학원 ${k.acas.length}곳` : ""}</div></div><span style="font-size:13px;color:var(--indigo);font-weight:700">수정</span></button>`; }).join("");
   $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">마이</h1>
     <section class="section" style="margin-top:0"><div class="sec-head"><h2>우리 아이</h2><span style="font-size:12px;color:var(--muted)">${ks.length}/${MAX_KIDS}명</span></div>
       <div class="lift list">${kidRows || `<div class="empty">아직 등록한 아이가 없어요.</div>`}</div>
@@ -574,7 +582,7 @@ function viewKid(arg, pre) {
   const list = kids();
   const editing = list.find(k => k.id === arg);
   if (!editing && list.length >= MAX_KIDS) { toast(`아이는 ${MAX_KIDS}명까지 등록할 수 있어요`); return go("my"); }
-  if (!kidForm || kidForm.key !== location.hash) kidForm = { key: location.hash, name: editing ? editing.name : (ORD[list.length] || "아이"), code: editing ? editing.code : (pre || ""), q: "", arm: false };
+  if (!kidForm || kidForm.key !== location.hash) kidForm = { key: location.hash, name: editing ? editing.name : (ORD[list.length] || "아이"), code: editing ? editing.code : (pre || ""), q: "", arm: false, acas: editing ? (editing.acas || []).slice() : [], aq: "" };
   const sc = kidForm.code && DATA.schools.find(s => s.code === kidForm.code);
   $view.innerHTML = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
     <h1 style="font-size:25px;font-weight:800;margin-top:14px">${editing ? "아이 정보 수정" : "아이 추가"}</h1>
@@ -586,11 +594,59 @@ function viewKid(arg, pre) {
         <div style="flex:1;min-width:0"><div style="font-weight:700">${esc(sc.name)}</div><div style="font-size:12px;color:var(--muted)">${levelShort(sc)} · ${esc(sc.gu || "")} ${esc(sc.dong || "")}</div></div></div>` : ""}
       <label class="search lift">${icon.search}<input id="kq" placeholder="${sc ? "다른 학교로 바꾸기 (학교 이름 검색)" : "학교 이름 검색 (예: 마성, 수지중)"}" value="${esc(kidForm.q)}" aria-label="학교 이름 검색"></label>
       <div class="lift list" id="kres"></div></section>
+    <section class="section"><div class="sec-head"><h2>다니는 학원 <span style="font-size:12px;color:var(--muted);font-weight:600">선택</span></h2><span style="font-size:12px;color:var(--muted)">${kidForm.acas.length}/10곳</span></div>
+      ${kidForm.acas.length ? `<div class="lift list">${kidForm.acas.map(a => `<div class="school"><span class="tile t-coral" style="width:40px;height:40px;font-weight:800">${esc((a.n || "학")[0])}</span>
+        <div style="flex:1;min-width:0;cursor:pointer" onclick="go('aca/${esc(a.id)}')"><div class="nm">${esc(a.n)}</div><div class="ad">${esc(a.r || "")} · 정보 보기 ›</div></div>
+        <button class="btn btn-soft" style="height:34px;padding:0 12px;font-size:12px" onclick="removeAca('${esc(a.id)}')" aria-label="${esc(a.n)} 빼기">빼기</button></div>`).join("")}</div>` : ""}
+      ${kidForm.acas.length < 10 ? `<label class="search lift">${icon.search}<input id="aq" placeholder="학원 이름 검색 (예: 수학, 태권도)" value="${esc(kidForm.aq)}" aria-label="학원 이름 검색"></label>
+      <div class="lift list" id="ares"></div>` : ""}
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px">교육청에 등록된 용인시 학원·교습소 목록에서 골라요. 지금은 이 휴대폰에만 저장돼요.<br>앞으로 동의한 분들의 학원 정보만 <b>이름 없이</b> 모아 "우리 동네 인기 학원"을 보여 드릴 예정이에요.</p></section>
     <button class="btn btn-3d" style="width:100%;height:54px;margin-top:24px;font-size:15px" onclick="saveKid('${editing ? editing.id : ""}')">${editing ? "저장하기" : "등록하기"}</button>
     ${editing ? `<button class="btn btn-soft" style="width:100%;height:46px;margin-top:12px;color:var(--coral-ink)" onclick="deleteKid('${editing.id}')">${kidForm.arm ? "한 번 더 누르면 삭제돼요" : "이 아이 삭제"}</button>` : ""}`;
   document.getElementById("kname").addEventListener("input", e => { kidForm.name = e.target.value; });
   document.getElementById("kq").addEventListener("input", e => { kidForm.q = e.target.value; kidResults(); });
-  kidResults();
+  const aq = document.getElementById("aq");
+  if (aq) aq.addEventListener("input", e => { kidForm.aq = e.target.value; acaResults(); });
+  kidResults(); acaResults();
+}
+function acaResults() {
+  const box = document.getElementById("ares"); if (!box) return;
+  const q = kidForm.aq.replace(/\s/g, "");
+  if (!q) { box.style.display = "none"; return; }
+  box.style.display = "";
+  if (!ACAS) { box.innerHTML = `<div class="empty">학원 목록을 불러오는 중이에요…</div>`; loadAcas().then(acaResults).catch(() => { box.innerHTML = `<div class="empty">학원 목록을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.</div>`; }); return; }
+  const sc = kidForm.code && DATA.schools.find(s => s.code === kidForm.code);
+  const picked = new Set(kidForm.acas.map(a => a.id));
+  const res = ACAS.academies.filter(a => !picked.has(a.id) && a.n.replace(/\s/g, "").includes(q))
+    .sort((x, y) => (sc ? (y.dong === sc.dong) - (x.dong === sc.dong) || (y.gu === sc.gu) - (x.gu === sc.gu) : 0) || x.n.localeCompare(y.n)).slice(0, 20);
+  box.innerHTML = res.map(a => `<button class="school" onclick="pickAca('${esc(a.id)}')"><span class="pill pill-gray">${esc(a.t || "학원")}</span>
+      <div style="flex:1;min-width:0"><div class="nm">${esc(a.n)}</div><div class="ad">${esc(acaKind(a))} · ${esc(a.gu)} ${esc(a.dong)}</div></div><span style="font-size:13px;color:var(--indigo);font-weight:700">추가</span></button>`).join("") || `<div class="empty">검색 결과가 없어요. 이름 일부만 넣어 보세요.</div>`;
+}
+function acaKind(a) { return (a.c && a.c[0]) || a.r || ""; }
+function pickAca(id) { const a = ACAS.academies.find(x => x.id === id); if (!a || kidForm.acas.length >= 10) return; kidForm.acas.push({ id: a.id, n: a.n, r: acaKind(a) }); kidForm.aq = ""; render(); }
+function removeAca(id) { kidForm.acas = kidForm.acas.filter(a => a.id !== id); render(); }
+function won(n) { return n >= 10000 ? (n % 10000 ? (n / 10000).toFixed(1).replace(/\.0$/, "") : n / 10000) + "만원" : n.toLocaleString() + "원"; }
+function viewAca(id) {
+  const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>`;
+  if (!ACAS) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">학원 정보를 불러오는 중이에요…</div>`; loadAcas().then(() => { if (location.hash === "#aca/" + id) render(); }).catch(() => { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">학원 정보를 불러오지 못했어요.</div>`; }); return; }
+  const a = ACAS.academies.find(x => x.id === id);
+  if (!a) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">이 학원은 지금 교육청 목록에 없어요. 휴원·폐원했을 수 있어요.</div>`; return; }
+  const row = (k, v) => v ? `<div class="row"><span>${k}</span><span class="val" style="text-align:right;max-width:65%">${v}</span></div>` : "";
+  const map = "https://map.naver.com/p/search/" + encodeURIComponent(a.n + " " + (a.dong || a.gu || "용인"));
+  $view.innerHTML = `${back}
+    <div style="display:flex;gap:14px;align-items:center;margin-top:14px"><span class="tile t-coral" style="width:54px;height:54px;font-size:22px;font-weight:800">${esc(a.n[0])}</span>
+      <div style="min-width:0"><h1 style="font-size:23px;font-weight:800;line-height:1.3">${esc(a.n)}</h1><p style="font-size:13px;color:var(--muted);margin-top:4px">${esc(a.t)} · ${esc(a.gu)} ${esc(a.dong)}</p></div></div>
+    <div class="lift card-pad" style="margin-top:18px">
+      ${row("분야", esc(a.r))}${row("교습 과정", esc((a.c || []).join(", ")))}${row("정원", a.cap ? a.cap + "명" : "")}${row("주소", esc(a.a))}${row("전화", a.tel ? `<a href="tel:${esc(a.tel)}">${esc(a.tel)}</a>` : "")}
+    </div>
+    <section class="section"><div class="sec-head"><h2>수강료</h2><span style="font-size:12px;color:var(--muted)">1인 월 기준 (교육청 신고)</span></div>
+      ${a.f && a.f.length ? `<div class="lift card-pad">${a.f.slice(0, 20).map(([k, v]) => row(esc(k), `<b>${won(v)}</b>`)).join("")}</div>` : `<div class="lift empty">공개된 수강료 정보가 없어요.</div>`}</section>
+    <a class="btn btn-soft" style="width:100%;height:48px;margin-top:18px;font-size:14px" href="${map}" target="_blank" rel="noopener">네이버 지도에서 보기 ↗</a>
+    <section class="section"><div class="lift" style="padding:18px;display:flex;gap:14px;align-items:center">
+      <span class="tile t-sun" style="width:44px;height:44px">${icon.star}</span>
+      <div><div style="font-weight:800">우리 동네 인기 학원 <span class="pill pill-gray" style="margin-left:4px">프리미엄 · 준비 중</span></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5">같은 학교·동네 아이들이 많이 다니는 학원을 익명 통계로 보여 드릴 예정이에요.</div></div></div></section>
+    <div class="foot">데이터 · 나이스 교육정보 개방포털 학원교습소정보<br>교육청에 등록된 정보라 실제와 다를 수 있어요.</div>`;
 }
 function kidResults() {
   const box = document.getElementById("kres"); if (!box) return;
@@ -607,8 +663,8 @@ function saveKid(id) {
   const list = kids();
   const name = (kidForm.name || "").trim() || ORD[list.length] || "아이";
   const k = list.find(x => x.id === id);
-  if (k) { k.name = name; k.code = kidForm.code; }
-  else list.push({ id: "k" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, code: kidForm.code, color: nextColor(list) });
+  if (k) { k.name = name; k.code = kidForm.code; k.acas = kidForm.acas; }
+  else list.push({ id: "k" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, code: kidForm.code, acas: kidForm.acas, color: nextColor(list) });
   saveKids(list); kidForm = null; homeKid = "all";
   toast(k ? "저장했어요" : `${name}을(를) 등록했어요`); go("home");
 }
@@ -623,10 +679,11 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "schools" : r.startsWith("library") || r === "books" ? "library" : r === "my" || r === "region" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "schools" : r.startsWith("library") || r === "books" ? "library" : r === "my" || r === "region" || r.startsWith("kid/") || r.startsWith("aca/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
   else if (r === "region") viewRegion();
+  else if (r.startsWith("aca/")) viewAca(r.slice(4));
   else if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
   else if (r === "schools") viewSchools();
   else if (r === "library") viewLibrary();
