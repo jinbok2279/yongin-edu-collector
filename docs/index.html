@@ -533,7 +533,7 @@ function currentBookList() { const ls = bookLists(); const k = bookKey || defaul
 function coverImg(b, cls) { return b.cover ? `<img class="${cls}" src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">` : `<span class="${cls}" style="display:block"></span>`; }
 function bookRow(b) {
   const inner = `<span class="rk">${b.rank}</span>${coverImg(b, "cv")}
-    <div style="flex:1;min-width:0"><div class="tt">${esc(b.title)}</div><div class="au">${esc([b.author, b.publisher].filter(Boolean).join(" · "))}</div></div>`;
+    <div style="flex:1;min-width:0"><div class="tt">${esc(b.title)}</div><div class="au">${b.series > 1 ? `<b style="color:var(--indigo)">시리즈 ${b.series}권</b> · ` : ""}${esc([b.author, b.publisher].filter(Boolean).join(" · "))}</div></div>`;
   return b.link ? `<a class="book" href="${esc(b.link)}" target="_blank" rel="noopener">${inner}<span style="color:var(--muted)">↗</span></a>` : `<div class="book">${inner}</div>`;
 }
 function viewBooks() {
