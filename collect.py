@@ -15,6 +15,7 @@ SKIP_EVENTS = {"토요휴업일"}
 PUBLIC_HOLIDAYS = {"한글날", "개천절", "추석", "설날", "성탄절", "기독탄신일", "신정",
                    "삼일절", "어린이날", "부처님오신날", "석가탄신일", "현충일", "광복절",
                    "대체공휴일", "선거일"}
+RENAMED = {"남사면": "남사읍", "모현면": "모현읍", "이동면": "이동읍"}   # 읍으로 승격된 옛 주소
 HIGHLIGHT_WORDS = ["재량휴업", "방학", "개학", "졸업", "입학", "체험", "기념일", "운동회",
                    "한마당", "발표회", "축제", "상담", "공개수업"]
 
@@ -61,7 +62,7 @@ def parse_area(address, detail):
     rest = address.split(gu, 1)[-1].split()
     for t in rest[:2]:
         if re.fullmatch(r"\S+(읍|면)", t):
-            return gu, t
+            return gu, RENAMED.get(t, t)
     m = re.search(r"\(([^,()]*?[0-9]?동)\s*[,)]", detail + " " + address)
     if m:
         return gu, m.group(1).strip()
