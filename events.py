@@ -5,6 +5,7 @@
 결과는 output/events.json 으로 저장한다.
 """
 
+import hashlib
 import json
 import os
 import re
@@ -18,6 +19,9 @@ from books import Tree  # 같은 저장소의 간단한 HTML 파서
 KST = timezone(timedelta(hours=9))
 CITY_LIST = "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArtList.do"
 CITY_VIEW = "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do"
+CULTURE_API = "https://api.kcisa.kr/openapi/CNV_060/request"  # 문화체육관광부_문화예술공연(통합)
+CULTURE_KEY = os.environ.get("CULTURE_KEY", "").strip()
+YONGIN = re.compile(r"용인|포은아트|문화예술원|마루홀|수지아르피아|기흥아트|처인구|기흥구|수지구|에버랜드|한국민속촌|백남준아트센터|경기도박물관|경기도어린이박물관|호암미술관")
 LIB = "https://lib.yongin.go.kr"
 LIB_LIST = LIB + "/yongin/menu/10264/program/30027/lectureList.do"
 LIB_VIEW = LIB + "/yongin/menu/10264/program/30027/lectureDetail.do"
@@ -26,12 +30,12 @@ KID_WORDS = re.compile(r"가족|어린이|아이|키즈|kids|유아|아동|동�
 NOT_KID = re.compile(r"19세|청소년\s*관람\s*불가|성인|어르신|트로트|콘서트\s*<|스탠드업|stand-up|장애인|합창단\s*정기", re.I)
 
 
-def get(url, params=None, tries=3):
+def get(url, params=None, tries=3, timeout=40):
     full = url + ("?" + urllib.parse.urlencode(params, doseq=True) if params else "")
     req = urllib.request.Request(full, headers={"User-Agent": "Mozilla/5.0 (yongin-edu-collector)"})
     for i in range(tries):
         try:
-            with urllib.request.urlopen(req, timeout=40) as res:
+            with urllib.request.urlopen(req, timeout=timeout) as res:
                 return res.read().decode("utf-8", errors="replace")
         except Exception as e:
             print(f"  다시 시도 {i + 1}/{tries}: {e}")
@@ -56,7 +60,7 @@ def city_events(today):
     found = []
     for page in range(1, 13):
         try:
-            t = Tree(); t.feed(get(CITY_LIST, {"q_currPage": page}))
+            t = Tree(); t.feed(get(CITY_LIST, {"q_currPage": page}, tries=1 if page == 1 else 2, timeout=20))
         except Exception as e:
             print("  시청 목록 실패:", e); break
         rows = [r for r in t.root.find_all("tr") if r.find("td")]
@@ -98,6 +102,76 @@ def city_events(today):
                     "free": bool(re.search(r"무료", price)), "src": "city",
                     "link": CITY_VIEW + "?" + urllib.parse.urlencode({"q_showIdx": ev["id"]})})
         time.sleep(0.3)
+    return out
+
+
+def strip_html(s):
+    s = re.sub(r"<[^>]+>", " ", s or "")
+    s = s.replace("&nbsp;", " ").replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&quot;", '"')
+    return " ".join(s.split())
+
+
+def culture_events(today):
+    """문화체육관광부 문화예술공연(통합) API에서 용인 공연·전시 중 아이와 갈 만한 것"""
+    if not CULTURE_KEY:
+        print("  CULTURE_KEY 없음: 문화포털 공연 건너뜀")
+        return []
+    import xml.etree.ElementTree as ET
+    horizon = (today + timedelta(days=60)).strftime("%Y%m%d")
+    t0 = today.strftime("%Y%m%d")
+    key = CULTURE_KEY if "%" in CULTURE_KEY else urllib.parse.quote(CULTURE_KEY, safe="")
+    out, seen, rows = [], set(), 1000
+    for page in range(1, 41):
+        url = f"{CULTURE_API}?serviceKey={key}&numOfRows={rows}&pageNo={page}&dtype=&title="
+        try:
+            raw = get(url, timeout=60)
+        except Exception as e:
+            print("  문화포털 실패:", e); break
+        try:
+            root = ET.fromstring(raw.encode("utf-8"))
+        except Exception:
+            print("  문화포털 응답이 XML이 아님:", raw[:200].replace(CULTURE_KEY, "***")); break
+        code = (root.findtext(".//resultCode") or "").strip()
+        items = root.findall(".//item")
+        total = root.findtext(".//totalCount")
+        if page == 1:
+            print(f"  문화포털 결과코드 {code or '-'} · 전체 {total}건")
+        if not items:
+            if page == 1:
+                print("  응답 앞부분:", raw[:300].replace(CULTURE_KEY, "***"))
+            break
+        periods = []
+        for it in items:
+            g = lambda k: " ".join((it.findtext(k) or "").split())
+            ds = re.findall(r"(\d{8})", g("period"))
+            if not ds:
+                continue
+            start, end = ds[0], ds[-1]
+            periods.append(start)
+            if end < t0 or start > horizon:
+                continue
+            title, site, desc = g("title"), g("eventSite"), strip_html(it.findtext("description"))
+            contact = g("contactPoint")
+            if not YONGIN.search(" ".join([title, site, contact])) and not ("용인" in desc[:300]):
+                continue
+            hay = title + " " + desc[:600] + " " + g("charge")
+            kid = bool(KID_WORDS.search(title)) or bool(re.search(r"전체\s*관람|어린이|가족|아동|유아|\d+\s*개월|초등", hay))
+            if not kid or NOT_KID.search(title) or re.search(r"19세 이상|청소년\s*관람\s*불가", hay):
+                continue
+            k = (title, start)
+            if k in seen:
+                continue
+            seen.add(k)
+            charge = g("charge")
+            out.append({"id": "C" + hashlib.md5((title + start).encode()).hexdigest()[:10], "title": title,
+                        "start": f"{start[:4]}-{start[4:6]}-{start[6:]}", "end": f"{end[:4]}-{end[4:6]}-{end[6:]}",
+                        "place": site, "time": g("eventPeriod")[:60], "grade": "", "price": charge[:40],
+                        "free": bool(re.search(r"무료", charge)), "src": "culture", "link": g("url") or "https://search.naver.com/search.naver?query=" + urllib.parse.quote(title),
+                        "img": g("imageObject")})
+        if periods:
+            print(f"  문화포털 {page}쪽: 기간 {min(periods)} ~ {max(periods)} · 용인 가족 {len(out)}건")
+        if len(items) < rows:
+            break
     return out
 
 
@@ -156,6 +230,10 @@ def main():
         city = city_events(today)
     except Exception as e:
         print("시청 행사 실패:", e)
+    try:
+        city += [e for e in culture_events(today) if all(e["title"] != c["title"] for c in city)]
+    except Exception as e:
+        print("문화포털 공연 실패:", e)
     try:
         lib = lib_events()
     except Exception as e:
