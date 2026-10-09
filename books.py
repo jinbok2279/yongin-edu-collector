@@ -84,7 +84,7 @@ def fetch(url, params, tries=3):
     req = urllib.request.Request(full, headers={"User-Agent": "Mozilla/5.0 (yongin-edu-collector)"})
     for i in range(tries):
         try:
-            with urllib.request.urlopen(req, timeout=60) as res:
+            with urllib.request.urlopen(req, timeout=90) as res:
                 return res.read().decode("utf-8", errors="replace")
         except Exception as e:  # 일시 오류는 다시 시도
             print(f"  다시 시도 {i + 1}/{tries}: {e}")
@@ -156,30 +156,46 @@ def tidy_author(s):
 
 
 def popular(age):
+    """정보나루 인기 도서. 같은 시리즈(제목이 같은 책)는 하나로 묶고, 묶인 권수를 series 에 적는다."""
     end = datetime.now(KST).date() - timedelta(days=1)
     start = end - timedelta(days=30)
-    html = fetch(POPULAR, {"searchAgesArr": age, "searchRegionArr": "31", "searchRecordCount": str(TOP),
-                           "searchStartDate": start.isoformat(), "searchEndDate": end.isoformat()})
-    books = []
-    for i, li in enumerate(book_items(html)[:TOP]):
-        name = li.find(cls="book_name")
-        if not name:
-            continue
-        info = {}
-        for item in li.find_all("li"):
-            k, _, v = item.all_text().partition(":")
-            info[k.strip()] = v.strip()
-        title = name.all_text().split(" :")[0]
-        isbn = re.sub(r"\D", "", info.get("ISBN", ""))
-        books.append({
-            "rank": rank_of(li, i),
-            "title": clean_title(title),
-            "author": tidy_author(info.get("저자", "")),
-            "publisher": info.get("발행사", ""),
-            "cover": cover_of(li),
-            "link": ISBN_SEARCH + "?" + urllib.parse.urlencode({"searchType": "ISBN", "searchIsbn": isbn, "searchLibrary": "ALL"}) if isbn else "",
-        })
-    return books
+    books, seen = [], {}
+    for page in range(1, 6):
+        try:
+            html = fetch(POPULAR, {"searchAgesArr": age, "searchRegionArr": "31", "searchRecordCount": "20", "currentPageNo": str(page),
+                                   "searchStartDate": start.isoformat(), "searchEndDate": end.isoformat()})
+        except Exception as e:
+            print(f"  {page}쪽 실패: {e}")
+            break
+        items = book_items(html)
+        for li in items:
+            name = li.find(cls="book_name")
+            if not name:
+                continue
+            info = {}
+            for item in li.find_all("li"):
+                k, _, v = item.all_text().partition(":")
+                info[k.strip()] = v.strip()
+            title = clean_title(name.all_text().split(" :")[0])
+            key = re.sub(r"\W", "", title)
+            if key in seen:
+                seen[key]["series"] += 1
+                continue
+            isbn = re.sub(r"\D", "", info.get("ISBN", ""))
+            b = {
+                "rank": len(books) + 1,
+                "title": title,
+                "author": tidy_author(info.get("저자", "")),
+                "publisher": info.get("발행사", ""),
+                "cover": cover_of(li),
+                "link": ISBN_SEARCH + "?" + urllib.parse.urlencode({"searchType": "ISBN", "searchIsbn": isbn, "searchLibrary": "ALL"}) if isbn else "",
+                "series": 1,
+            }
+            seen[key] = b
+            books.append(b)
+        if len(books) >= TOP or len(items) < 20:
+            break
+    return books[:TOP]
 
 
 def main():
