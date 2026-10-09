@@ -1,5 +1,5 @@
 // 용인 맘 교육알림 - 오프라인 지원
-const CACHE = "edu-app-v12";
+const CACHE = "edu-app-v13";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
@@ -32,7 +32,12 @@ self.addEventListener("fetch", (e) => {
     e.respondWith(networkFirst(e.request));
     return;
   }
-  // 앱 화면 파일: 저장본 먼저, 뒤에서 새로 받아 두기
+  // 앱 첫 화면(index.html): 인터넷 먼저 → 새 버전이 바로 보이게
+  if (url.origin === self.location.origin && (e.request.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith("index.html"))) {
+    e.respondWith(networkFirst(e.request));
+    return;
+  }
+  // 그 밖의 앱 파일(아이콘 등): 저장본 먼저, 뒤에서 새로 받아 두기
   if (url.origin === self.location.origin) {
     e.respondWith(
       caches.match(e.request).then((hit) => {
