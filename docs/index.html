@@ -404,7 +404,7 @@ function viewMy() {
       <div class="lift card-pad">
         <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.4 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.4.1 (시범 운영)</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -735,14 +735,19 @@ async function loadAdmin() {
   const iso = d => d.toISOString().slice(0, 19) + "Z";
   const end = iso(new Date(Math.ceil(Date.now() / 3600e3) * 3600e3));
   const r = (days) => ({ start: iso(kstMidnight(days)), end });
-  try {
-    const [today, yest, week, month, hits, refs, systems, locs] = await Promise.all([
-      gcApi("stats/total", r(0)), gcApi("stats/total", { start: iso(kstMidnight(1)), end: iso(kstMidnight(0)) }),
-      gcApi("stats/total", r(6)), gcApi("stats/total", r(29)),
-      gcApi("stats/hits", { ...r(6), limit: 50 }), gcApi("stats/toprefs", { ...r(29), limit: 8 }),
-      gcApi("stats/systems", { ...r(29), limit: 6 }), gcApi("stats/locations", { ...r(29), limit: 6 })]);
-    ADMIN = { at: new Date(), today, yest, week, month, hits, refs, systems, locs, err: "" };
-  } catch (e) { ADMIN = { err: String(e.message || e) }; }
+  // GoatCounter는 1초에 4번까지만 받아서, 하나씩 차례로 요청
+  const jobs = [["today", "stats/total", r(0)], ["yest", "stats/total", { start: iso(kstMidnight(1)), end: iso(kstMidnight(0)) }],
+    ["week", "stats/total", r(6)], ["month", "stats/total", r(29)], ["hits", "stats/hits", { ...r(6), limit: 50 }],
+    ["refs", "stats/toprefs", { ...r(29), limit: 8 }], ["systems", "stats/systems", { ...r(29), limit: 6 }], ["locs", "stats/locations", { ...r(29), limit: 6 }]];
+  const out = { at: new Date(), err: "" }; let ok = 0, lastErr = "";
+  for (const [k, path, params] of jobs) {
+    try { out[k] = await gcApi(path, params); ok++; }
+    catch (e) { out[k] = {}; lastErr = String(e.message || e); if (/401|403/.test(lastErr)) break; }
+    await new Promise(res => setTimeout(res, 600));
+  }
+  if (!ok) out.err = lastErr === "Failed to fetch" ? "통계 서버에 연결하지 못했어요. 광고 차단 앱이나 인터넷 연결을 확인해 주세요. (Failed to fetch)" : lastErr;
+  else if (lastErr) out.warn = lastErr;
+  ADMIN = out;
   adminBusy = false;
   if (location.hash === "#admin") render();
 }
@@ -798,17 +803,18 @@ function viewAdmin() {
   }
   const A = ADMIN;
   const tile = (label, v, sub) => `<div class="stat" style="padding:14px 6px"><div class="k">${label}</div><div class="v" style="font-size:24px">${(v ?? 0).toLocaleString()}</div>${sub ? `<div class="k" style="margin-top:2px">${sub}</div>` : ""}</div>`;
-  const days = (A.month.stats || []).slice(-14);
+  const days = ((A.month || {}).stats || []).slice(-14);
   const max = Math.max(1, ...days.map(d => d.daily || 0));
   const bars = days.map(d => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0">
       <div style="font-size:10px;color:var(--muted)">${d.daily || ""}</div>
       <div style="width:70%;height:${Math.max(3, Math.round((d.daily || 0) / max * 110))}px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#8C97FF,var(--indigo))"></div>
       <div style="font-size:10px;color:var(--muted)">${Number(d.day.slice(8))}</div></div>`).join("");
-  const hits = A.hits.hits || [];
+  const hits = (A.hits || {}).hits || [];
   const pages = hits.filter(h => !h.event), events = hits.filter(h => h.event);
   const list = (rows, label) => rows.length ? `<div class="lift card-pad">${rows.map(([k, v]) => `<div class="row"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(k)}</span><span class="val"><b>${v.toLocaleString()}</b></span></div>`).join("")}</div>` : `<div class="lift empty">${label}</div>`;
   const evName = { "아이-등록": "아이 등록", "아이-수정": "아이 정보 수정", "학원-추가": "학원 추가", "책-클릭": "인기 도서 클릭", "앱-설치": "홈 화면에 설치" };
   $view.innerHTML = `${head}
+    ${A.warn ? `<div class="lift empty" style="margin:10px 0">일부 통계를 못 불러왔어요: ${esc(A.warn)}</div>` : ""}
     <p style="font-size:12px;color:var(--muted);margin:6px 0 14px">방문자 수 기준 · ${A.at.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })} 불러옴 · <a href="#admin" onclick="ADMIN=null;render();return false">새로고침</a></p>
     <div class="stats" style="grid-template-columns:repeat(2,1fr)">${tile("오늘", A.today.total)}${tile("어제", A.yest.total)}${tile("최근 7일", A.week.total)}${tile("최근 30일", A.month.total)}</div>
     <section class="section"><div class="sec-head"><h2>최근 14일 방문자</h2></div>
