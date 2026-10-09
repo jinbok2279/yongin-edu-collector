@@ -1,15 +1,644 @@
 {
   "region": "용인시 기흥구",
-  "updated_at": "2026-10-09 09:52:50",
-  "count": 1,
-  "items": [
+  "updated_at": "2026-10-09 10:33:23",
+  "period": {
+    "from": "20261009",
+    "to": "20261208"
+  },
+  "school_count": 34,
+  "highlights": [
     {
-      "source": "테스트",
-      "title": "수집기 동작 확인용 샘플 공고",
-      "target": "초등 전학년",
-      "deadline": "2026-10-12",
-      "summary": "예약 실행이 정상이면 updated_at 시각이 계속 바뀝니다.",
-      "link": ""
+      "school": "용인한얼초등학교",
+      "date": "2026-10-12",
+      "name": "학교장재량휴업일",
+      "holiday": true
+    },
+    {
+      "school": "산양초등학교",
+      "date": "2026-11-19",
+      "name": "학교장재량휴업일",
+      "holiday": true
     }
-  ]
+  ],
+  "schools": [
+    {
+      "code": "7751054",
+      "name": "갈곡초등학교",
+      "address": "경기도 용인시 기흥구 강남동로 61",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751227",
+      "name": "공세초등학교",
+      "address": "경기도 용인시 기흥구 탑실로 86-10",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751069",
+      "name": "관곡초등학교",
+      "address": "경기도 용인시 기흥구 관곡로 61",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751065",
+      "name": "교동초등학교",
+      "address": "경기도 용인시 기흥구 마북로 124-10",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751066",
+      "name": "구갈초등학교",
+      "address": "경기도 용인시 기흥구 구갈로 36",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751067",
+      "name": "구성초등학교",
+      "address": "경기도 용인시 기흥구 구성로 51",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751068",
+      "name": "기흥초등학교",
+      "address": "경기도 용인시 기흥구 공세로82번길 5",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751070",
+      "name": "나곡초등학교",
+      "address": "경기도 용인시 기흥구 사은로126번길 26",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751190",
+      "name": "나산초등학교",
+      "address": "경기도 용인시 기흥구 한보라1로43번길 8",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751048",
+      "name": "독정초등학교",
+      "address": "경기도 용인시 기흥구 보정로 100",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751183",
+      "name": "동막초등학교",
+      "address": "경기도 용인시 기흥구 동백8로 39",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751184",
+      "name": "동백초등학교",
+      "address": "경기도 용인시 기흥구 동백평촌로 69",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751078",
+      "name": "마북초등학교",
+      "address": "경기도 용인시 기흥구 연원로 31",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751079",
+      "name": "마성초등학교",
+      "address": "경기도 용인시 기흥구 용구대로2360번길 29",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-16",
+          "name": "마성체험전",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-19",
+          "name": "방과후 공개수업 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-20",
+          "name": "방과후 공개수업 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-21",
+          "name": "방과후 공개수업 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-22",
+          "name": "방과후 공개수업 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-23",
+          "name": "소방훈련",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-23",
+          "name": "방과후 공개수업 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-05",
+          "name": "개교기념일",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-16",
+          "name": "꿈끼발표회주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-17",
+          "name": "꿈끼발표회주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-18",
+          "name": "꿈끼발표회주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-19",
+          "name": "꿈끼발표회주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-20",
+          "name": "꿈끼발표회주간",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751081",
+      "name": "보라초등학교",
+      "address": "경기도 용인시 기흥구 금화로 105",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751082",
+      "name": "보정초등학교",
+      "address": "경기도 용인시 기흥구 신촌로73번길 28",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751085",
+      "name": "산양초등학교",
+      "address": "경기도 용인시 기흥구 산양로 2",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-19",
+          "name": "학교장재량휴업일",
+          "holiday": true
+        }
+      ]
+    },
+    {
+      "code": "7751086",
+      "name": "상갈초등학교",
+      "address": "경기도 용인시 기흥구 금화로58번길 17",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751087",
+      "name": "상하초등학교",
+      "address": "경기도 용인시 기흥구 중부대로788번길 27",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751351",
+      "name": "샘말초등학교",
+      "address": "경기도 용인시 기흥구 흥덕중앙로105번길 9",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-12",
+          "name": "인권 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-13",
+          "name": "인권 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-14",
+          "name": "인권 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-14",
+          "name": "합동소방훈련",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-15",
+          "name": "인권 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-16",
+          "name": "인권 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-19",
+          "name": "독도 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-20",
+          "name": "어울림 체육 한마당",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-20",
+          "name": "독도 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-21",
+          "name": "독도 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-22",
+          "name": "어울림 체육 한마당",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-22",
+          "name": "독도 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-23",
+          "name": "어울림 체육 한마당",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-23",
+          "name": "독도 교육 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-26",
+          "name": "어울림 체육 한마당",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-27",
+          "name": "어울림 체육 한마당",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-09",
+          "name": "친구 사랑의 날 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-10",
+          "name": "친구 사랑의 날 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-11",
+          "name": "친구 사랑의 날 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-12",
+          "name": "친구 사랑의 날 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-13",
+          "name": "친구 사랑의 날 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-16",
+          "name": "스마트폰 이별 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-17",
+          "name": "스마트폰 이별 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-17",
+          "name": "안전한국훈련",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-18",
+          "name": "스마트폰 이별 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-19",
+          "name": "스마트폰 이별 주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-20",
+          "name": "스마트폰 이별 주간",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751307",
+      "name": "서농초등학교",
+      "address": "경기도 용인시 기흥구 서천동로21번길 5",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751091",
+      "name": "서천초등학교",
+      "address": "경기도 용인시 기흥구 서그내로62번길 6",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751185",
+      "name": "석성초등학교",
+      "address": "경기도 용인시 기흥구 동백2로 53",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751229",
+      "name": "석현초등학교",
+      "address": "경기도 용인시 기흥구 흥덕3로 42",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751049",
+      "name": "성지초등학교",
+      "address": "경기도 용인시 기흥구 강남서로 38",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751097",
+      "name": "신갈초등학교",
+      "address": "경기도 용인시 기흥구 신갈로 76",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751100",
+      "name": "어정초등학교",
+      "address": "경기도 용인시 기흥구 어정로 155",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751059",
+      "name": "언남초등학교",
+      "address": "경기도 용인시 기흥구 기흥로116번길 87",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751101",
+      "name": "언동초등학교",
+      "address": "경기도 용인시 기흥구 언남로 55",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751189",
+      "name": "용인백현초등학교",
+      "address": "경기도 용인시 기흥구 동백8로 108",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751056",
+      "name": "용인신릉초등학교",
+      "address": "경기도 용인시 기흥구 새천년로 53",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751410",
+      "name": "용인초당초등학교",
+      "address": "경기도 용인시 기흥구 동백중앙로 78",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    },
+    {
+      "code": "7751358",
+      "name": "용인한얼초등학교",
+      "address": "경기도 용인시 기흥구 기흥역로58번길 57",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        },
+        {
+          "date": "2026-10-12",
+          "name": "학교장재량휴업일",
+          "holiday": true
+        }
+      ]
+    },
+    {
+      "code": "7751192",
+      "name": "용인한일초등학교",
+      "address": "경기도 용인시 기흥구 한보라1로 145",
+      "events": [
+        {
+          "date": "2026-10-09",
+          "name": "한글날",
+          "holiday": false
+        }
+      ]
+    }
+  ],
+  "source": "나이스 교육정보 개방포털 (학교기본정보, 학사일정)"
 }
