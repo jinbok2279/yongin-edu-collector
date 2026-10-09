@@ -1,0 +1,15 @@
+{
+  "name": "용인 맘 교육알림",
+  "short_name": "교육알림",
+  "description": "용인 기흥구 초등학교 학사일정과 교육 정보를 한곳에서",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EEF1F8",
+  "theme_color": "#5161F7",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

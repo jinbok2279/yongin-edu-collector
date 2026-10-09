@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#5161F7">
+<meta name="description" content="용인 기흥구 초등학교 학사일정과 교육 정보를 한곳에서">
+<title>용인 맘 교육알림</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+:root{
+  --ink:#141A2E;--muted:#5C6478;--line:#EEF0F6;--ground:#EEF1F8;
+  --indigo:#4B5BF0;--indigo-ink:#3442C9;--coral-ink:#C93D22;--coral-bg:#FFE9E2;
+  --mint-ink:#13795F;--mint-bg:#E2F6F0;--sun-ink:#8A5300;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+button,input{font-family:inherit}
+a{color:var(--indigo);text-decoration:none}
+.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 90% 4%,rgba(150,135,255,.38),transparent 42%),radial-gradient(circle at 0% 62%,rgba(110,220,195,.26),transparent 45%),var(--ground)}
+.wrap{max-width:560px;margin:0 auto;padding:20px 18px calc(110px + env(safe-area-inset-bottom))}
+.lift{background:#fff;border-radius:24px;box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(20,26,46,.05),0 14px 30px -12px rgba(43,52,120,.24)}
+.glass{background:rgba(255,255,255,.66);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid rgba(255,255,255,.85)}
+.tile{display:inline-flex;align-items:center;justify-content:center;color:#fff;border-radius:14px;flex:0 0 auto;box-shadow:inset 0 2px 1px rgba(255,255,255,.55),inset 0 -4px 8px rgba(0,0,0,.16),0 10px 18px -6px var(--sh)}
+.t-indigo{background:linear-gradient(155deg,#9AA4FF,#5B6BFF 45%,#3B47D6);--sh:rgba(75,91,240,.6)}
+.t-coral{background:linear-gradient(155deg,#FFBBA5,#FF7A59 50%,#DD4E33);--sh:rgba(255,122,89,.6)}
+.t-mint{background:linear-gradient(155deg,#9BF0DC,#2FC4A4 50%,#16917A);--sh:rgba(43,181,154,.55)}
+.t-sun{background:linear-gradient(155deg,#FFE9A6,#FFC53D 50%,#E79B00);--sh:rgba(240,170,20,.55)}
+.t-lilac{background:linear-gradient(155deg,#E3C9FF,#AE7BFA 50%,#7E4ED8);--sh:rgba(167,116,242,.55)}
+.orb-sun{border-radius:50%;background:radial-gradient(circle at 30% 26%,#fff 0%,#FFF1C4 14%,#FFD15A 45%,#F2A900 78%,#C98500 100%);box-shadow:0 18px 26px -12px rgba(30,10,80,.55)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.fl{animation:float 5s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.fl{animation:none}}
+.btn{border:none;border-radius:16px;height:46px;padding:0 18px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-3d{background:linear-gradient(180deg,#6876FF,#4B5BF0);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 0 #3340C4,0 12px 18px -8px rgba(75,91,240,.6)}
+.btn-soft{background:linear-gradient(180deg,#fff,#F2F4FB);color:var(--ink);box-shadow:inset 0 1px 0 #fff,0 4px 0 #DCE0EE,0 10px 16px -8px rgba(43,52,120,.3)}
+.btn:active{transform:translateY(3px)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:20px;font-size:13px;font-weight:700;color:var(--ink)}
+h1,h2,h3{margin:0;letter-spacing:-.4px}
+.section{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline}
+.sec-head h2{font-size:19px;font-weight:800}
+.sec-head a,.sec-head button{font-size:13px;font-weight:700;color:var(--indigo);background:none;border:none;cursor:pointer;padding:6px 0}
+.hero{position:relative;overflow:hidden;border-radius:30px;padding:24px;min-height:200px;color:#fff;background:linear-gradient(140deg,#5161F7,#6B55E8 55%,#8A5BE6);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 26px 40px -18px rgba(75,91,240,.7)}
+.hero .glow{position:absolute;left:-60px;top:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%)}
+.hero .date{font-size:12px;opacity:.85;font-weight:500}
+.hero h1{font-size:23px;font-weight:800;line-height:1.38;margin-top:8px;max-width:72%;white-space:pre-line}
+.hero .next{margin:6px 0 0;font-size:15px;font-weight:500;opacity:.92;max-width:62%;line-height:1.5}
+.hero .cta{margin-top:14px;height:38px;padding:0 16px;border-radius:19px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.hero .deco{position:absolute;right:20px;top:20px}
+.hero .dday{position:absolute;right:18px;bottom:20px;text-align:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:10px 14px;min-width:84px}
+.hero .dday b{display:block;font-size:26px;font-weight:800;line-height:1.1}
+.hero .dday span{font-size:11px;opacity:.9}
+.ev{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.ev:last-child{border-bottom:none}
+.datebox{width:54px;height:54px;border-radius:16px;flex:0 0 auto;background:linear-gradient(180deg,#fff,#EEF0FA);box-shadow:inset 0 -3px 0 #DDE1F0,0 6px 12px -6px rgba(43,52,120,.35);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.datebox b{font-size:18px;font-weight:800;color:var(--indigo-ink);line-height:1.1}
+.datebox span{font-size:10px;font-weight:700;color:var(--muted)}
+.datebox.hol b{color:var(--coral-ink)}
+.ev-body{flex:1;min-width:0}
+.ev-name{font-size:15px;font-weight:700;line-height:1.4}
+.ev-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.pill{font-size:12px;font-weight:800;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.pill-coral{color:var(--coral-ink);background:var(--coral-bg)}
+.pill-indigo{color:var(--indigo-ink);background:#ECEEFF}
+.pill-mint{color:var(--mint-ink);background:var(--mint-bg)}
+.pill-gray{color:#3A4256;background:#EEF0F6}
+.card-pad{padding:6px 18px}
+.empty{padding:18px;font-size:14px;color:var(--muted);line-height:1.7}
+.soon{display:flex;gap:14px;align-items:center;padding:16px 18px}
+.soon p{margin:2px 0 0;font-size:13px;color:var(--muted);line-height:1.5}
+.search{display:flex;align-items:center;gap:10px;height:52px;padding:0 18px;border-radius:18px}
+.search input{flex:1;border:none;outline:none;background:transparent;font-size:15px;color:var(--ink)}
+.school{display:flex;gap:14px;align-items:center;padding:14px 16px;width:100%;text-align:left;border:none;background:#fff;cursor:pointer;border-bottom:1px solid var(--line);color:var(--ink)}
+.school:last-child{border-bottom:none}
+.school .nm{font-size:15px;font-weight:700}
+.school .ad{font-size:12px;color:var(--muted);margin-top:2px}
+.school.mine{background:#F4F5FF}
+.list{overflow:hidden}
+.back{width:44px;height:44px;border-radius:22px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:56px;border-bottom:1px solid var(--line);font-size:15px}
+.row:last-child{border-bottom:none}
+.row .val{font-size:13px;color:var(--muted);text-align:right}
+.foot{margin-top:26px;font-size:11px;color:var(--muted);line-height:1.7;text-align:center}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));width:min(524px,calc(100% - 28px));height:70px;border-radius:35px;display:flex;align-items:center;padding:0 6px;box-shadow:0 18px 40px -14px rgba(43,52,120,.38);z-index:10}
+.navi{flex:1;height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:11px;font-weight:700;background:none;border:none;cursor:pointer}
+.navi .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:12px}
+.navi.on{color:var(--indigo-ink)}
+.navi.on .ic{color:#fff;background:linear-gradient(155deg,#9AA4FF,#5B6BFF 45%,#3B47D6);box-shadow:inset 0 2px 1px rgba(255,255,255,.55),inset 0 -4px 8px rgba(0,0,0,.16),0 8px 14px -6px rgba(75,91,240,.6)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;background:#141A2E;color:#fff;font-size:13px;padding:10px 16px;border-radius:14px;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:.92}
+.loading{padding:60px 0;text-align:center;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<main class="wrap" id="view"><div class="loading">불러오는 중…</div></main>
+
+<nav class="nav glass" aria-label="주요 메뉴">
+  <button class="navi" data-tab="home"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg></span>홈</button>
+  <button class="navi" data-tab="schools"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>학교 일정</button>
+  <button class="navi" data-tab="my"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>마이</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const DATA_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/latest.json";
+const KEY_SCHOOL = "edu.school";
+const KEY_DATA = "edu.data";
+const IMPORTANT = /휴업|방학|개학|졸업|입학|체험|기념일|운동회|한마당|발표회|축제|상담|공개수업/;
+const WD = ["일","월","화","수","목","금","토"];
+const $view = document.getElementById("view");
+let DATA = null;
+let installEvt = null;
+
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+function toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 1800); }
+
+function parseDate(s) { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); }
+function today() { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+function dday(s) { return Math.round((parseDate(s) - today()) / 86400000); }
+function ddayText(n) { return n === 0 ? "오늘" : n > 0 ? `D-${n}` : `D+${-n}`; }
+function md(s) { const d = parseDate(s); return `${d.getMonth() + 1}.${d.getDate()}`; }
+function mdw(s) { const d = parseDate(s); return `${d.getMonth() + 1}.${d.getDate()} (${WD[d.getDay()]})`; }
+
+// 같은 이름의 연속 일정(예: ○○ 주간)을 하나로 묶기
+function group(events) {
+  const out = [];
+  [...events].sort((a, b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name)).forEach(e => {
+    const prev = out.find(g => g.name === e.name && (parseDate(e.date) - parseDate(g.end)) / 86400000 <= 3);
+    if (prev) prev.end = e.date; else out.push({ ...e, end: e.date });
+  });
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
+function upcoming(list) { return list.filter(g => dday(g.end) >= 0); }
+
+function mySchool() { const c = store(KEY_SCHOOL); return DATA && DATA.schools.find(s => s.code === c); }
+function schoolEvents(s) {
+  const pub = (DATA.public_holidays || []).map(p => ({ ...p, holiday: true, pub: true }));
+  return upcoming(group([...(s.events || []), ...pub]));
+}
+
+function evRow(g, sub) {
+  const n = dday(g.date);
+  const range = g.end !== g.date ? `${mdw(g.date)} ~ ${md(g.end)}` : mdw(g.date);
+  const d = parseDate(g.date);
+  const pill = g.holiday ? `<span class="pill pill-coral">${g.pub ? "공휴일" : "휴업"}</span>`
+    : `<span class="pill ${n <= 7 ? "pill-indigo" : "pill-gray"}">${ddayText(n)}</span>`;
+  return `<div class="ev">
+    <div class="datebox ${g.holiday ? "hol" : ""}"><b>${d.getDate()}</b><span>${d.getMonth() + 1}월 ${WD[d.getDay()]}</span></div>
+    <div class="ev-body"><div class="ev-name">${esc(g.name)}</div><div class="ev-sub">${esc(sub || range)}</div></div>
+    ${pill}
+  </div>`;
+}
+
+function regionHighlights() {
+  const rows = [];
+  DATA.schools.forEach(s => group(s.events || []).forEach(g => {
+    if ((g.holiday || IMPORTANT.test(g.name)) && dday(g.end) >= 0) rows.push({ ...g, school: s.name, code: s.code });
+  }));
+  return rows.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+const icon = {
+  pin: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4B5BF0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  back: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
+  search: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B5BF0" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  star: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>'
+};
+
+function footer() {
+  return `<div class="foot">데이터 · ${esc(DATA.source || "나이스 교육정보 개방포털")}<br>업데이트 ${esc(DATA.updated_at)} · 하루 3번 자동 갱신</div>`;
+}
+
+// ---------- 화면: 홈 ----------
+function viewHome() {
+  const s = mySchool();
+  const now = new Date();
+  const dateStr = `${now.getMonth() + 1}월 ${now.getDate()}일 ${WD[now.getDay()]}요일`;
+  let hero;
+  if (s) {
+    const next = schoolEvents(s).find(g => !g.pub) || schoolEvents(s)[0];
+    hero = `<section class="hero"><div class="glow"></div>
+      <div class="date">${dateStr}</div>
+      <h1>${esc(s.name)}</h1>
+      <p class="next">${next ? "다음 일정 · " + esc(next.name) : "예정된 일정이 없어요"}</p>
+      <button class="cta" onclick="go('school/${s.code}')">전체 일정 보기 →</button>
+      ${next ? `<div class="dday"><b>${ddayText(dday(next.date))}</b><span>${mdw(next.date)}</span></div>` : `<div class="deco fl"><div class="orb-sun" style="width:56px;height:56px"></div></div>`}
+    </section>`;
+  } else {
+    hero = `<section class="hero"><div class="glow"></div>
+      <div class="date">${dateStr}</div>
+      <h1>우리 아이 학교를\n선택해 주세요</h1>
+      <button class="cta" onclick="go('schools')">학교 고르기 →</button>
+      <div class="deco fl"><div class="orb-sun" style="width:58px;height:58px"></div></div>
+    </section>`;
+  }
+
+  let mine = "";
+  if (s) {
+    const list = schoolEvents(s).slice(0, 5);
+    const own = (s.events || []).length;
+    mine = `<section class="section"><div class="sec-head"><h2>우리 학교 다가오는 일정</h2><button onclick="go('school/${s.code}')">전체보기</button></div>
+      <div class="lift card-pad">${list.map(g => evRow(g)).join("") || ""}
+      ${own ? "" : `<div class="empty">학교가 아직 나이스에 학사일정을 많이 등록하지 않았어요. 등록되면 자동으로 여기에 나타나요.</div>`}</div></section>`;
+  }
+
+  const hl = regionHighlights().slice(0, 8);
+  const region = `<section class="section"><div class="sec-head"><h2>기흥구 학교 주요 일정</h2><button onclick="go('schools')">학교별 보기</button></div>
+    <div class="lift card-pad">${hl.length ? hl.map(g => evRow(g, `${g.school} · ${g.end !== g.date ? mdw(g.date) + " ~ " + md(g.end) : mdw(g.date)}`)).join("") : `<div class="empty">앞으로 두 달 안에 등록된 주요 일정이 없어요.</div>`}</div></section>`;
+
+  const soon = `<section class="section"><div class="sec-head"><h2>곧 추가돼요</h2></div>
+    <div class="lift soon"><span class="tile t-mint" style="width:44px;height:44px">공</span><div><b>도서관·교육지원청 공고</b><p>무료 체험·강좌·캠프 모집과 마감일 알림</p></div></div>
+    <div class="lift soon"><span class="tile t-lilac" style="width:44px;height:44px">뉴</span><div><b>오늘의 교육 뉴스</b><p>전국·경기·용인 교육 소식을 한 줄 요약으로</p></div></div></section>`;
+
+  const install = installEvt ? `<button class="btn btn-soft" style="height:40px;font-size:12px" onclick="doInstall()">앱으로 설치</button>` : "";
+  $view.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <button class="chip glass" onclick="go('schools')">${icon.pin} 용인 기흥구 · 초등</button>${install}</div>
+    ${hero}${mine}${region}${soon}${footer()}`;
+}
+
+// ---------- 화면: 학교 목록 ----------
+function viewSchools(q = "") {
+  const code = store(KEY_SCHOOL);
+  const list = DATA.schools.filter(s => !q || s.name.includes(q) || s.address.includes(q));
+  const rows = list.map(s => {
+    const next = upcoming(group(s.events || []))[0];
+    const tile = s.code === code ? `<span class="tile t-sun" style="width:40px;height:40px">${icon.star}</span>` : `<span class="tile t-indigo" style="width:40px;height:40px;font-weight:800">${esc(s.name.replace("용인", "")[0])}</span>`;
+    return `<button class="school ${s.code === code ? "mine" : ""}" onclick="go('school/${s.code}')">${tile}
+      <div style="flex:1;min-width:0"><div class="nm">${esc(s.name)}</div><div class="ad">${next ? esc(mdw(next.date) + " " + next.name) : "등록된 학교 일정 없음"}</div></div>
+      <span style="color:#8A91A5">›</span></button>`;
+  }).join("");
+  $view.innerHTML = `<h1 style="font-size:27px;font-weight:800">학교 일정</h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 16px">용인 기흥구 초등학교 ${DATA.school_count}곳 · 앞으로 두 달</p>
+    <label class="search lift">${icon.search}<input id="q" placeholder="학교 이름 검색" value="${esc(q)}" aria-label="학교 이름 검색"></label>
+    <div class="lift list" style="margin-top:16px">${rows || `<div class="empty">검색 결과가 없어요.</div>`}</div>${footer()}`;
+  const inp = document.getElementById("q");
+  inp.addEventListener("input", () => { const v = inp.value; viewSchools(v); const n = document.getElementById("q"); n.focus(); n.setSelectionRange(v.length, v.length); });
+}
+
+// ---------- 화면: 학교 상세 ----------
+function viewSchool(code) {
+  const s = DATA.schools.find(x => x.code === code);
+  if (!s) return go("schools");
+  const mine = store(KEY_SCHOOL) === code;
+  const list = schoolEvents(s);
+  $view.innerHTML = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
+    <div class="lift" style="padding:20px;margin-top:14px">
+      <h1 style="font-size:23px;font-weight:800">${esc(s.name)}</h1>
+      <p style="margin:6px 0 16px;font-size:13px;color:var(--muted)">${esc(s.address)}</p>
+      ${mine ? `<span class="pill pill-mint">내 학교로 설정됨</span>` : `<button class="btn btn-3d" onclick="setSchool('${s.code}')">${icon.star} 우리 아이 학교로 설정</button>`}
+    </div>
+    <section class="section"><div class="sec-head"><h2>다가오는 일정</h2></div>
+      <div class="lift card-pad">${list.map(g => evRow(g)).join("")}
+      ${(s.events || []).length ? "" : `<div class="empty">이 학교는 아직 나이스에 학사일정을 등록하지 않았어요. 등록되면 하루 3번 자동으로 반영돼요.</div>`}</div></section>${footer()}`;
+}
+
+// ---------- 화면: 마이 ----------
+function viewMy() {
+  const s = mySchool();
+  $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">마이</h1>
+    <div class="lift card-pad">
+      <div class="row"><span>우리 아이 학교</span><button class="btn btn-soft" style="height:38px;font-size:13px" onclick="go('schools')">${s ? esc(s.name) + " · 변경" : "선택하기"}</button></div>
+      <div class="row"><span>지역</span><span class="val">용인시 기흥구 · 초등학교</span></div>
+    </div>
+    <section class="section"><div class="sec-head"><h2>앱처럼 쓰기</h2></div>
+      <div class="lift" style="padding:18px;font-size:14px;line-height:1.75">
+        ${installEvt ? `<button class="btn btn-3d" onclick="doInstall()" style="width:100%;margin-bottom:12px">홈 화면에 설치하기</button>` : ""}
+        크롬 오른쪽 위 <b>⋮ 메뉴 → 홈 화면에 추가</b>(또는 앱 설치)를 누르면 휴대폰에 앱 아이콘이 생겨요.
+      </div></section>
+    <section class="section"><div class="sec-head"><h2>정보</h2></div>
+      <div class="lift card-pad">
+        <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
+        <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
+        <div class="row"><span>버전</span><span class="val">0.1 (시범 운영)</span></div>
+      </div></section>
+    <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
+}
+
+// ---------- 이동 / 동작 ----------
+function setSchool(code) { store(KEY_SCHOOL, code); toast("우리 아이 학교로 설정했어요"); go("home"); }
+function go(route) { if (location.hash === "#" + route) render(); else location.hash = route; }
+function render() {
+  if (!DATA) return;
+  const r = (location.hash || "#home").slice(1);
+  const tab = r.startsWith("school") ? "schools" : r === "my" ? "my" : "home";
+  document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+  if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
+  else if (r === "schools") viewSchools();
+  else if (r === "my") viewMy();
+  else viewHome();
+  window.scrollTo(0, 0);
+}
+async function doInstall() { if (!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; render(); }
+
+document.querySelectorAll(".navi").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
+window.addEventListener("hashchange", render);
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; render(); });
+
+async function load() {
+  try {
+    const res = await fetch(DATA_URL, { cache: "no-cache" });
+    if (!res.ok) throw new Error(res.status);
+    DATA = await res.json();
+    store(KEY_DATA, JSON.stringify(DATA));
+  } catch (e) {
+    const saved = store(KEY_DATA);
+    if (saved) { DATA = JSON.parse(saved); toast("인터넷 연결이 없어 저장된 정보를 보여드려요"); }
+    else { $view.innerHTML = `<div class="loading">정보를 불러오지 못했어요.<br>인터넷 연결을 확인하고 다시 열어 주세요.</div>`; return; }
+  }
+  render();
+}
+load();
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>
