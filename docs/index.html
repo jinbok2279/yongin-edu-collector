@@ -145,7 +145,7 @@ function dataFetch(name) {
 }
 // 접속 통계 (GoatCounter · 쿠키/개인정보 없음)
 let lastTracked = "";
-function gc(fn, tries = 0) { if (window.goatcounter && window.goatcounter.count) fn(window.goatcounter); else if (tries < 20) setTimeout(() => gc(fn, tries + 1), 500); }
+function gc(fn, tries = 0) { if (store("edu.admin")) return; if (window.goatcounter && window.goatcounter.count) fn(window.goatcounter); else if (tries < 20) setTimeout(() => gc(fn, tries + 1), 500); }
 function trackView(route) {
   const path = "/" + route.replace(/^kid\/(?!new).*/, "kid/edit").replace(/^kid\/new\/.*/, "kid/new");
   if (path === lastTracked) return; lastTracked = path;
@@ -404,7 +404,7 @@ function viewMy() {
       <div class="lift card-pad">
         <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row"><span>버전</span><span class="val">0.2 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.3 (시범 운영)</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -690,15 +690,113 @@ function deleteKid(id) {
 }
 function pickKid(id) { homeKid = id; render(); }
 
+
+// ---------- 관리자 (숨은 화면: 마이 > 버전 5번 누르기) ----------
+const GC_SITE = "https://yongin-edu-app.goatcounter.com";
+const KEY_ADMIN = "edu.admin";
+let adminTaps = 0, adminTapTimer = null, ADMIN = null, adminBusy = false;
+function adminTap() {
+  adminTaps++; clearTimeout(adminTapTimer); adminTapTimer = setTimeout(() => adminTaps = 0, 1500);
+  if (adminTaps >= 5) { adminTaps = 0; go("admin"); }
+}
+const PATH_NAMES = { "/home": "홈", "/schools": "학교 일정", "/library": "도서관 좌석", "/books": "인기 도서", "/my": "마이", "/region": "지역 설정",
+  "/kid/new": "아이 추가 화면", "/kid/edit": "아이 수정 화면", "/admin": "관리자" };
+function pathName(p) {
+  if (PATH_NAMES[p]) return PATH_NAMES[p];
+  if (p.startsWith("/school/")) { const sc = DATA.schools.find(s => s.code === p.slice(8)); return "학교: " + (sc ? sc.name : p.slice(8)); }
+  if (p.startsWith("/library/")) return "도서관: " + decodeURIComponent(p.slice(9));
+  if (p.startsWith("/aca/")) { const a = ACAS && ACAS.academies.find(x => x.id === p.slice(5)); return "학원: " + (a ? a.n : p.slice(5)); }
+  return p;
+}
+function kstMidnight(daysAgo) { const now = new Date(); const k = new Date(now.getTime() + 9 * 3600e3); k.setUTCHours(0, 0, 0, 0); return new Date(k.getTime() - 9 * 3600e3 - daysAgo * 86400e3); }
+function gcApi(path, params) {
+  const q = new URLSearchParams(params).toString();
+  return fetch(GC_SITE + "/api/v0/" + path + (q ? "?" + q : ""), { headers: { Authorization: "Bearer " + store(KEY_ADMIN), "Content-Type": "application/json" } })
+    .then(async r => { if (r.status === 401 || r.status === 403) throw new Error("키가 맞지 않거나 권한이 없어요 (" + r.status + ")"); if (!r.ok) throw new Error("통계 서버 오류 " + r.status + " " + (await r.text()).slice(0, 80)); return r.json(); });
+}
+async function loadAdmin() {
+  if (adminBusy) return; adminBusy = true;
+  const iso = d => d.toISOString().slice(0, 19) + "Z";
+  const end = iso(new Date(Math.ceil(Date.now() / 3600e3) * 3600e3));
+  const r = (days) => ({ start: iso(kstMidnight(days)), end });
+  try {
+    const [today, yest, week, month, hits, refs, systems, locs] = await Promise.all([
+      gcApi("stats/total", r(0)), gcApi("stats/total", { start: iso(kstMidnight(1)), end: iso(kstMidnight(0)) }),
+      gcApi("stats/total", r(6)), gcApi("stats/total", r(29)),
+      gcApi("stats/hits", { ...r(6), limit: 50 }), gcApi("stats/toprefs", { ...r(29), limit: 8 }),
+      gcApi("stats/systems", { ...r(29), limit: 6 }), gcApi("stats/locations", { ...r(29), limit: 6 })]);
+    ADMIN = { at: new Date(), today, yest, week, month, hits, refs, systems, locs, err: "" };
+  } catch (e) { ADMIN = { err: String(e.message || e) }; }
+  adminBusy = false;
+  if (location.hash === "#admin") render();
+}
+function adminSaveKey() {
+  const v = (document.getElementById("akey").value || "").trim();
+  if (v.length < 10) { toast("API 키를 붙여 넣어 주세요"); return; }
+  store(KEY_ADMIN, v); ADMIN = null; toast("이 휴대폰을 관리자로 등록했어요"); render();
+}
+function adminLogout() { try { localStorage.removeItem(KEY_ADMIN); } catch (e) {} ADMIN = null; toast("관리자 등록을 해제했어요"); go("my"); }
+function viewAdmin() {
+  const back = `<button class="back glass" onclick="go('my')" aria-label="뒤로">${icon.back}</button>`;
+  const head = `${back}<h1 style="font-size:26px;font-weight:800;margin-top:14px">관리자</h1>`;
+  if (!store(KEY_ADMIN)) {
+    $view.innerHTML = `${head}
+      <p style="font-size:13px;color:var(--muted);margin:6px 0 16px;line-height:1.6">접속 통계를 보려면 이 휴대폰에 GoatCounter API 키를 한 번 넣어 주세요. 키는 이 휴대폰에만 저장되고, 관리자로 등록된 휴대폰의 방문은 통계에서 빠져요.</p>
+      <div class="lift" style="padding:18px;font-size:14px;line-height:1.8">
+        <b>키 만드는 법</b><br>1. <a href="${GC_SITE}" target="_blank" rel="noopener">GoatCounter 관리자 화면</a>에 로그인<br>2. 위쪽 메뉴의 내 이름(또는 톱니바퀴) → <b>API</b><br>3. 새 키를 만들 때 <b>Read statistics</b>(통계 읽기)만 체크 → 만들기<br>4. 나온 긴 글자를 복사해서 아래 칸에 붙여 넣기
+      </div>
+      <label class="search lift" style="margin-top:14px"><input id="akey" type="password" autocomplete="off" placeholder="API 키 붙여 넣기" aria-label="GoatCounter API 키"></label>
+      <button class="btn btn-3d" style="width:100%;height:52px;margin-top:14px" onclick="adminSaveKey()">이 휴대폰을 관리자로 등록</button>
+      <a class="btn btn-soft" style="width:100%;height:46px;margin-top:10px;font-size:14px" href="${GC_SITE}" target="_blank" rel="noopener">키 없이 전체 통계 사이트 열기 ↗</a>`;
+    return;
+  }
+  if (!ADMIN) { $view.innerHTML = head + `<div class="lift empty" style="margin-top:16px">통계를 불러오는 중이에요…</div>`; loadAdmin(); return; }
+  if (ADMIN.err) {
+    $view.innerHTML = head + `<div class="lift empty" style="margin-top:16px">통계를 불러오지 못했어요.<br>${esc(ADMIN.err)}</div>
+      <button class="btn btn-soft" style="width:100%;height:46px;margin-top:12px" onclick="ADMIN=null;render()">다시 시도</button>
+      <button class="btn btn-soft" style="width:100%;height:46px;margin-top:10px;color:var(--coral-ink)" onclick="adminLogout()">API 키 지우기</button>`;
+    return;
+  }
+  const A = ADMIN;
+  const tile = (label, v, sub) => `<div class="stat" style="padding:14px 6px"><div class="k">${label}</div><div class="v" style="font-size:24px">${(v ?? 0).toLocaleString()}</div>${sub ? `<div class="k" style="margin-top:2px">${sub}</div>` : ""}</div>`;
+  const days = (A.month.stats || []).slice(-14);
+  const max = Math.max(1, ...days.map(d => d.daily || 0));
+  const bars = days.map(d => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0">
+      <div style="font-size:10px;color:var(--muted)">${d.daily || ""}</div>
+      <div style="width:70%;height:${Math.max(3, Math.round((d.daily || 0) / max * 110))}px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#8C97FF,var(--indigo))"></div>
+      <div style="font-size:10px;color:var(--muted)">${Number(d.day.slice(8))}</div></div>`).join("");
+  const hits = A.hits.hits || [];
+  const pages = hits.filter(h => !h.event), events = hits.filter(h => h.event);
+  const list = (rows, label) => rows.length ? `<div class="lift card-pad">${rows.map(([k, v]) => `<div class="row"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(k)}</span><span class="val"><b>${v.toLocaleString()}</b></span></div>`).join("")}</div>` : `<div class="lift empty">${label}</div>`;
+  const evName = { "아이-등록": "아이 등록", "아이-수정": "아이 정보 수정", "학원-추가": "학원 추가", "책-클릭": "인기 도서 클릭", "앱-설치": "홈 화면에 설치" };
+  $view.innerHTML = `${head}
+    <p style="font-size:12px;color:var(--muted);margin:6px 0 14px">방문자 수 기준 · ${A.at.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })} 불러옴 · <a href="#admin" onclick="ADMIN=null;render();return false">새로고침</a></p>
+    <div class="stats" style="grid-template-columns:repeat(2,1fr)">${tile("오늘", A.today.total)}${tile("어제", A.yest.total)}${tile("최근 7일", A.week.total)}${tile("최근 30일", A.month.total)}</div>
+    <section class="section"><div class="sec-head"><h2>최근 14일 방문자</h2></div>
+      <div class="lift" style="padding:16px 10px 12px;display:flex;align-items:flex-end;gap:2px;height:170px">${bars || `<div class="empty" style="width:100%">아직 데이터가 없어요.</div>`}</div></section>
+    <section class="section"><div class="sec-head"><h2>많이 본 화면</h2><span style="font-size:12px;color:var(--muted)">최근 7일</span></div>
+      ${list(pages.slice(0, 12).map(h => [pathName(h.path), h.count]), "아직 기록이 없어요.")}</section>
+    <section class="section"><div class="sec-head"><h2>사용자 행동</h2><span style="font-size:12px;color:var(--muted)">최근 7일</span></div>
+      ${list(events.map(h => [evName[h.path] || h.path, h.count]), "아직 아이 등록·학원 추가 같은 행동 기록이 없어요.")}</section>
+    <section class="section"><div class="sec-head"><h2>어디서 들어왔나</h2><span style="font-size:12px;color:var(--muted)">최근 30일</span></div>
+      ${list((A.refs.stats || []).map(x => [x.name || "(직접 입력·앱)", x.count]), "아직 기록이 없어요.")}</section>
+    <section class="section"><div class="sec-head"><h2>휴대폰·지역</h2><span style="font-size:12px;color:var(--muted)">최근 30일</span></div>
+      ${list([...(A.systems.stats || []).map(x => [x.name || "기타", x.count]), ...(A.locs.stats || []).map(x => ["📍 " + (x.name || "기타"), x.count])], "아직 기록이 없어요.")}</section>
+    <a class="btn btn-3d" style="width:100%;height:50px;margin-top:20px;font-size:14px" href="${GC_SITE}" target="_blank" rel="noopener">전체 통계 사이트 열기 ↗</a>
+    <button class="btn btn-soft" style="width:100%;height:46px;margin-top:10px;color:var(--coral-ink)" onclick="adminLogout()">이 휴대폰 관리자 해제</button>
+    <div class="foot">관리자로 등록된 이 휴대폰의 방문은 통계에 들어가지 않아요.</div>`;
+}
+
 // ---------- 이동 / 동작 ----------
 function go(route) { if (location.hash === "#" + route) render(); else location.hash = route; }
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "schools" : r.startsWith("library") || r === "books" ? "library" : r === "my" || r === "region" || r.startsWith("kid/") || r.startsWith("aca/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "schools" : r.startsWith("library") || r === "books" ? "library" : r === "my" || r === "region" || r === "admin" || r.startsWith("kid/") || r.startsWith("aca/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
   else if (r === "region") viewRegion();
+  else if (r === "admin") viewAdmin();
   else if (r.startsWith("aca/")) viewAca(r.slice(4));
   else if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
   else if (r === "schools") viewSchools();
