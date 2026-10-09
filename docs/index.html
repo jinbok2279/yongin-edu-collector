@@ -417,7 +417,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.6 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.7 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -1293,22 +1293,18 @@ function viewAdmin() {
   }
   const A = ADMIN;
   const tile = (label, v, sub) => `<div class="stat" style="padding:14px 6px"><div class="k">${label}</div><div class="v" style="font-size:24px">${(v ?? 0).toLocaleString()}</div>${sub ? `<div class="k" style="margin-top:2px">${sub}</div>` : ""}</div>`;
-  const days = ((A.month || {}).stats || []).slice(-14);
-  const max = Math.max(1, ...days.map(d => d.daily || 0));
-  const bars = days.map(d => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0">
-      <div style="font-size:10px;color:var(--muted)">${d.daily || ""}</div>
-      <div style="width:70%;height:${Math.max(3, Math.round((d.daily || 0) / max * 110))}px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#8C97FF,var(--indigo))"></div>
-      <div style="font-size:10px;color:var(--muted)">${Number(d.day.slice(8))}</div></div>`).join("");
+  const chart = adminChartHtml(A);
   const hits = (A.hits || {}).hits || [];
   const pages = hits.filter(h => !h.event), events = hits.filter(h => h.event);
   const list = (rows, label) => rows.length ? `<div class="lift card-pad">${rows.map(([k, v]) => `<div class="row"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(k)}</span><span class="val"><b>${v.toLocaleString()}</b></span></div>`).join("")}</div>` : `<div class="lift empty">${label}</div>`;
   const evName = { "아이-등록": "아이 등록", "아이-수정": "아이 정보 수정", "학원-추가": "학원 추가", "책-클릭": "인기 도서 클릭", "앱-설치": "홈 화면에 설치", "관심-인기학원": "★ 인기 학원 순위 알림 신청", "관심-알림": "★ 알림 기능 알림 신청", "리포트-보기": "수강료 리포트 보기" };
   $view.innerHTML = `${head}
     ${A.warn ? `<div class="lift empty" style="margin:10px 0">일부 통계를 못 불러왔어요: ${esc(A.warn)}</div>` : ""}
-    <p style="font-size:12px;color:var(--muted);margin:6px 0 14px">방문자 수 기준 · ${A.at.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })} 불러옴 · <a href="#admin" onclick="ADMIN=null;render();return false">새로고침</a></p>
+    <p style="font-size:12px;color:var(--muted);margin:6px 0 14px">방문자 수 기준 · ${A.at.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })} 불러옴 · <a href="#admin" onclick="ADMIN=null;adminMonths=null;render();return false">새로고침</a></p>
     <div class="stats" style="grid-template-columns:repeat(2,1fr)">${tile("오늘", A.today.total)}${tile("어제", A.yest.total)}${tile("최근 7일", A.week.total)}${tile("최근 30일", A.month.total)}</div>
-    <section class="section"><div class="sec-head"><h2>최근 14일 방문자</h2></div>
-      <div class="lift" style="padding:16px 10px 12px;display:flex;align-items:flex-end;gap:2px;height:170px">${bars || `<div class="empty" style="width:100%">아직 데이터가 없어요.</div>`}</div></section>
+    <section class="section"><div class="sec-head"><h2>방문자 그래프</h2></div>
+      <div class="seg" style="display:flex;gap:6px;margin-bottom:10px">${[["day", "일별 (30일)"], ["month", "월별 (12개월)"]].map(([k, l]) => `<button class="btn ${adminChart === k ? "btn-3d" : "btn-soft"}" style="flex:1;height:40px;font-size:13px" onclick="pickAdminChart('${k}')">${l}</button>`).join("")}</div>
+      ${chart}</section>
     <section class="section"><div class="sec-head"><h2>많이 본 화면</h2><span style="font-size:12px;color:var(--muted)">최근 7일</span></div>
       ${list(pages.slice(0, 12).map(h => [pathName(h.path), h.count]), "아직 기록이 없어요.")}</section>
     <section class="section"><div class="sec-head"><h2>사용자 행동</h2><span style="font-size:12px;color:var(--muted)">최근 7일</span></div>
@@ -1322,6 +1318,60 @@ function viewAdmin() {
     <div class="foot">관리자로 등록된 이 휴대폰의 방문은 통계에 들어가지 않아요.</div>`;
 }
 
+// 관리자 방문자 그래프: 일별(최근 30일) / 월별(최근 12개월)
+let adminChart = "day", adminMonths = null, adminMonthsBusy = false;
+function pickAdminChart(k) { adminChart = k; render(); }
+function kstMonthStart(back) { const k = new Date(Date.now() + 9 * 3600e3); return new Date(Date.UTC(k.getUTCFullYear(), k.getUTCMonth() - back, 1) - 9 * 3600e3); }
+async function loadAdminMonths() {
+  if (adminMonthsBusy) return; adminMonthsBusy = true;
+  const iso = d => d.toISOString().slice(0, 19) + "Z";
+  const end = iso(new Date(Math.ceil(Date.now() / 3600e3) * 3600e3));
+  try {
+    // 1) 12개월치 일별 방문자 → 기록이 있는 달 찾기
+    const year = await gcApi("stats/total", { start: iso(kstMonthStart(11)), end });
+    const has = new Set((year.stats || []).filter(d => d.daily > 0).map(d => d.day.slice(0, 7)));
+    const months = [];
+    for (let b = 11; b >= 0; b--) {
+      const st = kstMonthStart(b), en = b === 0 ? end : iso(kstMonthStart(b - 1));
+      const key = new Date(st.getTime() + 9 * 3600e3).toISOString().slice(0, 7);
+      let total = 0;
+      // 2) 기록이 있는 달만 그 달 전체 방문자(중복 제외)를 따로 받음 (1초에 4번 제한 → 0.6초 간격)
+      if (has.has(key)) { await new Promise(r => setTimeout(r, 600)); total = ((await gcApi("stats/total", { start: iso(st), end: en })) || {}).total || 0; }
+      months.push({ key, total });
+    }
+    adminMonths = { months };
+  } catch (e) { adminMonths = { err: String(e.message || e) }; }
+  adminMonthsBusy = false;
+  if (location.hash === "#admin" && adminChart === "month") render();
+}
+function adminBars(rows, scroll) {
+  const max = Math.max(1, ...rows.map(r => r.v));
+  const w = scroll ? "flex:0 0 26px" : "flex:1;min-width:0";
+  const bars = rows.map(r => `<div style="${w};display:flex;flex-direction:column;align-items:center;gap:4px">
+      <div style="font-size:10px;color:var(--muted)">${r.v || ""}</div>
+      <div style="width:70%;height:${Math.max(3, Math.round(r.v / max * 110))}px;border-radius:6px 6px 3px 3px;background:${r.hi ? "linear-gradient(180deg,#FFB199,#FF7A59)" : "linear-gradient(180deg,#8C97FF,var(--indigo))"}"></div>
+      <div style="font-size:10px;color:${r.hi ? "var(--coral-ink)" : "var(--muted)"};font-weight:${r.hi ? 800 : 400};white-space:nowrap">${r.l}</div></div>`).join("");
+  return `<div class="lift" id="adminBars" style="padding:16px 10px 12px;display:flex;align-items:flex-end;gap:2px;height:170px;overflow-x:${scroll ? "auto" : "hidden"}">${bars}</div>`;
+}
+function adminChartHtml(A) {
+  if (adminChart === "month") {
+    if (!adminMonths) { setTimeout(loadAdminMonths, 0); return `<div class="lift empty">월별 통계를 불러오는 중이에요… (몇 초 걸려요)</div>`; }
+    if (adminMonths.err) return `<div class="lift empty">월별 통계를 불러오지 못했어요.<br>${esc(adminMonths.err)}</div><button class="btn btn-soft" style="width:100%;height:42px;margin-top:8px" onclick="adminMonths=null;render()">다시 시도</button>`;
+    const ms = adminMonths.months, sum = ms.reduce((a, m) => a + m.total, 0);
+    const best = ms.reduce((a, m) => m.total > a.total ? m : a, ms[0]);
+    return adminBars(ms.map((m, i) => ({ v: m.total, l: Number(m.key.slice(5)) + "월", hi: i === ms.length - 1 })), false) +
+      `<p style="font-size:12px;color:var(--muted);margin:8px 2px 0;line-height:1.6">한 달 동안 들어온 사람 수(같은 사람은 한 번) · 12개월 합 ${sum.toLocaleString()}명${best && best.total ? ` · 가장 많은 달 ${Number(best.key.slice(5))}월 ${best.total.toLocaleString()}명` : ""}<br>이번 달은 오늘까지 집계예요.</p>`;
+  }
+  const days = ((A.month || {}).stats || []).slice(-30);
+  if (!days.length) return `<div class="lift empty">아직 데이터가 없어요.</div>`;
+  const wk = ["일", "월", "화", "수", "목", "금", "토"];
+  const rows = days.map((d, i) => { const dt = new Date(d.day + "T00:00:00"); const dd = Number(d.day.slice(8)); return { v: d.daily || 0, l: (dd === 1 || i === 0 ? Number(d.day.slice(5, 7)) + "/" : "") + dd, hi: i === days.length - 1, we: dt.getDay() }; });
+  const avg = Math.round(rows.reduce((a, r) => a + r.v, 0) / rows.length * 10) / 10;
+  const top = rows.reduce((a, r, i) => r.v > rows[a].v ? i : a, 0);
+  setTimeout(() => { const el = document.getElementById("adminBars"); if (el) el.scrollLeft = el.scrollWidth; }, 0);
+  return adminBars(rows, true) + `<p style="font-size:12px;color:var(--muted);margin:8px 2px 0;line-height:1.6">하루 방문자 · 30일 평균 ${avg}명 · 최고 ${days[top].day.slice(5).replace("-", "/")}(${wk[rows[top].we]}) ${rows[top].v}명 · 옆으로 밀면 이전 날짜</p>`;
+}
+
 // ---------- 이동 / 동작 ----------
 function go(route) { if (location.hash === "#" + route) render(); else location.hash = route; }
 function render() {
@@ -1329,7 +1379,7 @@ function render() {
   const r = (location.hash || "#home").slice(1);
   const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r === "jobs" || r === "elite" || r === "about" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
-  if (r !== "admin") { adminOpen = false; ADMIN = null; }
+  if (r !== "admin") { adminOpen = false; ADMIN = null; adminMonths = null; }
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
   else if (r === "region") viewRegion();
   else if (r === "admin") viewAdmin();
