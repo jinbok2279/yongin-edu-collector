@@ -112,6 +112,8 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 const DATA_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/latest.json";
 const KEY_SCHOOL = "edu.school";
 const KEY_DATA = "edu.data";
+const KEY_REGION = "edu.region";
+const GUS = ["수지구", "기흥구", "처인구"];
 const IMPORTANT = /휴업|방학|개학|졸업|입학|체험|기념일|운동회|한마당|발표회|축제|상담|공개수업/;
 const WD = ["일","월","화","수","목","금","토"];
 const $view = document.getElementById("view");
@@ -140,6 +142,14 @@ function group(events) {
 }
 function upcoming(list) { return list.filter(g => dday(g.end) >= 0); }
 
+// ---------- 지역(구 · 읍면동) ----------
+function region() { try { return JSON.parse(store(KEY_REGION) || "{}"); } catch (e) { return {}; } }
+function setRegion(gu, dong) { store(KEY_REGION, JSON.stringify({ gu: gu || "", dong: dong || "" })); }
+function dongOf(s) { return s.dong || "기타"; }
+function inRegion(s) { const r = region(); return (!r.gu || s.gu === r.gu) && (!r.dong || dongOf(s) === r.dong); }
+function regionLabel() { const r = region(); return r.gu ? `용인 ${r.gu}${r.dong ? " " + r.dong : ""}` : "용인시 전체"; }
+function regionSchools() { return DATA.schools.filter(inRegion); }
+
 function mySchool() { const c = store(KEY_SCHOOL); return DATA && DATA.schools.find(s => s.code === c); }
 function schoolEvents(s) {
   const pub = (DATA.public_holidays || []).map(p => ({ ...p, holiday: true, pub: true }));
@@ -161,7 +171,7 @@ function evRow(g, sub) {
 
 function regionHighlights() {
   const rows = [];
-  DATA.schools.forEach(s => group(s.events || []).forEach(g => {
+  regionSchools().forEach(s => group(s.events || []).forEach(g => {
     if ((g.holiday || IMPORTANT.test(g.name)) && dday(g.end) >= 0) rows.push({ ...g, school: s.name, code: s.code });
   }));
   return rows.sort((a, b) => a.date.localeCompare(b.date));
@@ -212,8 +222,10 @@ function viewHome() {
   }
 
   const hl = regionHighlights().slice(0, 8);
-  const region = `<section class="section"><div class="sec-head"><h2>기흥구 학교 주요 일정</h2><button onclick="go('schools')">학교별 보기</button></div>
-    <div class="lift card-pad">${hl.length ? hl.map(g => evRow(g, `${g.school} · ${g.end !== g.date ? mdw(g.date) + " ~ " + md(g.end) : mdw(g.date)}`)).join("") : `<div class="empty">앞으로 두 달 안에 등록된 주요 일정이 없어요.</div>`}</div></section>`;
+  const r = region();
+  const regionTitle = r.dong || r.gu || "용인시";
+  const regionSec = `<section class="section"><div class="sec-head"><h2>${esc(regionTitle)} 학교 주요 일정</h2><button onclick="go('schools')">학교별 보기</button></div>
+    <div class="lift card-pad">${hl.length ? hl.map(g => evRow(g, `${g.school} · ${g.end !== g.date ? mdw(g.date) + " ~ " + md(g.end) : mdw(g.date)}`)).join("") : `<div class="empty">이 지역에는 앞으로 두 달 안에 등록된 주요 일정이 없어요.</div>`}</div></section>`;
 
   const soon = `<section class="section"><div class="sec-head"><h2>곧 추가돼요</h2></div>
     <div class="lift soon"><span class="tile t-mint" style="width:44px;height:44px">공</span><div><b>도서관·교육지원청 공고</b><p>무료 체험·강좌·캠프 모집과 마감일 알림</p></div></div>
@@ -221,23 +233,27 @@ function viewHome() {
 
   const install = installEvt ? `<button class="btn btn-soft" style="height:40px;font-size:12px" onclick="doInstall()">앱으로 설치</button>` : "";
   $view.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <button class="chip glass" onclick="go('schools')">${icon.pin} 용인 기흥구 · 초등</button>${install}</div>
-    ${hero}${mine}${region}${soon}${footer()}`;
+      <button class="chip glass" onclick="go('region')">${icon.pin} ${esc(regionLabel())} · 초등 ▾</button>${install}</div>
+    ${hero}${mine}${regionSec}${soon}${footer()}`;
 }
 
 // ---------- 화면: 학교 목록 ----------
 function viewSchools(q = "") {
   const code = store(KEY_SCHOOL);
-  const list = DATA.schools.filter(s => !q || s.name.includes(q) || s.address.includes(q));
+  const base = q ? DATA.schools : regionSchools();
+  const list = base.filter(s => !q || s.name.includes(q) || s.address.includes(q) || (s.dong || "").includes(q));
+  const tileCls = { "수지구": "t-mint", "기흥구": "t-indigo", "처인구": "t-coral" };
   const rows = list.map(s => {
     const next = upcoming(group(s.events || []))[0];
-    const tile = s.code === code ? `<span class="tile t-sun" style="width:40px;height:40px">${icon.star}</span>` : `<span class="tile t-indigo" style="width:40px;height:40px;font-weight:800">${esc(s.name.replace("용인", "")[0])}</span>`;
+    const tile = s.code === code ? `<span class="tile t-sun" style="width:40px;height:40px">${icon.star}</span>` : `<span class="tile ${tileCls[s.gu] || "t-lilac"}" style="width:40px;height:40px;font-weight:800">${esc(s.name.replace("용인", "")[0])}</span>`;
     return `<button class="school ${s.code === code ? "mine" : ""}" onclick="go('school/${s.code}')">${tile}
-      <div style="flex:1;min-width:0"><div class="nm">${esc(s.name)}</div><div class="ad">${next ? esc(mdw(next.date) + " " + next.name) : "등록된 학교 일정 없음"}</div></div>
+      <div style="flex:1;min-width:0"><div class="nm">${esc(s.name)}</div><div class="ad">${esc(s.gu || "")}${s.dong ? " " + esc(s.dong) : ""} · ${next ? esc(mdw(next.date) + " " + next.name) : "등록된 일정 없음"}</div></div>
       <span style="color:#8A91A5">›</span></button>`;
   }).join("");
   $view.innerHTML = `<h1 style="font-size:27px;font-weight:800">학교 일정</h1>
-    <p style="font-size:13px;color:var(--muted);margin:6px 0 16px">용인 기흥구 초등학교 ${DATA.school_count}곳 · 앞으로 두 달</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0 16px;gap:10px">
+      <span style="font-size:13px;color:var(--muted)">${q ? "용인시 전체에서 검색" : esc(regionLabel())} · 초등학교 ${list.length}곳</span>
+      <button class="btn btn-soft" style="height:36px;font-size:12px;padding:0 12px" onclick="go('region')">지역 변경</button></div>
     <label class="search lift">${icon.search}<input id="q" placeholder="학교 이름 검색" value="${esc(q)}" aria-label="학교 이름 검색"></label>
     <div class="lift list" style="margin-top:16px">${rows || `<div class="empty">검색 결과가 없어요.</div>`}</div>${footer()}`;
   const inp = document.getElementById("q");
@@ -267,7 +283,7 @@ function viewMy() {
   $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">마이</h1>
     <div class="lift card-pad">
       <div class="row"><span>우리 아이 학교</span><button class="btn btn-soft" style="height:38px;font-size:13px" onclick="go('schools')">${s ? esc(s.name) + " · 변경" : "선택하기"}</button></div>
-      <div class="row"><span>지역</span><span class="val">용인시 기흥구 · 초등학교</span></div>
+      <div class="row"><span>관심 지역</span><button class="btn btn-soft" style="height:38px;font-size:13px" onclick="go('region')">${esc(regionLabel())} · 변경</button></div>
     </div>
     <section class="section"><div class="sec-head"><h2>앱처럼 쓰기</h2></div>
       <div class="lift" style="padding:18px;font-size:14px;line-height:1.75">
@@ -283,15 +299,45 @@ function viewMy() {
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
 
+// ---------- 화면: 지역 설정 ----------
+function viewRegion() {
+  const r = region();
+  const cnt = gu => DATA.schools.filter(s => !gu || s.gu === gu).length;
+  const guBtn = (gu, label) => {
+    const on = (r.gu || "") === gu;
+    return `<button class="btn ${on ? "btn-3d" : "btn-soft"}" style="flex:1;min-width:0;flex-direction:column;height:64px;gap:2px" onclick="pickGu('${gu}')">
+      <span>${label}</span><span style="font-size:11px;font-weight:500;opacity:.85">${cnt(gu)}곳</span></button>`;
+  };
+  let dongs = "";
+  if (r.gu) {
+    const map = {};
+    DATA.schools.filter(s => s.gu === r.gu).forEach(s => { map[dongOf(s)] = (map[dongOf(s)] || 0) + 1; });
+    const names = Object.keys(map).sort((a, b) => (a === "기타") - (b === "기타") || a.localeCompare(b, "ko"));
+    const chip = (d, label, n) => `<button class="btn ${(r.dong || "") === d ? "btn-3d" : "btn-soft"}" style="height:40px;font-size:13px;padding:0 14px" onclick="pickDong('${d}')">${esc(label)} <span style="font-weight:500;opacity:.8">${n}</span></button>`;
+    dongs = `<section class="section"><div class="sec-head"><h2>읍 · 면 · 동</h2></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px 8px">${chip("", r.gu + " 전체", cnt(r.gu))}${names.map(d => chip(d, d, map[d])).join("")}</div></section>`;
+  }
+  $view.innerHTML = `<button class="back glass" onclick="go('home')" aria-label="뒤로">${icon.back}</button>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">관심 지역 설정</h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">고른 지역의 학교와 일정만 모아서 보여드려요.</p>
+    <section class="section"><div class="sec-head"><h2>구</h2></div>
+      <div style="display:flex;gap:8px">${guBtn("", "전체")}${GUS.map(g => guBtn(g, g)).join("")}</div></section>
+    ${dongs}
+    <button class="btn btn-3d" style="width:100%;height:54px;margin-top:28px;font-size:15px" onclick="go('home')">이 지역으로 보기 · ${esc(regionLabel())}</button>`;
+}
+function pickGu(gu) { setRegion(gu, ""); render(); }
+function pickDong(d) { setRegion(region().gu, d); render(); }
+
 // ---------- 이동 / 동작 ----------
 function setSchool(code) { store(KEY_SCHOOL, code); toast("우리 아이 학교로 설정했어요"); go("home"); }
 function go(route) { if (location.hash === "#" + route) render(); else location.hash = route; }
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "schools" : r === "my" ? "my" : "home";
+  const tab = r.startsWith("school") ? "schools" : r === "my" || r === "region" ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
-  if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
+  if (r === "region") viewRegion();
+  else if (r.startsWith("school/")) viewSchool(r.split("/")[1]);
   else if (r === "schools") viewSchools();
   else if (r === "my") viewMy();
   else viewHome();
