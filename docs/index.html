@@ -404,7 +404,7 @@ function viewMy() {
       <div class="lift card-pad">
         <div class="row"><span>데이터 출처</span><span class="val">나이스 교육정보 개방포털</span></div>
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.3 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">0.4 (시범 운영)</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
 }
@@ -885,7 +885,12 @@ async function load() {
   render();
 }
 load();
-if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").then(r => r.update()).catch(() => {}));
+  // 새 버전이 설치되면 한 번 자동으로 새로고침
+  let swReloaded = false; const hadSW = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (swReloaded || !hadSW) return; swReloaded = true; location.reload(); });
+}
 </script>
 </body>
 </html>
