@@ -115,7 +115,7 @@ def city_events(today):
         except Exception as e:
             print("  상세 실패:", ev["id"], e)
         grade, price = info.get("관람등급", ""), info.get("가격", "")
-        kid = bool(KID_WORDS.search(ev["title"])) or bool(re.search(r"전체|어린이|유아|\d+개월|[3-9]세|초등", grade))
+        kid = bool(KID_WORDS.search(ev["title"])) or bool(re.search(r"전체|어린이|유아|\d+개월|[3-9]세", grade))
         if not kid or re.search(r"19세|청소년관람불가|14세 이상|15세 이상", grade):
             continue
         out.append({**ev, "time": info.get("관람시간", ""), "grade": grade, "price": price,
