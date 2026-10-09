@@ -23,6 +23,10 @@ NATIONAL = ["용인한국외국어대학교부설고등학교", "상산고등학
 # 영재학교 8곳
 GIFTED = ["서울과학고등학교", "경기과학고등학교", "대구과학고등학교", "대전과학고등학교", "광주과학고등학교",
           "한국과학영재학교", "세종과학예술영재학교", "인천과학예술영재학교"]
+# 광역단위 자사고 22곳 (2026학년도: 서울 14 + 서울 밖 8) — 나이스 구분값은 일반고 전환이 늦게 반영돼 목록으로 확인
+REGIONAL = {"경희고", "배재고", "보인고", "선덕고", "세화고", "세화여자고", "신일고", "양정고", "이화여자고", "중동고",
+            "중앙고", "한양대사범대학부속고", "현대고", "휘문고",
+            "해운대고", "부일고", "부일외국어고", "계성고", "대전대성고", "대전대신고", "인천포스코고", "안산동산고", "충남삼성고"}
 SHORT = {"용인한국외국어대학교부설고등학교": "외대부고"}
 
 
@@ -53,22 +57,23 @@ def page(office, idx):
 
 def kind_of(r):
     name = r.get("SCHUL_NM") or ""
+    short = name.replace("고등학교", "고")
     hs = r.get("HS_SC_NM") or ""
     line = r.get("SPCLY_PURPS_HS_ORD_NM") or ""
-    fond = r.get("FOND_SC_NM") or ""
+    if "학력인정" in name or hs == "특성화고":
+        return ""
     if name in GIFTED:
         return "영재학교"
     if name in NATIONAL:
         return "자사고(전국)"
-    if hs == "자율고" and fond == "사립":
+    if short in REGIONAL:
         return "자사고(광역)"
-    if hs == "특목고":
-        if "외국어" in line:
-            return "외고"
-        if "국제" in line:
-            return "국제고"
-        if "과학" in line:
-            return "과학고"
+    if name.endswith("외국어고등학교") or (hs == "특목고" and "외국어" in line):
+        return "외고"
+    if name.endswith("국제고등학교") or (hs == "특목고" and "국제" in line):
+        return "국제고"
+    if name.endswith("과학고등학교") or (hs == "특목고" and "과학" in line):
+        return "과학고"
     return ""
 
 
