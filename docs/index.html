@@ -122,6 +122,7 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 .dots i.u{background:var(--dot);border-color:var(--dot-ink)}
 .loading{padding:60px 0;text-align:center;color:var(--muted);font-size:14px}
 </style>
+<script data-goatcounter="https://yongin-edu-app.goatcounter.com/count" data-goatcounter-settings='{"no_onload": true}' async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div class="bg"></div>
@@ -136,19 +137,34 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 <div class="toast" id="toast" role="status"></div>
 
 <script>
-const DATA_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/latest.json";
+// 수집 데이터: 이 사이트의 data/ 폴더에서 먼저 받고, 없으면 GitHub 원본에서 받기
+const RAW = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/";
+function dataFetch(name) {
+  return fetch("./data/" + name, { cache: "no-cache" }).then(r => r.ok ? r : Promise.reject(r.status))
+    .catch(() => fetch(RAW + name, { cache: "no-cache" }));
+}
+// 접속 통계 (GoatCounter · 쿠키/개인정보 없음)
+let lastTracked = "";
+function gc(fn, tries = 0) { if (window.goatcounter && window.goatcounter.count) fn(window.goatcounter); else if (tries < 20) setTimeout(() => gc(fn, tries + 1), 500); }
+function trackView(route) {
+  const path = "/" + route.replace(/^kid\/(?!new).*/, "kid/edit").replace(/^kid\/new\/.*/, "kid/new");
+  if (path === lastTracked) return; lastTracked = path;
+  gc(g => g.count({ path, title: document.title }));
+}
+function trackEvent(name) { gc(g => g.count({ path: name, title: name, event: true })); }
+const DATA_URL = "latest.json";
 const KEY_SCHOOL = "edu.school";
-const SEATS_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/seats.json";
+const SEATS_URL = "seats.json";
 const KEY_SEATS = "edu.seats";
 let SEATS = null;
-const BOOKS_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/books.json";
+const BOOKS_URL = "books.json";
 const KEY_BOOKS = "edu.books";
 let BOOKS = null;
-const ACAS_URL = "https://raw.githubusercontent.com/jinbok2279/yongin-edu-collector/main/output/academies.json";
+const ACAS_URL = "academies.json";
 let ACAS = null, acasLoading = null;
 function loadAcas() {
   if (ACAS) return Promise.resolve(ACAS);
-  if (!acasLoading) acasLoading = fetch(ACAS_URL, { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  if (!acasLoading) acasLoading = dataFetch(ACAS_URL).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(j => (ACAS = j)).catch(e => { acasLoading = null; throw e; });
   return acasLoading;
 }
@@ -542,7 +558,7 @@ function coverImg(b, cls) { return b.cover ? `<img class="${cls}" src="${esc(b.c
 function bookRow(b) {
   const inner = `<span class="rk">${b.rank}</span>${coverImg(b, "cv")}
     <div style="flex:1;min-width:0"><div class="tt">${esc(b.title)}</div><div class="au">${b.series > 1 ? `<b style="color:var(--indigo)">시리즈 ${b.series}권</b> · ` : ""}${esc([b.author, b.publisher].filter(Boolean).join(" · "))}</div></div>`;
-  return b.link ? `<a class="book" href="${esc(b.link)}" target="_blank" rel="noopener">${inner}<span style="color:var(--muted)">↗</span></a>` : `<div class="book">${inner}</div>`;
+  return b.link ? `<a class="book" href="${esc(b.link)}" target="_blank" rel="noopener" onclick="trackEvent('책-클릭')">${inner}<span style="color:var(--muted)">↗</span></a>` : `<div class="book">${inner}</div>`;
 }
 function viewBooks() {
   const cur = currentBookList();
@@ -623,7 +639,7 @@ function acaResults() {
       <div style="flex:1;min-width:0"><div class="nm">${esc(a.n)}</div><div class="ad">${esc(acaKind(a))} · ${esc(a.gu)} ${esc(a.dong)}</div></div><span style="font-size:13px;color:var(--indigo);font-weight:700">추가</span></button>`).join("") || `<div class="empty">검색 결과가 없어요. 이름 일부만 넣어 보세요.</div>`;
 }
 function acaKind(a) { return (a.c && a.c[0]) || a.r || ""; }
-function pickAca(id) { const a = ACAS.academies.find(x => x.id === id); if (!a || kidForm.acas.length >= 10) return; kidForm.acas.push({ id: a.id, n: a.n, r: acaKind(a) }); kidForm.aq = ""; render(); }
+function pickAca(id) { const a = ACAS.academies.find(x => x.id === id); if (!a || kidForm.acas.length >= 10) return; kidForm.acas.push({ id: a.id, n: a.n, r: acaKind(a) }); kidForm.aq = ""; trackEvent("학원-추가"); render(); }
 function removeAca(id) { kidForm.acas = kidForm.acas.filter(a => a.id !== id); render(); }
 function won(n) { return n >= 10000 ? (n % 10000 ? (n / 10000).toFixed(1).replace(/\.0$/, "") : n / 10000) + "만원" : n.toLocaleString() + "원"; }
 function viewAca(id) {
@@ -665,7 +681,7 @@ function saveKid(id) {
   const k = list.find(x => x.id === id);
   if (k) { k.name = name; k.code = kidForm.code; k.acas = kidForm.acas; }
   else list.push({ id: "k" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, code: kidForm.code, acas: kidForm.acas, color: nextColor(list) });
-  saveKids(list); kidForm = null; homeKid = "all";
+  saveKids(list); kidForm = null; homeKid = "all"; trackEvent(k ? "아이-수정" : "아이-등록");
   toast(k ? "저장했어요" : `${name}을(를) 등록했어요`); go("home");
 }
 function deleteKid(id) {
@@ -691,9 +707,10 @@ function render() {
   else if (r.startsWith("library/")) viewLibraryDetail(r.slice(8));
   else if (r === "my") viewMy();
   else viewHome();
+  trackView(r);
   window.scrollTo(0, 0);
 }
-async function doInstall() { if (!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; render(); }
+async function doInstall() { if (!installEvt) return; installEvt.prompt(); const ch = await installEvt.userChoice; if (ch && ch.outcome === "accepted") trackEvent("앱-설치"); installEvt = null; render(); }
 
 document.querySelectorAll(".navi").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
 window.addEventListener("hashchange", render);
@@ -701,7 +718,7 @@ window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); instal
 
 async function loadSeats() {
   try {
-    const res = await fetch(SEATS_URL, { cache: "no-cache" });
+    const res = await dataFetch(SEATS_URL);
     if (!res.ok) throw new Error(res.status);
     SEATS = await res.json(); store(KEY_SEATS, JSON.stringify(SEATS));
   } catch (e) { try { SEATS = JSON.parse(store(KEY_SEATS) || "null"); } catch (e2) { SEATS = null; } }
@@ -709,7 +726,7 @@ async function loadSeats() {
 }
 async function loadBooks() {
   try {
-    const res = await fetch(BOOKS_URL, { cache: "no-cache" });
+    const res = await dataFetch(BOOKS_URL);
     if (!res.ok) throw new Error(res.status);
     BOOKS = await res.json(); store(KEY_BOOKS, JSON.stringify(BOOKS));
   } catch (e) { try { BOOKS = JSON.parse(store(KEY_BOOKS) || "null"); } catch (e2) { BOOKS = null; } }
@@ -718,7 +735,7 @@ async function loadBooks() {
 async function load() {
   loadSeats(); loadBooks();
   try {
-    const res = await fetch(DATA_URL, { cache: "no-cache" });
+    const res = await dataFetch(DATA_URL);
     if (!res.ok) throw new Error(res.status);
     DATA = await res.json();
     store(KEY_DATA, JSON.stringify(DATA));
