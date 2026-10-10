@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#5161F7">
 <meta name="description" content="용인시 초·중·고등학교 학사일정과 교육 정보를 한곳에서">
-<title>용인시 교육알림</title>
+<title>용인 정보모음</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -416,7 +416,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.10 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.11 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -744,7 +744,7 @@ function acaToCalendar(i) {
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
   const uid = (a.id + "-" + kid).replace(/[^\w가-힣-]/g, "");
   const ev = (key, title, s, e, alarm) => ["BEGIN:VEVENT", `UID:${uid}-${key}@yongin-edu`, `DTSTAMP:${stamp}`, `DTSTART;TZID=Asia/Seoul:${icsTime(first, s)}`, `DTEND;TZID=Asia/Seoul:${icsTime(first, e)}`,
-    `RRULE:FREQ=WEEKLY;BYDAY=${byday}`, `SUMMARY:${icsEsc(title)}`, `DESCRIPTION:${icsEsc("용인시 교육알림에서 추가한 일정이에요. 시간이 바뀌면 이 일정을 지우고 다시 추가해 주세요.")}`,
+    `RRULE:FREQ=WEEKLY;BYDAY=${byday}`, `SUMMARY:${icsEsc(title)}`, `DESCRIPTION:${icsEsc("용인 정보모음에서 추가한 일정이에요. 시간이 바뀌면 이 일정을 지우고 다시 추가해 주세요.")}`,
     "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${icsEsc(alarm)}`, "TRIGGER:-PT10M", "END:VALARM", "END:VEVENT"];
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//yongin-edu//KO", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
     "BEGIN:VTIMEZONE", "TZID:Asia/Seoul", "BEGIN:STANDARD", "DTSTART:19700101T000000", "TZOFFSETFROM:+0900", "TZOFFSETTO:+0900", "TZNAME:KST", "END:STANDARD", "END:VTIMEZONE",
