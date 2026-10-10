@@ -416,7 +416,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.9 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.10 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -673,7 +673,7 @@ function viewKid(arg, pre) {
   const sc = kidForm.code && DATA.schools.find(s => s.code === kidForm.code);
   $view.innerHTML = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
     <h1 style="font-size:25px;font-weight:800;margin-top:14px">${editing ? "아이 정보 수정" : "아이 추가"}</h1>
-    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">이름 대신 첫째·둘째 같은 별명도 괜찮아요. 이 휴대폰에만 저장돼요.</p>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">이름 대신 첫째·둘째 같은 별명도 괜찮아요. 접속한 본인 휴대폰에만 저장돼요.</p>
     <section class="section"><div class="sec-head"><h2>이름(별명)</h2></div>
       <label class="search lift"><input id="kname" maxlength="10" value="${esc(kidForm.name)}" aria-label="아이 이름 또는 별명"></label></section>
     <section class="section"><div class="sec-head"><h2>학교</h2></div>
@@ -690,7 +690,7 @@ function viewKid(arg, pre) {
         <button class="btn btn-soft" style="height:34px;padding:0 12px;font-size:12px" onclick="removeAca('${esc(a.id)}')" aria-label="${esc(a.n)} 빼기">빼기</button></div>${acaTimeBox(a, i)}`).join("")}</div>` : ""}
       ${kidForm.acas.length < 10 ? `<label class="search lift">${icon.search}<input id="aq" placeholder="학원 이름 검색 (예: 수학, 태권도)" value="${esc(kidForm.aq)}" aria-label="학원 이름 검색"></label>
       <div class="lift list" id="ares"></div>` : ""}
-      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px">교육청에 등록된 용인시 학원·교습소 목록에서 골라요. 요일·시간을 넣고 <b>📅 캘린더에 추가</b>를 누르면 휴대폰 캘린더가 수업 시작·끝 10분 전에 알려 줘요. 시간이 바뀌면 캘린더에서 예전 일정을 지우고 다시 추가해 주세요.<br>학원 정보는 이 휴대폰에만 저장돼요.<br>앞으로 동의한 분들의 학원 정보만 <b>이름 없이</b> 모아 "우리 동네 인기 학원"을 보여 드릴 예정이에요.</p></section>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px">교육청에 등록된 용인시 학원·교습소 목록에서 골라요. 요일·시간을 넣고 <b>📅 캘린더에 추가</b>를 누르면 휴대폰 캘린더가 수업 시작·끝 10분 전에 알려 줘요. 시간이 바뀌면 캘린더에서 예전 일정을 지우고 다시 추가해 주세요.<br>학원 정보는 접속한 본인 휴대폰에만 저장돼요.<br>앞으로 동의한 분들의 학원 정보만 <b>이름 없이</b> 모아 "우리 동네 인기 학원"을 보여 드릴 예정이에요.</p></section>
     <button class="btn btn-3d" style="width:100%;height:54px;margin-top:24px;font-size:15px" onclick="saveKid('${editing ? editing.id : ""}')">${editing ? "저장하기" : "등록하기"}</button>
     ${editing ? `<button class="btn btn-soft" style="width:100%;height:46px;margin-top:12px;color:var(--coral-ink)" onclick="deleteKid('${editing.id}')">${kidForm.arm ? "한 번 더 누르면 삭제돼요" : "이 아이 삭제"}</button>` : ""}`;
   document.getElementById("kname").addEventListener("input", e => { kidForm.name = e.target.value; });
