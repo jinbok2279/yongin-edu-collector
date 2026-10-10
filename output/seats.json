@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-10 19:06:35",
+  "updated_at": "2026-10-10 19:40:40",
   "source": "용인시도서관 좌석현황",
   "source_url": "https://lib.yongin.go.kr/yongin/seatStatusList.do",
   "libraries": [
@@ -13,8 +13,8 @@
         {
           "name": "열람실",
           "total": 140,
-          "used": 34,
-          "left": 106,
+          "used": 29,
+          "left": 111,
           "wait": 0
         }
       ]
@@ -29,8 +29,8 @@
         {
           "name": "일반열람실",
           "total": 148,
-          "used": 84,
-          "left": 62,
+          "used": 83,
+          "left": 63,
           "wait": 0
         }
       ]
@@ -45,15 +45,15 @@
         {
           "name": "열람실(일반)",
           "total": 156,
-          "used": 66,
-          "left": 90,
+          "used": 57,
+          "left": 99,
           "wait": 0
         },
         {
           "name": "열람실(청소년)",
           "total": 102,
-          "used": 37,
-          "left": 65,
+          "used": 35,
+          "left": 67,
           "wait": 0
         }
       ]
@@ -68,8 +68,8 @@
         {
           "name": "보라도서관 열람실",
           "total": 134,
-          "used": 76,
-          "left": 58,
+          "used": 68,
+          "left": 66,
           "wait": 0
         }
       ]
@@ -84,15 +84,15 @@
         {
           "name": "열람실",
           "total": 80,
-          "used": 64,
-          "left": 16,
+          "used": 60,
+          "left": 20,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 32,
-          "used": 24,
-          "left": 8,
+          "used": 25,
+          "left": 7,
           "wait": 0
         }
       ]
@@ -107,8 +107,8 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 23,
-          "left": 157,
+          "used": 18,
+          "left": 162,
           "wait": 0
         },
         {
@@ -130,15 +130,15 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 73,
-          "left": 107,
+          "used": 68,
+          "left": 112,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 30,
-          "used": 14,
-          "left": 16,
+          "used": 11,
+          "left": 19,
           "wait": 0
         }
       ]
@@ -169,15 +169,15 @@
         {
           "name": "일반열람실",
           "total": 180,
-          "used": 41,
-          "left": 139,
+          "used": 37,
+          "left": 143,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 54,
-          "used": 34,
-          "left": 20,
+          "used": 25,
+          "left": 29,
           "wait": 0
         }
       ]
