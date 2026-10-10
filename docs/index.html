@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#5161F7">
 <meta name="description" content="용인시 초·중·고등학교 학사일정과 교육 정보를 한곳에서">
-<title>용인 맘 교육알림</title>
+<title>용인시 교육알림</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -399,8 +399,7 @@ function viewMy() {
     ["schools", "🏫", "t-lilac", "학교<br>일정"], ["library", "📚", "t-mint", "도서관<br>빈자리"], ["books", "📖", "t-coral", "대출<br>베스트"], ["acas", "✏️", "t-indigo", "학원<br>찾기"],
     ["kinders", "🧸", "t-sun", "유치원"], ["region", "📍", "t-lilac", "관심<br>지역"]];
   $view.innerHTML = `<h1 style="font-size:27px;font-weight:800;margin-bottom:16px">전체</h1>
-    <div class="lift mgrid">${M.map(([r, e, t, l, p]) => `<button onclick="go('${r}')"><span class="tile ${t}">${e}</span><b>${l}</b>${p ? "<i>P</i>" : ""}</button>`).join("")}</div>
-    <p style="font-size:11px;color:var(--muted);margin:8px 2px 0"><span style="color:#8A5300;background:#FFE3A3;border-radius:6px;padding:1px 5px;font-weight:800;font-size:9px">P</span> 프리미엄 · 시범 기간에는 모두 무료예요</p>
+    <div class="lift mgrid">${M.map(([r, e, t, l, p]) => `<button onclick="go('${r}')"><span class="tile ${t}">${e}</span><b>${l}</b></button>`).join("")}</div>
     <section class="section" style="margin-top:0"><div class="sec-head"><h2>우리 아이</h2><span style="font-size:12px;color:var(--muted)">${ks.length}/${MAX_KIDS}명</span></div>
       <div class="lift list">${kidRows || `<div class="empty">아직 등록한 아이가 없어요.</div>`}</div>
       ${ks.length < MAX_KIDS ? `<button class="btn btn-soft" style="width:100%;height:50px" onclick="go('kid/new')">+ 아이 추가</button>` : ""}
@@ -417,7 +416,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.8 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.9 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -745,7 +744,7 @@ function acaToCalendar(i) {
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
   const uid = (a.id + "-" + kid).replace(/[^\w가-힣-]/g, "");
   const ev = (key, title, s, e, alarm) => ["BEGIN:VEVENT", `UID:${uid}-${key}@yongin-edu`, `DTSTAMP:${stamp}`, `DTSTART;TZID=Asia/Seoul:${icsTime(first, s)}`, `DTEND;TZID=Asia/Seoul:${icsTime(first, e)}`,
-    `RRULE:FREQ=WEEKLY;BYDAY=${byday}`, `SUMMARY:${icsEsc(title)}`, `DESCRIPTION:${icsEsc("용인 맘 교육알림에서 추가한 일정이에요. 시간이 바뀌면 이 일정을 지우고 다시 추가해 주세요.")}`,
+    `RRULE:FREQ=WEEKLY;BYDAY=${byday}`, `SUMMARY:${icsEsc(title)}`, `DESCRIPTION:${icsEsc("용인시 교육알림에서 추가한 일정이에요. 시간이 바뀌면 이 일정을 지우고 다시 추가해 주세요.")}`,
     "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${icsEsc(alarm)}`, "TRIGGER:-PT10M", "END:VALARM", "END:VEVENT"];
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//yongin-edu//KO", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
     "BEGIN:VTIMEZONE", "TZID:Asia/Seoul", "BEGIN:STANDARD", "DTSTART:19700101T000000", "TZOFFSETFROM:+0900", "TZOFFSETTO:+0900", "TZNAME:KST", "END:STANDARD", "END:VTIMEZONE",
@@ -781,7 +780,7 @@ function viewAca(id) {
     <a class="btn btn-soft" style="width:100%;height:48px;margin-top:18px;font-size:14px" href="${map}" target="_blank" rel="noopener">네이버 지도에서 보기 ↗</a>
     <section class="section"><div class="lift" style="padding:18px;display:flex;gap:14px;align-items:center">
       <span class="tile t-sun" style="width:44px;height:44px">${icon.star}</span>
-      <div><div style="font-weight:800">우리 동네 인기 학원 <span class="pill pill-gray" style="margin-left:4px">프리미엄 · 준비 중</span></div>
+      <div><div style="font-weight:800">우리 동네 인기 학원 <span class="pill pill-gray" style="margin-left:4px">준비 중</span></div>
       <div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5">같은 학교·동네 아이들이 많이 다니는 학원을 익명 통계로 보여 드릴 예정이에요.</div></div></div></section>
     <div class="foot">데이터 · 나이스 교육정보 개방포털 학원교습소정보<br>교육청에 등록된 정보라 실제와 다를 수 있어요.</div>`;
 }
@@ -863,7 +862,7 @@ function viewAcaList() {
     ${list.length > acaShow ? `<button class="btn btn-soft" style="width:100%;height:46px;margin-top:12px" onclick="acaMore()">더 보기 (${(list.length - acaShow).toLocaleString()}곳 더)</button>` : ""}
     <section class="section"><button class="lift" onclick="go('premium')" style="width:100%;border:0;cursor:pointer;text-align:left;padding:16px 18px;display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#FFF6E0,#FFE7EE);margin-bottom:0">
       <span class="tile t-sun" style="width:44px;height:44px">${icon.star}</span>
-      <div style="flex:1;min-width:0"><div style="font-weight:800">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">시범 기간 무료</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">엄마 일자리 · 수강료 비교 · 인기 학원 순위 · 알림</div></div><span style="color:var(--muted)">›</span></button></section>
+      <div style="flex:1;min-width:0"><div style="font-weight:800">수강료 비교</div><div style="font-size:12px;color:var(--muted);margin-top:4px">우리 동네 학원비 중간값 · 가격대 분포 · 엄마 일자리</div></div><span style="color:var(--muted)">›</span></button></section>
     <div class="foot">데이터 · 나이스 교육정보 개방포털 학원교습소정보 (매주 갱신)<br>수강료는 학원이 교육청에 신고한 금액이라 실제와 다를 수 있어요.</div>`;
   const qi = document.getElementById("acaq");
   qi.addEventListener("input", e => { f.q = e.target.value; acaShow = 40; clearTimeout(qi._t); qi._t = setTimeout(() => { const pos = qi.selectionStart; render(); const n = document.getElementById("acaq"); n.focus(); try { n.setSelectionRange(pos, pos); } catch (er) {} }, 350); });
@@ -971,7 +970,7 @@ function viewKinder(id) {
 }
 
 
-// ---------- 화면: 프리미엄 (시범 기간 무료) ----------
+// ---------- 화면: 수강료 비교 ----------
 let premF = null;
 const FEE_LEVELS = [["초등", /초등|초[1-6]|초저|초고|유아|키즈|kids/i], ["중등", /중등|중[1-3]|중학/], ["고등", /고등|고[1-3]|고교|수능|입시|재수/]];
 function feeLevel(name) { for (const [l, re] of FEE_LEVELS) if (re.test(name)) return l; return ""; }
@@ -985,8 +984,8 @@ function feeStats(list) {
 }
 function viewPremium() {
   const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>`;
-  const head = `${back}<h1 style="font-size:26px;font-weight:800;margin-top:14px">프리미엄 <span class="pill" style="color:#8A5300;background:#FFE3A3;font-size:12px;vertical-align:middle">시범 기간 무료</span></h1>
-    <p style="font-size:13px;color:var(--muted);margin:6px 0 4px">앱 정식 출시 전까지는 모든 분이 무료로 쓸 수 있어요.</p>`;
+  const head = `${back}<h1 style="font-size:26px;font-weight:800;margin-top:14px">수강료 비교</h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 4px">교육청에 신고된 수강료로 우리 동네 학원비를 비교해 보세요.</p>`;
   if (!ACAS) { $view.innerHTML = head + `<div class="lift empty" style="margin-top:16px">학원 정보를 불러오는 중이에요…</div>`; loadAcas().then(() => { if (location.hash === "#premium") render(); }).catch(() => {}); return; }
   if (!premF) {
     const k = kids().find(x => kidSchool(x)); const sc = k && kidSchool(k);
@@ -1043,7 +1042,7 @@ function viewPremium() {
 }
 function premSet(k, v) { const y = window.scrollY; premF[k] = v; if (k === "gu") premF.dong = ""; render(); window.scrollTo(0, y); }
 
-// ---------- 프리미엄: 엄마 일자리 (경기도교육청 구인구직 · 경기육아종합지원센터) ----------
+// ---------- 엄마 일자리 (경기도교육청 구인구직 · 경기육아종합지원센터) ----------
 let JOBS = null, jobsLoading = null, jobF = { tab: "school", gu: "", kind: "" };
 function loadJobs() {
   if (JOBS) return Promise.resolve(JOBS);
@@ -1078,12 +1077,12 @@ function homeJobs() {
   if (!n) return "";
   return `<section class="section"><button class="lift" onclick="go('jobs')" style="width:100%;border:0;cursor:pointer;text-align:left;padding:16px 18px;display:flex;gap:14px;align-items:center;font:inherit;color:var(--ink)">
     <span class="tile t-mint" style="width:44px;height:44px;font-size:20px">💼</span>
-    <div style="flex:1;min-width:0"><div style="font-weight:800">엄마 일자리 <span class="pill" style="color:#8A5300;background:#FFE3A3;margin-left:4px">프리미엄</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">용인 학교·유치원·어린이집 채용 ${n}건 모집 중</div></div><span style="color:var(--muted)">›</span></button></section>`;
+    <div style="flex:1;min-width:0"><div style="font-weight:800">엄마 일자리</div><div style="font-size:12px;color:var(--muted);margin-top:4px">용인 학교·유치원·어린이집 채용 ${n}건 모집 중</div></div><span style="color:var(--muted)">›</span></button></section>`;
 }
 function pickJob(k, v) { const y = window.scrollY; jobF[k] = v; render(); window.scrollTo(0, y); }
 function viewJobs() {
   const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
-    <h1 style="font-size:25px;font-weight:800;margin-top:14px">엄마 일자리 <span class="pill" style="color:#8A5300;background:#FFE3A3;font-size:12px;vertical-align:middle">프리미엄</span></h1>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">엄마 일자리</h1>
     <p style="font-size:13px;color:var(--muted);margin:6px 0 0">용인 학교·유치원·어린이집 채용 공고를 매일 모아 드려요.</p>`;
   if (!JOBS) { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">채용 정보를 불러오는 중이에요…</div>`; loadJobs().then(() => { if (location.hash === "#jobs") render(); }).catch(() => { $view.innerHTML = back + `<div class="lift empty" style="margin-top:16px">채용 정보를 불러오지 못했어요. 잠시 후 다시 열어 주세요.</div>`; }); return; }
   if (!jobF.gu && region().gu) jobF.gu = region().gu;
@@ -1126,7 +1125,7 @@ function eliteNear(s) { return s.kind === "영재학교" || s.kind === "자사�
 function pickElite(k, v) { const y = window.scrollY; eliteF[k] = v; render(); window.scrollTo(0, y); }
 function viewElite() {
   const back = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
-    <h1 style="font-size:25px;font-weight:800;margin-top:14px">특목·자사고 <span class="pill" style="color:#8A5300;background:#FFE3A3;font-size:12px;vertical-align:middle">프리미엄</span></h1>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">특목·자사고</h1>
     <p style="font-size:13px;color:var(--muted);margin:6px 0 0">영재학교·과학고·외고·국제고·자사고 전국 목록과 입시 시기를 모았어요.</p>`;
   // 우리 아이 고입 시기
   const now = new Date(), sy = schoolYear();
@@ -1205,7 +1204,7 @@ function adminTap() {
   adminTaps++; clearTimeout(adminTapTimer); adminTapTimer = setTimeout(() => adminTaps = 0, 1500);
   if (adminTaps >= 5) { adminTaps = 0; go("admin"); }
 }
-const PATH_NAMES = { "/premium": "프리미엄", "/kinders": "유치원 찾기", "/acas": "학원 찾기", "/home": "홈", "/schools": "학교 일정", "/library": "도서관 좌석", "/books": "인기 도서", "/my": "마이", "/region": "지역 설정",
+const PATH_NAMES = { "/premium": "수강료 비교", "/kinders": "유치원 찾기", "/acas": "학원 찾기", "/home": "홈", "/schools": "학교 일정", "/library": "도서관 좌석", "/books": "인기 도서", "/my": "마이", "/region": "지역 설정",
   "/kid/new": "아이 추가 화면", "/kid/edit": "아이 수정 화면", "/admin": "관리자" };
 function pathName(p) {
   if (PATH_NAMES[p]) return PATH_NAMES[p];
