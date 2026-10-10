@@ -1,59 +1,7 @@
 {
- "updated_at": "2026-10-10 06:31:13",
+ "updated_at": "2026-10-11 06:32:08",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
-  {
-   "id": "16890",
-   "title": "PAF 2026 용인문화예술제 (PAF 2026 Yongin City)",
-   "start": "2026-10-01",
-   "end": "2026-10-10",
-   "place": "문화예술원 대전시실",
-   "time": "10:00-17:00 *10.01(목) 15:00부터 관람가능 *10.05(월) 휴관일 *10.10(토) 12:00까지 관람가능",
-   "grade": "전체관람등급",
-   "price": "전석무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16890"
-  },
-  {
-   "id": "16878",
-   "title": "용인문화원 < 고려의 명현, 용인에 뿌리를 내리다>",
-   "start": "2026-10-07",
-   "end": "2026-10-10",
-   "place": "용인포은아트갤러리",
-   "time": "10~18시",
-   "grade": "전체관람등급",
-   "price": "무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16878"
-  },
-  {
-   "id": "16877",
-   "title": "창작뮤지컬 < 정약용 묵시록>",
-   "start": "2026-10-09",
-   "end": "2026-10-10",
-   "place": "처인홀",
-   "time": "10.9.(금) 16시 / 10.10.(토) 16시",
-   "grade": "초등학생 이상",
-   "price": "전석 30,000원",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16877"
-  },
-  {
-   "id": "16863",
-   "title": "2026 V.O.S 콘서트 - 용인",
-   "start": "2026-10-11",
-   "end": "2026-10-11",
-   "place": "용인포은아트홀",
-   "time": "17시(120분)",
-   "grade": "초등학생 이상",
-   "price": "1층 99,000원 2층 77,000원",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16863"
-  },
   {
    "id": "16904",
    "title": "용인싱어즈 창단연주회 < 용인, 새로운 바람의 시작>",
@@ -172,19 +120,6 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16908"
   },
   {
-   "id": "16898",
-   "title": "테스트",
-   "start": "2026-10-19",
-   "end": "2026-10-23",
-   "place": "",
-   "time": "테스트",
-   "grade": "초등학생 이상",
-   "price": "0",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16898"
-  },
-  {
    "id": "16894",
    "title": "현과 건반의 선율",
    "start": "2026-10-21",
@@ -209,19 +144,6 @@
    "free": true,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16880"
-  },
-  {
-   "id": "16874",
-   "title": "용인시민합창단 제7회 정기연주회 < 흥겨운 나의 인생>",
-   "start": "2026-10-23",
-   "end": "2026-10-23",
-   "place": "용인포은아트홀",
-   "time": "19시30분",
-   "grade": "초등학생 이상",
-   "price": "전석 초대",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16874"
   },
   {
    "id": "16889",
@@ -354,19 +276,6 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16909"
   },
   {
-   "id": "16864",
-   "title": "주현미 데뷔 40주년 〈The Queen〉 - 용인",
-   "start": "2026-11-08",
-   "end": "2026-11-08",
-   "place": "용인포은아트홀",
-   "time": "11월 8일(일) 18시30분",
-   "grade": "초등학생 이상",
-   "price": "R석 121,000원 S석 99,000원",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16864"
-  },
-  {
    "id": "16861",
    "title": "2026년 지역민간교향악단 지원육성사업 웨스턴심포니오케스트라 하반기 기획공연 < 콘서트 '11월'>",
    "start": "2026-11-18",
@@ -391,19 +300,6 @@
    "free": false,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16798"
-  },
-  {
-   "id": "16912",
-   "title": "THE REGEND CONCERT < 015B 콘서트>",
-   "start": "2026-11-21",
-   "end": "2026-11-21",
-   "place": "처인홀",
-   "time": "17:00",
-   "grade": "초등학생 이상",
-   "price": "40,000",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16912"
   },
   {
    "id": "16799",
@@ -432,19 +328,6 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16840"
   },
   {
-   "id": "16862",
-   "title": "2026년 지역민간교향악단 지원육성사업 용인필하모닉오케스트라 하반기 기획공연 < 마스터피스 Ⅸ - 비제스페셜 '아를르의여인&카르멘'>",
-   "start": "2026-11-25",
-   "end": "2026-11-25",
-   "place": "용인포은아트홀",
-   "time": "100분(인터미션 15분 포함)",
-   "grade": "초등학생 이상",
-   "price": "1층 2만원, 2층 1만원",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16862"
-  },
-  {
    "id": "16810",
    "title": "뮤지컬 < 집사TV 시즌2 : 대저택 끝 없는 문>",
    "start": "2026-11-28",
@@ -469,6 +352,19 @@
    "free": false,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16800"
+  },
+  {
+   "id": "16811",
+   "title": "블랙 스노우",
+   "start": "2026-12-09",
+   "end": "2026-12-09",
+   "place": "큰어울마당",
+   "time": "70분",
+   "grade": "만 7세 이상",
+   "price": "대관단체문의",
+   "free": false,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16811"
   }
  ],
  "lib": [
@@ -522,7 +418,7 @@
    "applyStart": "2026-10-07",
    "applyEnd": "2026-10-13",
    "apply": "2026.10.07(수) 10:00 ~ 2026.10.13(화) 18:00",
-   "count": "8/10",
+   "count": "9/10",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -560,7 +456,7 @@
    "applyStart": "2026-10-01",
    "applyEnd": "2026-10-16",
    "apply": "2026.10.01(목) 10:00 ~ 2026.10.16(금) 17:00",
-   "count": "9/12",
+   "count": "10/12",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
