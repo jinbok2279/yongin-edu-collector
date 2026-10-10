@@ -417,7 +417,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.7 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.8 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -1226,7 +1226,8 @@ async function loadAdmin() {
   const end = iso(new Date(Math.ceil(Date.now() / 3600e3) * 3600e3));
   const r = (days) => ({ start: iso(kstMidnight(days)), end });
   // GoatCounter는 1초에 4번까지만 받아서, 하나씩 차례로 요청
-  const jobs = [["today", "stats/total", r(0)], ["yest", "stats/total", { start: iso(kstMidnight(1)), end: iso(kstMidnight(0)) }],
+  const hourStart = new Date(Math.floor(Date.now() / 3600e3) * 3600e3);
+  const jobs = [["now", "stats/total", { start: iso(hourStart), end }], ["today", "stats/total", r(0)], ["yest", "stats/total", { start: iso(kstMidnight(1)), end: iso(kstMidnight(0)) }],
     ["week", "stats/total", r(6)], ["month", "stats/total", r(29)], ["hits", "stats/hits", { ...r(6), limit: 50 }],
     ["refs", "stats/toprefs", { ...r(29), limit: 8 }], ["systems", "stats/systems", { ...r(29), limit: 6 }], ["locs", "stats/locations", { ...r(29), limit: 6 }]];
   const out = { at: new Date(), err: "" }; let ok = 0, lastErr = "";
@@ -1301,6 +1302,11 @@ function viewAdmin() {
   $view.innerHTML = `${head}
     ${A.warn ? `<div class="lift empty" style="margin:10px 0">일부 통계를 못 불러왔어요: ${esc(A.warn)}</div>` : ""}
     <p style="font-size:12px;color:var(--muted);margin:6px 0 14px">방문자 수 기준 · ${A.at.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })} 불러옴 · <a href="#admin" onclick="ADMIN=null;adminMonths=null;render();return false">새로고침</a></p>
+    <div class="lift" style="padding:16px 18px;display:flex;align-items:center;gap:14px;margin-bottom:12px">
+      <span style="width:12px;height:12px;border-radius:50%;background:#2FC4A4;box-shadow:0 0 0 6px rgba(47,196,164,.18);flex:0 0 auto"></span>
+      <div style="flex:1;min-width:0"><div style="font-size:13px;color:var(--muted)">지금 접속 · ${new Date(Math.floor(A.at.getTime() / 3600e3) * 3600e3).getHours()}시 이후</div>
+      <div style="font-size:28px;font-weight:800">${((A.now || {}).total ?? 0).toLocaleString()}<span style="font-size:14px;color:var(--muted);font-weight:600">명</span></div></div>
+      <div style="font-size:11px;color:var(--muted);text-align:right;line-height:1.5">1시간 단위로<br>집계돼요</div></div>
     <div class="stats" style="grid-template-columns:repeat(2,1fr)">${tile("오늘", A.today.total)}${tile("어제", A.yest.total)}${tile("최근 7일", A.week.total)}${tile("최근 30일", A.month.total)}</div>
     <section class="section"><div class="sec-head"><h2>방문자 그래프</h2></div>
       <div class="seg" style="display:flex;gap:6px;margin-bottom:10px">${[["day", "일별 (30일)"], ["month", "월별 (12개월)"]].map(([k, l]) => `<button class="btn ${adminChart === k ? "btn-3d" : "btn-soft"}" style="flex:1;height:40px;font-size:13px" onclick="pickAdminChart('${k}')">${l}</button>`).join("")}</div>
