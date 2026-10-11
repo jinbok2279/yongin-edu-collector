@@ -1,0 +1,33 @@
+name: meals
+
+on:
+  schedule:
+    - cron: "30 21 * * *"   # 한국시간 매일 06:30 (학교 목록 갱신 06:00 뒤)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: meals
+  cancel-in-progress: false
+
+jobs:
+  meals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python meals.py
+        env:
+          NEIS_KEY: ${{ secrets.NEIS_KEY }}
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p docs/data && cp output/meals.json docs/data/
+          git add output/meals.json docs/data/meals.json
+          git diff --cached --quiet && exit 0
+          git commit -m "급식 식단 업데이트"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
