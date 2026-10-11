@@ -1,5 +1,5 @@
-// 용인 정보모음 - 오프라인 지원
-const CACHE = "edu-app-v37";
+// 아이랑 용인 - 오프라인 지원
+const CACHE = "edu-app-v38";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
