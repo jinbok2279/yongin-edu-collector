@@ -52,12 +52,12 @@ h1,h2,h3{margin:0;letter-spacing:-.4px}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline}
 .sec-head h2{font-size:19px;font-weight:800}
 .sec-head a,.sec-head button{font-size:13px;font-weight:700;color:var(--indigo);background:none;border:none;cursor:pointer;padding:6px 0}
-.hero{position:relative;overflow:hidden;border-radius:30px;padding:24px;min-height:200px;color:#fff;background:linear-gradient(140deg,#5161F7,#6B55E8 55%,#8A5BE6);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 26px 40px -18px rgba(75,91,240,.7)}
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:20px 22px;min-height:150px;color:#fff;background:linear-gradient(140deg,#5161F7,#6B55E8 55%,#8A5BE6);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 26px 40px -18px rgba(75,91,240,.7)}
 .hero .glow{position:absolute;left:-60px;top:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%)}
 .hero .date{font-size:12px;opacity:.85;font-weight:500}
-.hero h1{font-size:23px;font-weight:800;line-height:1.38;margin-top:8px;max-width:72%;white-space:pre-line}
+.hero h1{font-size:21px;font-weight:800;line-height:1.35;margin-top:6px;max-width:72%;white-space:pre-line}
 .hero .next{margin:6px 0 0;font-size:15px;font-weight:500;opacity:.92;max-width:62%;line-height:1.5}
-.hero .cta{margin-top:14px;height:38px;padding:0 16px;border-radius:19px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.hero .cta{margin-top:12px;height:36px;padding:0 16px;border-radius:19px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
 .hero .deco{position:absolute;right:20px;top:20px}
 .hero .dday{position:absolute;right:18px;bottom:20px;text-align:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:10px 14px;min-width:84px}
 .hero .dday b{display:block;font-size:26px;font-weight:800;line-height:1.1}
@@ -235,7 +235,7 @@ const KID_TILES = ["t-indigo", "t-coral", "t-mint", "t-sun", "t-lilac"];
 const KID_PILLS = [["#3442C9", "#ECEEFF"], ["#C93D22", "#FFE9E2"], ["#13795F", "#E2F6F0"], ["#8A5300", "#FFF1CC"], ["#6436BE", "#F1E8FF"]];
 const ORD = ["첫째", "둘째", "셋째", "넷째", "다섯째"];
 const MAX_KIDS = 5;
-let homeKid = "all";
+let homeKid = "all", homeAllEv = false;
 let kidForm = null;
 function saveKids(list) { store(KEY_KIDS, JSON.stringify(list)); }
 function kids() {
@@ -322,17 +322,17 @@ function viewHome() {
       <div class="date">${dateStr}</div>
       <h1>${esc(title)}</h1>
       <p class="next">${esc(nextTxt)}</p>
-      ${cta}
       ${next ? `<div class="dday"><b>${ddayText(dday(next.date))}</b><span>${mdw(next.date)}</span></div>` : `<div class="deco fl"><div class="orb-sun" style="width:56px;height:56px"></div></div>`}
     </section>`;
     const chip = (id, label, extra = "") => `<button class="btn ${homeKid === id ? "btn-3d" : "btn-soft"}" style="height:38px;font-size:13px;padding:0 14px;flex:0 0 auto" onclick="pickKid('${id}')">${extra}${esc(label)}</button>`;
     const chips = ks.length > 1 ? `<div style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px">${chip("all", "전체")}${ks.map(k => chip(k.id, k.name, `<span class="tile ${KID_TILES[k.color % 5]}" style="width:18px;height:18px;border-radius:6px"></span>`)).join("")}</div>` : "";
-    const list = evs.slice(0, 8);
+    const list = evs.slice(0, homeAllEv ? 8 : 3);
     const ownCount = ks.filter(k => homeKid === "all" || k.id === homeKid).reduce((n, k) => n + (((kidSchool(k) || {}).events || []).length), 0);
     mine = `<section class="section"><div class="sec-head"><h2>우리 아이 다가오는 일정</h2>${ks.length < MAX_KIDS ? `<button onclick="go('kid/new')">+ 아이 추가</button>` : ""}</div>
       ${chips}
       <div class="lift card-pad">${list.map(g => g.kid ? evRow(g, `${g.school} · ${g.end !== g.date ? mdw(g.date) + " ~ " + md(g.end) : mdw(g.date)}`, ks.length > 1 ? kidPill(g.kid) : "") : evRow(g)).join("")}
-      ${ownCount ? "" : `<div class="empty">학교가 아직 나이스에 학사일정을 많이 등록하지 않았어요. 등록되면 자동으로 여기에 나타나요.</div>`}</div></section>`;
+      ${ownCount ? "" : `<div class="empty">학교가 아직 나이스에 학사일정을 많이 등록하지 않았어요. 등록되면 자동으로 여기에 나타나요.</div>`}
+      ${evs.length > 3 ? `<button onclick="homeAllEv=!homeAllEv;render()" style="width:100%;border:0;background:none;padding:12px 0 4px;font:inherit;font-size:13px;font-weight:700;color:var(--indigo);cursor:pointer">${homeAllEv ? "접기 ▲" : `일정 더보기 (${Math.min(evs.length, 8) - 3}개 더) ▼`}</button>` : ""}</div></section>`;
   } else {
     hero = `<section class="hero"><div class="glow"></div>
       <div class="date">${dateStr}</div>
@@ -344,12 +344,16 @@ function viewHome() {
   }
 
   const install = installEvt ? `<button class="btn btn-soft" style="height:40px;font-size:12px" onclick="doInstall()">앱으로 설치</button>` : "";
-  $view.innerHTML = `<div style="display:flex;align-items:center;gap:10px;margin:2px 0 12px">
-      <img src="icon-192.png" alt="송골랩 로고" width="34" height="34" style="border-radius:10px;box-shadow:0 2px 8px rgba(30,40,90,.12);flex:0 0 auto">
-      <div style="min-width:0;line-height:1.15"><div style="font-size:19px;font-weight:800;letter-spacing:-.3px">아이랑 용인</div><div style="font-size:11px;color:var(--muted);margin-top:2px">by 송골랩 · 개인이 만든 서비스</div></div></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <button class="chip glass" onclick="go('region')">${icon.pin} ${esc(regionLabel())} · ${levelLabel()} ▾</button>${install}</div>
-    ${hero}${ks.length ? homeMeals(homeKid === "all" ? ks : ks.filter(k => k.id === homeKid)) : ""}${homeNews()}${mine}${homeInstall()}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
+  const kidSc = ks.map(kidSchool).find(Boolean);
+  const Q = [["🍚", "급식", "t-sun", kidSc ? `school/${kidSc.code}` : "schools"], ["🏫", "학교 일정", "t-lilac", kidSc ? `school/${kidSc.code}` : "schools"], ["📚", "도서관", "t-mint", "library"],
+    ["✏️", "학원", "t-indigo", "acas"], ["🧸", "유치원", "t-coral", "kinders"], ["🎪", "행사", "t-coral", "events"]];
+  const quick = `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:14px 0 2px">${Q.map(([e, l, t, r]) => `<button onclick="go('${r}')" style="border:0;background:none;padding:4px 0;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--ink)"><span class="tile ${t}" style="width:44px;height:44px;font-size:20px;border-radius:14px">${e}</span><span style="font-size:11.5px;font-weight:700;white-space:nowrap">${l}</span></button>`).join("")}</div>`;
+  const notice = homeNews() || homeInstall();
+  $view.innerHTML = `<div style="display:flex;align-items:center;gap:9px;margin:2px 0 14px">
+      <img src="icon-192.png" alt="송골랩 로고" width="32" height="32" style="border-radius:9px;box-shadow:0 2px 8px rgba(30,40,90,.12);flex:0 0 auto">
+      <div style="min-width:0;flex:1;line-height:1.15"><div style="font-size:18px;font-weight:800;letter-spacing:-.3px">아이랑 용인</div><div style="font-size:10.5px;color:var(--muted);margin-top:2px">by 송골랩 · 개인이 만든 서비스</div></div>
+      <button class="chip glass" style="flex:0 0 auto;font-size:12px;padding:0 12px;height:34px" onclick="go('region')">${icon.pin} ${esc(regionLabel().replace("용인시 전체", "용인").replace("용인 ", ""))} · ${levelLabel()} ▾</button></div>
+    ${hero}${quick}${ks.length ? homeMeals(homeKid === "all" ? ks : ks.filter(k => k.id === homeKid)) : ""}${mine}${notice}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
 }
 
 // ---------- 급식 ----------
@@ -453,7 +457,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.17 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.18 (시범 운영)</span></div>
         <div class="row" onclick="go('news')" style="cursor:pointer"><span>업데이트 소식${newsUnseen() ? ' <span style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:8px;background:var(--coral, #E5533D);color:#fff;font-size:10px;font-weight:800;vertical-align:2px">NEW</span>' : ""}</span><span class="val" style="color:var(--indigo);font-weight:700">${esc(newsDate(NEWS[0].d))} ›</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:songgollab@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">songgollab@gmail.com</a></div>
         <div class="row"><span>유튜브 · 송골랩</span><a class="val" href="https://www.youtube.com/@songgollab" target="_blank" rel="noopener" style="color:var(--indigo);font-weight:700;text-decoration:none">@songgollab ›</a></div>
@@ -635,7 +639,7 @@ function homeBooks() {
 function homeLibrary() {
   if (!SEATS) return "";
   const { g, list } = libList();
-  const open = list.filter(l => l.status === "open" && l.rooms.length).slice(0, 3);
+  const open = list.filter(l => l.status === "open" && l.rooms.length).slice(0, 2);
   if (!open.length) return "";
   const rows = open.map(l => { const r = l.rooms.reduce((a, x) => ({ left: a.left + x.left, total: a.total + x.total, used: a.used + x.used, wait: 0 }), { left: 0, total: 0, used: 0 });
     const [bar, ink] = seatColor(r);
@@ -679,9 +683,8 @@ function homeEvents() {
   if (!EVENTS) return "";
   const c = cityEvents(), l = libEvents().filter(e => e.status === "접수중");
   if (!c.length && !l.length) return "";
-  const rows = [...c.slice(0, 3).map(cityRow), ...l.slice(0, 3).map(libRow)].join("");
+  const nl = Math.min(l.length, c.length >= 2 ? 1 : 3 - c.length); const rows = [...c.slice(0, 3 - nl).map(cityRow), ...l.slice(0, nl).map(libRow)].join("");
   return `<section class="section"><div class="sec-head"><h2>아이와 함께 가요</h2><button onclick="go('events')">전체보기</button></div>
-    <p style="font-size:12px;color:var(--muted);margin:-4px 0 10px">용인시 공연·축제와 도서관 어린이·가족 프로그램</p>
     <div class="lift card-pad">${rows}</div></section>`;
 }
 function pickEvTab(t) { evTab = t; render(); }
@@ -1203,8 +1206,7 @@ function viewElite() {
 const NEWS = [
   { d: "2026-10-11", v: "1.0.17", t: "이름이 '아이랑 용인'으로 바뀌었어요", items: [
     "아이와 함께하는 용인 생활 정보를 모아 보여 드린다는 뜻으로 이름을 <b>아이랑 용인</b>으로 바꿨어요.",
-    "사이트 주소와 휴대폰에 저장한 아이 정보는 <b>그대로</b>예요. 다시 등록하지 않아도 돼요.",
-    "아이콘이 만든 사람의 <b>송골랩</b> 로고로 바뀌었어요. 홈 화면에 추가해 둔 아이콘은 휴대폰에 따라 바뀌는 데 시간이 걸릴 수 있어요. 아이폰은 지우고 다시 추가하면 바로 바뀌어요."] },
+    "사이트 주소와 휴대폰에 저장한 아이 정보는 <b>그대로</b>예요. 다시 등록하지 않아도 돼요."] },
   { d: "2026-10-11", v: "1.0.13", t: "우리 아이 급식 메뉴를 볼 수 있어요", items: [
     "🍚 아이 학교를 등록하면 홈 화면에 <b>다음 급식 메뉴</b>가 나와요.",
     "학교 화면에서 <b>이번 주 급식</b>과 칼로리, 알레르기 정보를 볼 수 있어요. 매일 아침 자동으로 업데이트돼요.",
