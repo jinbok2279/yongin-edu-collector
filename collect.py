@@ -21,20 +21,28 @@ HIGHLIGHT_WORDS = ["재량휴업", "방학", "개학", "졸업", "입학", "체�
 
 
 def call(service, **params):
-    """나이스 API를 한 번 부르고, 결과 목록(row)만 돌려준다. 데이터가 없으면 빈 목록."""
-    params.update({"KEY": KEY, "Type": "json", "pIndex": 1, "pSize": 1000})
-    url = API + service + "?" + urllib.parse.urlencode(params)
-    with urllib.request.urlopen(url, timeout=30) as res:
-        data = json.loads(res.read().decode("utf-8"))
-    if service not in data:
-        code = data.get("RESULT", {}).get("CODE", "")
-        if code == "INFO-200":          # 해당하는 데이터가 없습니다
-            return []
-        raise RuntimeError(f"{service} 오류: {data.get('RESULT')}")
-    for part in data[service]:
-        if "row" in part:
-            return part["row"]
-    return []
+    """나이스 API를 부르고 결과 목록(row)을 모두 돌려준다 (1000건이 넘으면 다음 쪽까지). 데이터가 없으면 빈 목록."""
+    rows, page = [], 1
+    while True:
+        q = dict(params, KEY=KEY, Type="json", pIndex=page, pSize=1000)
+        url = API + service + "?" + urllib.parse.urlencode(q)
+        with urllib.request.urlopen(url, timeout=30) as res:
+            data = json.loads(res.read().decode("utf-8"))
+        if service not in data:
+            code = data.get("RESULT", {}).get("CODE", "")
+            if code == "INFO-200":          # 해당하는 데이터가 없습니다
+                return rows
+            raise RuntimeError(f"{service} 오류: {data.get('RESULT')}")
+        total, got = 0, []
+        for part in data[service]:
+            if "head" in part:
+                total = part["head"][0].get("list_total_count", 0)
+            if "row" in part:
+                got = part["row"]
+        rows += got
+        if not got or len(rows) >= total or page >= 20:
+            return rows
+        page += 1
 
 
 LEVELS = ["초등학교", "중학교", "고등학교"]
