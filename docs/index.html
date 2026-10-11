@@ -449,9 +449,10 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.13 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.14 (시범 운영)</span></div>
         <div class="row" onclick="go('news')" style="cursor:pointer"><span>업데이트 소식${newsUnseen() ? ' <span style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:8px;background:var(--coral, #E5533D);color:#fff;font-size:10px;font-weight:800;vertical-align:2px">NEW</span>' : ""}</span><span class="val" style="color:var(--indigo);font-weight:700">${esc(newsDate(NEWS[0].d))} ›</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
+        <div class="row"><span>유튜브 · 송골랩</span><a class="val" href="https://www.youtube.com/@songgollab" target="_blank" rel="noopener" style="color:var(--indigo);font-weight:700;text-decoration:none">@songgollab ›</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
     <p class="foot">학사일정은 학교가 나이스에 등록한 내용을 그대로 보여드려요.<br>정확한 내용은 학교 가정통신문을 함께 확인해 주세요.</p>`;
