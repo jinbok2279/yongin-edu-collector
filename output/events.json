@@ -1,20 +1,7 @@
 {
- "updated_at": "2026-10-11 06:32:08",
+ "updated_at": "2026-10-12 06:32:29",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
-  {
-   "id": "16904",
-   "title": "용인싱어즈 창단연주회 < 용인, 새로운 바람의 시작>",
-   "start": "2026-10-11",
-   "end": "2026-10-11",
-   "place": "마루홀",
-   "time": "90분(인터미션 15분)",
-   "grade": "전체관람등급",
-   "price": "전석무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16904"
-  },
   {
    "id": "16845",
    "title": "[공연놀이터] 누가 내 머리에 똥 쌌어?",
@@ -369,25 +356,6 @@
  ],
  "lib": [
   {
-   "id": "L135562",
-   "title": "[상현] 「어린이 AI 독서토론 아카데미」 (준비물: 개인 노트북 지참)",
-   "lib": "상현도서관",
-   "target": "초등 (2~4학년 / 15명 *개인 노트북 지참 필수*)",
-   "place": "상현도서관 4층 시청각실",
-   "start": "2026-10-14",
-   "end": "2026-10-30",
-   "period": "2026.10.14(수) ~ 2026.10.30(금) 16:00 ~ 17:40 6회",
-   "applyStart": "2026-09-23",
-   "applyEnd": "2026-10-12",
-   "apply": "2026.09.23(수) 10:00 ~ 2026.10.12(월) 14:00",
-   "count": "6/15",
-   "status": "접수중",
-   "btn": "신청하기",
-   "free": true,
-   "src": "lib",
-   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=135562"
-  },
-  {
    "id": "L134681",
    "title": "[흥덕_대면] 흥덕도서관 10월 저학년 「전래놀이 문화행사」 (10/14, 수, 15:00~17:00)",
    "lib": "흥덕도서관",
@@ -407,23 +375,23 @@
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=134681"
   },
   {
-   "id": "L134801",
-   "title": "[메이커] 내가 만든 캐릭터 스티커「디지털드로잉 (초등)」",
-   "lib": "수지도서관",
-   "target": "초등 (초등 4~6학년 10명)",
-   "place": "수지도서관 3층 메이커스페이스",
-   "start": "2026-10-16",
+   "id": "L135562",
+   "title": "[상현] 「어린이 AI 독서토론 아카데미」 (준비물: 개인 노트북 지참)",
+   "lib": "상현도서관",
+   "target": "초등 (2~4학년 / 15명 *개인 노트북 지참 필수*)",
+   "place": "상현도서관 4층 시청각실",
+   "start": "2026-10-14",
    "end": "2026-10-30",
-   "period": "2026.10.16(금) ~ 2026.10.30(금) 15:00 ~ 17:00 3회",
-   "applyStart": "2026-10-07",
+   "period": "2026.10.14(수) ~ 2026.10.30(금) 16:00 ~ 17:40 6회",
+   "applyStart": "2026-09-23",
    "applyEnd": "2026-10-13",
-   "apply": "2026.10.07(수) 10:00 ~ 2026.10.13(화) 18:00",
-   "count": "9/10",
+   "apply": "2026.09.23(수) 10:00 ~ 2026.10.13(화) 11:00",
+   "count": "9/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
    "src": "lib",
-   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=134801"
+   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=135562"
   },
   {
    "id": "L135223",
