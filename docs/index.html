@@ -168,6 +168,8 @@ const SEATS_URL = "seats.json";
 const KEY_SEATS = "edu.seats";
 let SEATS = null;
 const EVENTS_URL = "events.json";
+const MEALS_URL = "meals.json";
+let MEALS = null;
 const KEY_EVENTS = "edu.events";
 let EVENTS = null, evTab = "city";
 const BOOKS_URL = "books.json";
@@ -343,7 +345,42 @@ function viewHome() {
   const install = installEvt ? `<button class="btn btn-soft" style="height:40px;font-size:12px" onclick="doInstall()">앱으로 설치</button>` : "";
   $view.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <button class="chip glass" onclick="go('region')">${icon.pin} ${esc(regionLabel())} · ${levelLabel()} ▾</button>${install}</div>
-    ${hero}${mine}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
+    ${hero}${ks.length ? homeMeals(homeKid === "all" ? ks : ks.filter(k => k.id === homeKid)) : ""}${mine}${homeInstall()}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
+}
+
+// ---------- 급식 ----------
+const ALLERGY = ["", "난류", "우유", "메밀", "땅콩", "대두", "밀", "고등어", "게", "새우", "돼지고기", "복숭아", "토마토", "아황산류", "호두", "닭고기", "쇠고기", "오징어", "조개류", "잣"];
+function todayYmd() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+function schoolMeals(code) { const t = todayYmd(); return ((MEALS && MEALS.schools && MEALS.schools[code]) || []).filter(m => m[0] >= t); }
+function nextLunch(code) { const ms = schoolMeals(code); if (!ms.length) return null; const day = ms[0][0]; const same = ms.filter(m => m[0] === day); return { day, meal: same.find(m => m[1] === "중식") || same[0], all: same }; }
+function dishList(ds, small) { return ds.map(([n, a]) => `<span style="display:inline-block;margin:0 6px 6px 0;padding:5px 10px;border-radius:12px;background:var(--ground, #F4F5FB);font-size:${small ? 12 : 13}px;font-weight:600">${esc(n)}${a ? `<sup style="font-size:9px;color:var(--muted);font-weight:500;margin-left:2px">${esc(a)}</sup>` : ""}</span>`).join(""); }
+function dayLabel(ymd) { const t = todayYmd(); if (ymd === t) return "오늘"; const d = new Date(ymd + "T00:00:00"), n = new Date(t + "T00:00:00"); if ((d - n) / 864e5 === 1) return "내일"; return `${d.getMonth() + 1}월 ${d.getDate()}일 ${WD[d.getDay()]}요일`; }
+function homeMeals(ks) {
+  if (!MEALS) return "";
+  const seen = new Set(), cards = [];
+  for (const k of ks) {
+    const sc = kidSchool(k); if (!sc || seen.has(sc.code)) continue; seen.add(sc.code);
+    const nl = nextLunch(sc.code);
+    const who = ks.filter(x => x.code === sc.code).map(kidPill).join("");
+    cards.push(`<div style="padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer" onclick="go('school/${sc.code}')">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px"><div style="min-width:0">${ks.length > 1 ? who : ""}<b style="font-size:14px">${esc(sc.name)}</b></div>
+      <span style="font-size:12px;color:var(--muted);white-space:nowrap">${nl ? esc(dayLabel(nl.day)) + (nl.meal[3] ? " · " + esc(nl.meal[3]) + "kcal" : "") : ""} ›</span></div>
+      ${nl ? dishList(nl.meal[2]) : `<div style="font-size:13px;color:var(--muted)">이번 주 등록된 급식이 없어요 (방학이거나 아직 올라오지 않았어요)</div>`}</div>`);
+    if (cards.length >= 3) break;
+  }
+  if (!cards.length) return "";
+  return `<section class="section"><div class="sec-head"><h2>🍚 우리 아이 급식</h2></div><div class="lift card-pad" style="padding-top:2px;padding-bottom:2px">${cards.join("")}</div></section>`;
+}
+function schoolMealsSection(code) {
+  if (!MEALS) return "";
+  const ms = schoolMeals(code);
+  const days = [...new Set(ms.map(m => m[0]))].slice(0, 5);
+  const body = days.length ? days.map(day => { const list = ms.filter(m => m[0] === day);
+      return `<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div style="font-weight:800;font-size:14px;margin-bottom:8px">${esc(dayLabel(day))}${dayLabel(day).length < 4 ? ` <span style="font-weight:500;color:var(--muted);font-size:12px">${esc(mdw(day))}</span>` : ""}</div>
+        ${list.map(m => `${list.length > 1 ? `<div style="font-size:12px;color:var(--muted);margin:2px 0 6px">${esc(m[1])}${m[3] ? " · " + esc(m[3]) + "kcal" : ""}</div>` : (m[3] ? `<div style="font-size:12px;color:var(--muted);margin:-4px 0 6px">${esc(m[3])}kcal</div>` : "")}${dishList(m[2], true)}`).join("")}</div>`; }).join("")
+    : `<div class="empty">이번 주 등록된 급식이 없어요. 방학이거나 학교가 아직 식단을 올리지 않았어요.</div>`;
+  return `<section class="section"><div class="sec-head"><h2>🍚 이번 주 급식</h2></div><div class="lift card-pad" style="padding-top:2px">${body}
+    <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-top:10px">작은 숫자는 알레르기 유발 식품이에요. ${ALLERGY.slice(1).map((a, i) => `${i + 1} ${a}`).join(" · ")}<br>급식 · 나이스 급식식단정보${MEALS && MEALS.updated_at ? " · " + esc(MEALS.updated_at.slice(5, 16)) + " 갱신" : ""}</p></div></section>`;
 }
 
 // ---------- 화면: 학교 목록 ----------
@@ -386,7 +423,7 @@ function viewSchool(code) {
     </div>
     <section class="section"><div class="sec-head"><h2>다가오는 일정</h2></div>
       <div class="lift card-pad">${list.map(g => evRow(g)).join("")}
-      ${(s.events || []).length ? "" : `<div class="empty">이 학교는 아직 나이스에 학사일정을 등록하지 않았어요. 등록되면 하루 3번 자동으로 반영돼요.</div>`}</div></section>${footer()}`;
+      ${(s.events || []).length ? "" : `<div class="empty">이 학교는 아직 나이스에 학사일정을 등록하지 않았어요. 등록되면 하루 3번 자동으로 반영돼요.</div>`}</div></section>${schoolMealsSection(s.code)}${footer()}`;
 }
 
 // ---------- 화면: 마이 ----------
@@ -408,15 +445,11 @@ function viewMy() {
     <div class="lift card-pad">
       <div class="row"><span>관심 지역</span><button class="btn btn-soft" style="height:38px;font-size:13px" onclick="go('region')">${levelLabel()} · ${esc(regionLabel())} · 변경</button></div>
     </div></section>
-    <section class="section"><div class="sec-head"><h2>앱처럼 쓰기</h2></div>
-      <div class="lift" style="padding:18px;font-size:14px;line-height:1.75">
-        ${installEvt ? `<button class="btn btn-3d" onclick="doInstall()" style="width:100%;margin-bottom:12px">홈 화면에 설치하기</button>` : ""}
-        크롬 오른쪽 위 <b>⋮ 메뉴 → 홈 화면에 추가</b>(또는 앱 설치)를 누르면 휴대폰에 앱 아이콘이 생겨요.
-      </div></section>
+    <section class="section" id="install-guide"><div class="sec-head"><h2>앱처럼 쓰기</h2></div>${installGuide()}</section>
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.11 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.12 (시범 운영)</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -1407,6 +1440,51 @@ function render() {
   trackView(r);
   window.scrollTo(0, 0);
 }
+// ---------- 홈 화면에 추가 안내 (기기별) ----------
+function devInfo() {
+  const ua = navigator.userAgent || "";
+  const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const inApp = /NAVER\(inapp|KAKAOTALK|DaumApps|Instagram|FBAN|FBAV|Line\/|everytimeApp|BAND\/|Karrot|Daangn/i.test(ua);
+  const samsung = /SamsungBrowser/i.test(ua);
+  const standalone = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+  return { ios, inApp, samsung, standalone, android: /Android/i.test(ua) };
+}
+function copyLink() {
+  const url = location.origin + location.pathname;
+  (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => toast("주소를 복사했어요. 사파리나 크롬에 붙여 넣어 주세요")).catch(() => toast(url));
+}
+function installGuide() {
+  const d = devInfo();
+  const step = (n, t) => `<div style="display:flex;gap:10px;align-items:flex-start;margin-top:10px"><span style="flex:0 0 24px;height:24px;border-radius:12px;background:var(--indigo);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center">${n}</span><span style="flex:1">${t}</span></div>`;
+  const box = inner => `<div class="lift" style="padding:18px;font-size:14px;line-height:1.65">${inner}</div>`;
+  if (d.standalone) return box(`<b>✓ 지금 홈 화면 앱으로 쓰고 있어요.</b><br><span style="color:var(--muted)">홈 화면 아이콘을 누르면 바로 열려요.</span>`);
+  let main;
+  if (d.inApp) main = `<b>지금은 카페·카톡 같은 앱 안에서 열려 있어요.</b><br><span style="color:var(--muted)">앱 안에서는 홈 화면에 추가할 수 없어서, 사파리나 크롬으로 한 번 열어 주세요.</span>
+      ${step(1, `오른쪽 위(또는 아래) <b>⋯ / ⋮ 메뉴</b> → <b>다른 브라우저로 열기</b>`)}
+      ${step(2, d.ios ? `사파리에서 아래쪽 <b>공유 버튼(□↑)</b> → <b>홈 화면에 추가</b>` : `크롬에서 오른쪽 위 <b>⋮</b> → <b>홈 화면에 추가</b> 또는 <b>앱 설치</b>`)}
+      <button class="btn btn-soft" style="width:100%;height:44px;margin-top:14px;font-size:13px" onclick="copyLink()">주소 복사하기</button>`;
+  else if (d.ios) main = `<b>아이폰은 이렇게 추가해요</b> <span style="color:var(--muted)">(사파리 기준)</span>
+      ${step(1, `화면 아래쪽 <b>공유 버튼(□↑)</b>을 눌러요`)}
+      ${step(2, `목록을 내려 <b>홈 화면에 추가</b>를 눌러요`)}
+      ${step(3, `오른쪽 위 <b>추가</b>를 누르면 아이콘이 생겨요`)}`;
+  else if (installEvt) main = `<button class="btn btn-3d" onclick="doInstall()" style="width:100%">홈 화면에 설치하기</button>
+      <div style="color:var(--muted);margin-top:10px">누르고 <b>설치</b>를 고르면 홈 화면에 아이콘이 생겨요.</div>`;
+  else if (d.samsung) main = `<b>삼성 인터넷은 이렇게 추가해요</b>
+      ${step(1, `아래쪽 <b>≡ 메뉴</b>를 눌러요`)}
+      ${step(2, `<b>현재 페이지 추가</b> → <b>홈 화면</b>을 눌러요`)}`;
+  else main = `<b>크롬은 이렇게 추가해요</b>
+      ${step(1, `오른쪽 위 <b>⋮ 메뉴</b>를 눌러요`)}
+      ${step(2, `<b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 눌러요`)}`;
+  return box(main + `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.6">설치 파일을 받지 않아요. 홈 화면 아이콘은 이 페이지로 바로 가는 바로가기예요.</div>`);
+}
+function homeInstall() {
+  const d = devInfo();
+  if (d.standalone || store("edu.installHide") === "1") return "";
+  return `<section class="section"><div class="lift" style="padding:14px 16px;display:flex;align-items:center;gap:12px">
+    <span class="tile t-indigo" style="width:40px;height:40px;font-size:18px">📲</span>
+    <div style="flex:1;min-width:0;cursor:pointer" onclick="go('my');setTimeout(()=>{const e=document.getElementById('install-guide');if(e)e.scrollIntoView({behavior:'smooth'})},80)"><div style="font-weight:800;font-size:14px">홈 화면에 추가하고 앱처럼 쓰기</div><div style="font-size:12px;color:var(--muted);margin-top:2px">${d.inApp ? "카페·카톡 앱 안이라면 먼저 다른 브라우저로 열어 주세요" : d.ios ? "공유 버튼(□↑) → 홈 화면에 추가" : "설치 없이 아이콘 하나로 바로 열려요"} ›</div></div>
+    <button onclick="store('edu.installHide','1');render()" aria-label="닫기" style="border:0;background:none;font-size:18px;color:var(--muted);cursor:pointer;padding:4px 6px">×</button></div></section>`;
+}
 async function doInstall() { if (!installEvt) return; installEvt.prompt(); const ch = await installEvt.userChoice; if (ch && ch.outcome === "accepted") trackEvent("앱-설치"); installEvt = null; render(); }
 
 document.querySelectorAll(".navi").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
@@ -1429,6 +1507,14 @@ async function loadBooks() {
   } catch (e) { try { BOOKS = JSON.parse(store(KEY_BOOKS) || "null"); } catch (e2) { BOOKS = null; } }
   if (DATA) render();
 }
+async function loadMeals() {
+  try {
+    const res = await dataFetch(MEALS_URL);
+    if (!res.ok) throw new Error(res.status);
+    MEALS = await res.json(); store("edu.meals", JSON.stringify(MEALS));
+  } catch (e) { try { MEALS = JSON.parse(store("edu.meals") || "null"); } catch (e2) { MEALS = null; } }
+  if (DATA) render();
+}
 async function loadEvents() {
   try {
     const res = await dataFetch(EVENTS_URL);
@@ -1438,7 +1524,7 @@ async function loadEvents() {
   if (DATA) render();
 }
 async function load() {
-  loadSeats(); loadBooks(); loadEvents();
+  loadSeats(); loadBooks(); loadEvents(); loadMeals();
   try {
     const res = await dataFetch(DATA_URL);
     if (!res.ok) throw new Error(res.status);
