@@ -449,7 +449,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.15 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.16 (시범 운영)</span></div>
         <div class="row" onclick="go('news')" style="cursor:pointer"><span>업데이트 소식${newsUnseen() ? ' <span style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:8px;background:var(--coral, #E5533D);color:#fff;font-size:10px;font-weight:800;vertical-align:2px">NEW</span>' : ""}</span><span class="val" style="color:var(--indigo);font-weight:700">${esc(newsDate(NEWS[0].d))} ›</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:songgollab@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">songgollab@gmail.com</a></div>
         <div class="row"><span>유튜브 · 송골랩</span><a class="val" href="https://www.youtube.com/@songgollab" target="_blank" rel="noopener" style="color:var(--indigo);font-weight:700;text-decoration:none">@songgollab ›</a></div>
@@ -794,7 +794,7 @@ function acaToCalendar(i) {
   trackEvent("학원-캘린더"); toast("캘린더 파일을 열어 '추가'를 눌러 주세요");
 }
 function acaKind(a) { return (a.c && a.c[0]) || a.r || ""; }
-function pickAca(id) { const a = ACAS.academies.find(x => x.id === id); if (!a || kidForm.acas.length >= 10) return; kidForm.acas.push({ id: a.id, n: a.n, r: acaKind(a) }); kidForm.aq = ""; trackEvent("학원-추가"); trackEvent("학원선택/" + a.id); render(); }
+function pickAca(id) { const a = ACAS.academies.find(x => x.id === id); if (!a || kidForm.acas.length >= 10) return; kidForm.acas.push({ id: a.id, n: a.n, r: acaKind(a) }); kidForm.aq = ""; trackEvent("학원-추가"); render(); }
 function removeAca(id) { kidForm.acas = kidForm.acas.filter(a => a.id !== id); render(); }
 function won(n) { return n >= 10000 ? (n % 10000 ? (n / 10000).toFixed(1).replace(/\.0$/, "") : n / 10000) + "만원" : n.toLocaleString() + "원"; }
 function viewAca(id) {
@@ -837,6 +837,8 @@ function saveKid(id) {
   const list = kids();
   const name = (kidForm.name || "").trim() || ORD[list.length] || "아이";
   const k = list.find(x => x.id === id);
+  const before = new Set(((k && k.acas) || []).map(a => a.id));
+  (kidForm.acas || []).filter(a => !before.has(a.id)).forEach(a => trackEvent("학원등록/" + a.id));
   if (k) { k.name = name; k.code = kidForm.code; k.acas = kidForm.acas; k.grade = kidForm.grade; k.gy = schoolYear(); }
   else list.push({ id: "k" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, code: kidForm.code, acas: kidForm.acas, grade: kidForm.grade, gy: schoolYear(), color: nextColor(list) });
   saveKids(list); kidForm = null; homeKid = "all"; trackEvent(k ? "아이-수정" : "아이-등록");
@@ -1422,12 +1424,12 @@ function adminAcaHtml(A) {
   const find = id => ACAS && ACAS.academies.find(x => x.id === id);
   const pick = {}, view = {};
   rows.forEach(h => {
-    if (h.event && h.path.startsWith("학원선택/")) { const id = h.path.slice(5); pick[id] = (pick[id] || 0) + h.count; }
+    if (h.event && (h.path.startsWith("학원등록/") || h.path.startsWith("학원선택/"))) { const id = h.path.slice(5); pick[id] = (pick[id] || 0) + h.count; }
     else if (!h.event && h.path.startsWith("/aca/")) { const id = h.path.slice(5); view[id] = (view[id] || 0) + h.count; }
   });
   const sum = o => Object.values(o).reduce((a, b) => a + b, 0);
   const listPage = rows.filter(h => !h.event && h.path === "/acas").reduce((a, h) => a + h.count, 0);
-  const added = rows.filter(h => h.event && h.path === "학원-추가").reduce((a, h) => a + h.count, 0);
+  const added = sum(pick);
   const tile = (label, v) => `<div class="stat" style="padding:12px 4px"><div class="k">${label}</div><div class="v" style="font-size:22px">${v.toLocaleString()}</div></div>`;
   const top = (o, n) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, n);
   const acaRow = ([id, c], i) => { const a = find(id);
@@ -1440,13 +1442,14 @@ function adminAcaHtml(A) {
   const bars = arr => { const mx = Math.max(1, ...arr.map(x => x[1]));
     return arr.length ? `<div class="lift card-pad">${arr.map(([k, v]) => `<div style="display:flex;align-items:center;gap:10px;padding:7px 0"><span style="width:92px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(k)}</span><span style="flex:1;height:10px;border-radius:5px;background:var(--line);overflow:hidden"><span style="display:block;height:100%;width:${Math.round(v / mx * 100)}%;background:var(--indigo)"></span></span><span style="width:34px;text-align:right;font-size:12px;font-weight:700">${v}</span></div>`).join("")}</div>` : `<div class="lift empty">아직 기록이 없어요.</div>`; };
   return `<section class="section"><div class="sec-head"><h2>학원 분석</h2><span style="font-size:12px;color:var(--muted)">최근 30일</span></div>
-    <div class="stats" style="grid-template-columns:repeat(3,1fr)">${tile("학원 목록 방문", listPage)}${tile("학원 상세 조회", sum(view))}${tile("아이 학원 등록", added)}</div>
-    <p style="font-size:13px;font-weight:800;margin:16px 0 8px">아이 학원으로 많이 고른 곳</p>
-    ${box(top(pick, 10).map(acaRow), "학원별 집계는 10월 11일부터 쌓여요. 누가 골랐는지는 남기지 않고 학원별 횟수만 세요.")}
+    <div class="stats" style="grid-template-columns:repeat(3,1fr)">${tile("학원 목록 방문", listPage)}${tile("학원 상세 조회", sum(view))}${tile("등록된 학원 수", Object.keys(pick).length)}</div>
+    <p style="font-size:13px;font-weight:800;margin:16px 0 4px">아이 학원으로 많이 등록된 곳</p>
+    <p style="font-size:11px;color:var(--muted);margin:0 0 8px">아이 정보를 저장할 때 등록된 학원이에요 · 전체 ${added.toLocaleString()}건 · 같은 휴대폰은 학원마다 한 번만 세요</p>
+    ${box(top(pick, 10).map(acaRow), "아직 집계가 없어요. 아이를 등록할 때 넣은 학원부터 쌓이고, 이미 등록해 둔 학원도 앱을 한 번 열면 들어와요. 누가 등록했는지는 남기지 않고 학원별 횟수만 세요.")}
     <p style="font-size:13px;font-weight:800;margin:16px 0 8px">상세 화면을 많이 본 학원</p>
     ${box(top(view, 10).map(acaRow), "아직 기록이 없어요.")}
     <p style="font-size:13px;font-weight:800;margin:16px 0 4px">관심 많은 분야</p>
-    <p style="font-size:11px;color:var(--muted);margin:0 0 8px">아이 학원으로 고르면 3점, 상세 조회는 1점으로 계산했어요</p>
+    <p style="font-size:11px;color:var(--muted);margin:0 0 8px">아이 학원으로 등록하면 3점, 상세 조회는 1점으로 계산했어요</p>
     ${bars(group(a => (acaKind(a) || "").replace(/\(.*?\)/g, "").split(/[·,/]/)[0].trim()))}
     <p style="font-size:13px;font-weight:800;margin:16px 0 8px">관심 많은 지역</p>
     ${bars(group(a => a.gu))}
@@ -1634,6 +1637,14 @@ async function load() {
     else { $view.innerHTML = `<div class="loading">정보를 불러오지 못했어요.<br>인터넷 연결을 확인하고 다시 열어 주세요.</div>`; return; }
   }
   render();
+  reportKidAcas();
+}
+// 이 기능 전에 등록해 둔 아이 학원도 한 번만 집계 (학원 번호만 보내고, 아이·기기 정보는 보내지 않음)
+function reportKidAcas() {
+  if (store("edu.acaReported")) return;
+  const ids = new Set(); kids().forEach(k => (k.acas || []).forEach(a => ids.add(a.id)));
+  ids.forEach(id => trackEvent("학원등록/" + id));
+  store("edu.acaReported", "1");
 }
 load();
 if ("serviceWorker" in navigator) {
