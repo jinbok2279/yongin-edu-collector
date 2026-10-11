@@ -349,11 +349,15 @@ function viewHome() {
     ["✏️", "학원", "t-indigo", "acas"], ["🧸", "유치원", "t-coral", "kinders"], ["🎪", "행사", "t-coral", "events"]];
   const quick = `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:14px 0 2px">${Q.map(([e, l, t, r]) => `<button onclick="go('${r}')" style="border:0;background:none;padding:4px 0;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--ink)"><span class="tile ${t}" style="width:44px;height:44px;font-size:20px;border-radius:14px">${e}</span><span style="font-size:11.5px;font-weight:700;white-space:nowrap">${l}</span></button>`).join("")}</div>`;
   const notice = homeNews() || homeInstall();
+  const addrNote = store("edu.noteAddr") === "1" ? "" : `<div class="lift" style="padding:12px 14px;margin:0 0 12px;display:flex;gap:10px;align-items:flex-start;border:1px solid #FFD9A8;background:#FFF8EC">
+      <span style="font-size:18px;line-height:1.2">📢</span>
+      <div style="flex:1;min-width:0;font-size:13px;line-height:1.55"><b>사이트 주소가 곧 바뀌어요</b><br><span style="color:var(--muted)">예전 주소로 들어오셔도 새 주소로 자동 연결되고, 등록한 아이 정보도 그대로 옮겨져요. 따로 하실 일은 없어요.</span></div>
+      <button onclick="store('edu.noteAddr','1');render()" aria-label="닫기" style="border:0;background:none;font-size:18px;color:var(--muted);cursor:pointer;padding:0 4px">×</button></div>`;
   $view.innerHTML = `<div style="display:flex;align-items:center;gap:9px;margin:2px 0 14px">
       <img src="icon-192.png" alt="송골랩 로고" width="32" height="32" style="border-radius:9px;box-shadow:0 2px 8px rgba(30,40,90,.12);flex:0 0 auto">
       <div style="min-width:0;flex:1;line-height:1.15"><div style="font-size:18px;font-weight:800;letter-spacing:-.3px">아이랑 용인</div><div style="font-size:10.5px;color:var(--muted);margin-top:2px">by 송골랩 · 개인이 만든 서비스</div></div>
       <button class="chip glass" style="flex:0 0 auto;font-size:12px;padding:0 12px;height:34px" onclick="go('region')">${icon.pin} ${esc(regionLabel().replace("용인시 전체", "용인").replace("용인 ", ""))} · ${levelLabel()} ▾</button></div>
-    ${hero}${quick}${ks.length ? homeMeals(homeKid === "all" ? ks : ks.filter(k => k.id === homeKid)) : ""}${mine}${notice}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
+    ${addrNote}${hero}${quick}${ks.length ? homeMeals(homeKid === "all" ? ks : ks.filter(k => k.id === homeKid)) : ""}${mine}${notice}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
 }
 
 // ---------- 급식 ----------
@@ -457,7 +461,7 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.18 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.19 (시범 운영)</span></div>
         <div class="row" onclick="go('news')" style="cursor:pointer"><span>업데이트 소식${newsUnseen() ? ' <span style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:8px;background:var(--coral, #E5533D);color:#fff;font-size:10px;font-weight:800;vertical-align:2px">NEW</span>' : ""}</span><span class="val" style="color:var(--indigo);font-weight:700">${esc(newsDate(NEWS[0].d))} ›</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:songgollab@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">songgollab@gmail.com</a></div>
         <div class="row"><span>유튜브 · 송골랩</span><a class="val" href="https://www.youtube.com/@songgollab" target="_blank" rel="noopener" style="color:var(--indigo);font-weight:700;text-decoration:none">@songgollab ›</a></div>
