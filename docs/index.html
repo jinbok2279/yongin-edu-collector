@@ -345,7 +345,7 @@ function viewHome() {
   const install = installEvt ? `<button class="btn btn-soft" style="height:40px;font-size:12px" onclick="doInstall()">앱으로 설치</button>` : "";
   $view.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <button class="chip glass" onclick="go('region')">${icon.pin} ${esc(regionLabel())} · ${levelLabel()} ▾</button>${install}</div>
-    ${hero}${ks.length ? homeMeals(homeKid === "all" ? ks : ks.filter(k => k.id === homeKid)) : ""}${mine}${homeInstall()}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
+    ${hero}${ks.length ? homeMeals(homeKid === "all" ? ks : ks.filter(k => k.id === homeKid)) : ""}${homeNews()}${mine}${homeInstall()}${homeEvents()}${homeLibrary()}${homeBooks()}${footer()}`;
 }
 
 // ---------- 급식 ----------
@@ -449,7 +449,8 @@ function viewMy() {
     <section class="section"><div class="sec-head"><h2>정보</h2></div>
       <div class="lift card-pad">
         <div class="row"><span>마지막 업데이트</span><span class="val">${esc(DATA.updated_at)}</span></div>
-        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.12 (시범 운영)</span></div>
+        <div class="row" onclick="adminTap()" style="cursor:default;user-select:none"><span>버전</span><span class="val">1.0.13 (시범 운영)</span></div>
+        <div class="row" onclick="go('news')" style="cursor:pointer"><span>업데이트 소식${newsUnseen() ? ' <span style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:8px;background:var(--coral, #E5533D);color:#fff;font-size:10px;font-weight:800;vertical-align:2px">NEW</span>' : ""}</span><span class="val" style="color:var(--indigo);font-weight:700">${esc(newsDate(NEWS[0].d))} ›</span></div>
         <div class="row"><span>개발자 이메일</span><a class="val" href="mailto:jinbok2279.lee@gmail.com" style="color:var(--indigo);font-weight:700;text-decoration:none">jinbok2279.lee@gmail.com</a></div>
         <div class="row" onclick="go('about')" style="cursor:pointer"><span>이용 안내 · 개인정보</span><span class="val" style="color:var(--indigo);font-weight:700">보기 ›</span></div>
       </div></section>
@@ -1191,6 +1192,50 @@ function viewElite() {
 }
 
 // ---------- 이용 안내 · 개인정보 ----------
+// ---------- 업데이트 소식 (날짜별) ----------
+const NEWS = [
+  { d: "2026-10-11", v: "1.0.13", t: "우리 아이 급식 메뉴를 볼 수 있어요", items: [
+    "🍚 아이 학교를 등록하면 홈 화면에 <b>다음 급식 메뉴</b>가 나와요.",
+    "학교 화면에서 <b>이번 주 급식</b>과 칼로리, 알레르기 정보를 볼 수 있어요. 매일 아침 자동으로 업데이트돼요.",
+    "🏫 일부 초등학교가 목록에 빠져 있던 문제를 고쳤어요. 이제 용인 초등학교가 모두 나와요.",
+    "📲 <b>앱처럼 쓰기</b> 안내가 아이폰, 삼성 인터넷, 크롬, 카페·카톡 앱 안에서 열었을 때마다 맞게 바뀌어요.",
+    "🆕 전체 메뉴에 날짜별 <b>업데이트 소식</b>을 만들었어요. 새로 바뀐 내용이 있으면 홈 화면에서 먼저 알려 드려요."] },
+  { d: "2026-10-10", v: "1.0.11", t: "이름이 '용인 정보모음'으로 바뀌었어요", items: [
+    "학교뿐 아니라 도서관, 유치원, 학원, 행사, 일자리까지 모아 보여 드려서 이름을 <b>용인 정보모음</b>으로 바꿨어요.",
+    "모든 기능을 <b>무료</b>로 쓸 수 있어요.",
+    "아이 정보는 <b>접속한 본인 휴대폰에만 저장</b>된다는 안내를 더 분명하게 적었어요."] },
+  { d: "2026-10-09", v: "1.0.6", t: "학원 수업 알림이 생겼어요", items: [
+    "⏰ 아이 학원의 수업 요일과 시간을 넣으면 <b>휴대폰 캘린더</b>에 추가할 수 있어요.",
+    "수업 <b>시작 10분 전, 끝나기 10분 전</b>에 알림이 와요."] },
+  { d: "2026-10-09", v: "1.0.5", t: "시범 운영을 시작했어요", items: [
+    "우리 아이 학교 일정, 도서관 빈자리·대출 베스트, 유치원 빈자리, 학원 찾기, 아이와 갈 행사, 특목·자사고, 엄마 일자리를 한곳에서 볼 수 있어요.",
+    "회원가입 없이 바로 쓸 수 있어요."] },
+];
+function newsDate(d) { const [y, m, dd] = d.split("-").map(Number); return `${m}월 ${dd}일`; }
+function newsUnseen() { return store("edu.newsSeen") !== NEWS[0].v; }
+function homeNews() {
+  if (!newsUnseen()) return "";
+  const n = NEWS[0], days = (new Date(todayYmd() + "T00:00:00") - new Date(n.d + "T00:00:00")) / 864e5;
+  if (days > 14) return "";
+  return `<section class="section"><div class="lift" style="padding:14px 16px;display:flex;align-items:center;gap:12px">
+    <span class="tile t-sun" style="width:40px;height:40px;font-size:18px">🆕</span>
+    <div style="flex:1;min-width:0;cursor:pointer" onclick="go('news')"><div style="font-size:12px;color:var(--muted)">${esc(newsDate(n.d))} 업데이트</div><div style="font-weight:800;font-size:14px;margin-top:2px">${esc(n.t)} ›</div></div>
+    <button onclick="store('edu.newsSeen',NEWS[0].v);render()" aria-label="닫기" style="border:0;background:none;font-size:18px;color:var(--muted);cursor:pointer;padding:4px 6px">×</button></div></section>`;
+}
+function viewNews() {
+  store("edu.newsSeen", NEWS[0].v);
+  const byDay = [];
+  NEWS.forEach(n => { let g = byDay.find(x => x.d === n.d); if (!g) byDay.push(g = { d: n.d, list: [] }); g.list.push(n); });
+  $view.innerHTML = `<button class="back glass" onclick="history.back()" aria-label="뒤로">${icon.back}</button>
+    <h1 style="font-size:25px;font-weight:800;margin-top:14px">업데이트 소식</h1>
+    <p style="font-size:13px;color:var(--muted);margin:6px 0 0">써 주시는 분들 의견을 듣고 계속 고쳐 나가고 있어요</p>
+    ${byDay.map(g => `<section class="section"><div class="sec-head"><h2 style="font-size:17px">${esc(newsDate(g.d))}</h2></div>
+      <div class="lift card-pad">${g.list.map((n, i) => `<div style="padding:12px 0;${i ? "border-top:1px solid var(--line)" : ""}">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b style="font-size:15px">${esc(n.t)}</b><span style="font-size:11px;color:var(--muted);white-space:nowrap">${esc(n.v)}</span></div>
+        <ul style="margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.7">${n.items.map(x => `<li style="margin:3px 0">${x}</li>`).join("")}</ul></div>`).join("")}</div></section>`).join("")}
+    <div class="foot">바라는 기능이나 불편한 점은 jinbok2279.lee@gmail.com 으로 알려 주세요.</div>`;
+}
+
 function viewAbout() {
   const sec = (t, body) => `<section class="section"><div class="sec-head"><h2 style="font-size:17px">${t}</h2></div><div class="lift card-pad" style="font-size:14px;line-height:1.75;color:var(--ink)">${body}</div></section>`;
   const li = a => `<ul style="margin:0;padding-left:18px">${a.map(x => `<li style="margin:4px 0">${x}</li>`).join("")}</ul>`;
@@ -1415,7 +1460,7 @@ function go(route) { if (location.hash === "#" + route) render(); else location.
 function render() {
   if (!DATA) return;
   const r = (location.hash || "#home").slice(1);
-  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r === "jobs" || r === "elite" || r === "about" || r.startsWith("kid/") ? "my" : "home";
+  const tab = r.startsWith("school") ? "home" : r.startsWith("library") || r === "books" ? "library" : r === "acas" || r.startsWith("aca/") ? "acas" : r === "kinders" || r.startsWith("kinder/") ? "kinders" : r === "my" || r === "region" || r === "admin" || r === "premium" || r === "jobs" || r === "elite" || r === "about" || r === "news" || r.startsWith("kid/") ? "my" : "home";
   document.querySelectorAll(".navi").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
   if (r !== "admin") { adminOpen = false; ADMIN = null; adminMonths = null; }
   if (r.startsWith("kid/")) { const p = r.split("/"); if (p[1] === "new") viewKid("", p[2] || ""); else viewKid(p[1]); }
@@ -1434,6 +1479,7 @@ function render() {
   else if (r === "jobs") viewJobs();
   else if (r === "elite") viewElite();
   else if (r === "about") viewAbout();
+  else if (r === "news") viewNews();
   else if (r.startsWith("library/")) viewLibraryDetail(r.slice(8));
   else if (r === "my") viewMy();
   else viewHome();
