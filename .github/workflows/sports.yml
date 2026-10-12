@@ -1,0 +1,32 @@
+name: sports
+
+on:
+  schedule:
+    - cron: "10 21 * * 0"   # 매주 월요일 06:10 (한국시간)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sports
+  cancel-in-progress: false
+
+jobs:
+  sports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python sports.py
+      - run: |
+          [ -f output/sports.json ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p docs/data && cp output/sports.json docs/data/
+          git add output/sports.json docs/data/sports.json
+          git diff --cached --quiet && exit 0
+          git commit -m "운동교실 강좌 업데이트"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
