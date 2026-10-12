@@ -2,10 +2,10 @@
  "city": "용인",
  "updated": "2026-10-12",
  "status": {
-  "ysports": "ok",
-  "giheung": "ok",
+  "ysports": "old",
+  "giheung": "old",
   "arpia": "old",
-  "namsa": "ok"
+  "namsa": "old"
  },
  "centers": [
   {
