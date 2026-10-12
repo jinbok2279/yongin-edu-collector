@@ -7,6 +7,7 @@ output/academies.json 으로 저장한다. 앱에서 아이의 학원을 고를 
 import json
 import os
 import re
+from collections import Counter, defaultdict
 import time
 import urllib.parse
 import urllib.request
@@ -81,6 +82,55 @@ def fees(text):
     return out
 
 
+def fill_dong(lst, city):
+    """동을 못 찾은 곳 채우기: ① 괄호 안에 이미 아는 동 이름이 붙어 있으면 그것 ② 같은 길에 있는 다른 학원 대부분이 같은 동이면 그 동"""
+    known = defaultdict(set)
+    for a in lst:
+        if a["dong"]:
+            known[a["gu"]].add(a["dong"])
+    for a in lst:
+        if a["dong"]:
+            continue
+        m = re.search(city + r"시\s*\S+구\s+([가-힣]+\d{0,2}(?:동|가))\s+\d", a["a"])   # 지번 주소: … 기흥구 중동 874
+        if m and m.group(1) in known[a["gu"]]:
+            a["dong"] = m.group(1)
+            continue
+        text = "," + ",".join(re.findall(r"\(([^()]*)", a["a"])).replace(" ", "")
+        for d in sorted(known[a["gu"]], key=len, reverse=True):
+            after = r"" if len(d) >= 3 else r"(?![가-힣])"   # 두 글자 동(신동·하동)은 '신동아'처럼 붙은 이름과 헷갈리지 않게
+            if re.search(r"[,(]" + re.escape(d) + after, text):
+                a["dong"] = d
+                break
+
+    def road(addr):
+        m = re.search(city + r"시\s*\S+구\s+(\S+?(?:로|길))\s*\d", addr) or re.search(city + r"시\s+(\S+?(?:로|길))\s*\d", addr)
+        return m.group(1) if m else ""
+
+    by_road = defaultdict(Counter)
+    for a in lst:
+        if a["dong"]:
+            r = road(a["a"])
+            if r:
+                by_road[(a["gu"], r)][a["dong"]] += 1
+                base = re.sub(r"\d+번?길$", "", r)
+                if base != r:
+                    by_road[(a["gu"], base + "*")][a["dong"]] += 1
+    for a in lst:
+        if a["dong"]:
+            continue
+        r = road(a["a"])
+        if not r:
+            continue
+        for key in ((a["gu"], r), (a["gu"], re.sub(r"\d+번?길$", "", r) + "*")):
+            c = by_road.get(key)
+            if c:
+                d, n = c.most_common(1)[0]
+                if n >= 2 and n / sum(c.values()) >= 0.8:
+                    a["dong"] = d
+                    break
+    return lst
+
+
 def main():
     if not KEY:
         raise SystemExit("NEIS_KEY가 없습니다. 저장소 Secrets에 NEIS_KEY를 넣어 주세요.")
@@ -123,7 +173,7 @@ def main():
             "cap": r.get("TOFOR_SMTOT") or 0,
             "tel": clean(r.get("FA_TELNO")),
         }
-    lst = sorted(acas.values(), key=lambda a: a["n"])
+    lst = fill_dong(sorted(acas.values(), key=lambda a: a["n"]), "용인")
     os.makedirs("output", exist_ok=True)
     result = {"updated_at": datetime.now(KST).strftime("%Y-%m-%d %H:%M:%S"),
               "source": "NEIS 교육정보 개방 포털 (학원교습소정보)", "count": len(lst), "academies": lst}
@@ -133,6 +183,7 @@ def main():
     for a in lst:
         by_gu[a["gu"] or "구 미상"] = by_gu.get(a["gu"] or "구 미상", 0) + 1
     print(f"개원 학원·교습소 {len(lst)}곳 저장:", by_gu)
+    print("동 모름:", sum(1 for a in lst if not a["dong"]), "곳")
     print("수강료 공개:", sum(1 for a in lst if a["f"]), "곳")
 
 
