@@ -43,15 +43,28 @@ def clean(s):
     return "" if s in ("null", "None") else " ".join(s.split())
 
 
+DONG = re.compile(r"^([가-힣]{1,8}?\d{0,2}(?:동|가|읍|면))(?:\d[\d\-]*)?$")
+NOT_DONG = re.compile(r"상가|빌딩|타워|프라자|플라자|센터|아파트|오피스텔|빌라|하우스|힐스|자이|래미안|푸르지오|아이파크|캐슬|단지|블럭|블록|마을")
+NOT_DONG_EXACT = {"가동", "나동", "다동", "라동", "마동", "바동", "사동", "아동", "자동", "에이동", "비동", "씨동", "디동", "본동", "별동", "신관동", "구관동", "전면", "후면", "측면", "정면", "일부동", "전동", "상가동"}
+
+
 def area(addr, detail):
+    """주소에서 구·행정 동(읍·면) 이름만 뽑기 — 아파트·상가 '101동', '203호', 건물 이름은 버림"""
     gm = re.search(r"용인시\s*(\S+구)", addr)
     gu = gm.group(1) if gm else ""
-    m = re.search(r"\(([^)]*?[동읍면])(?:[,)\s]|$)", detail + ")") or re.search(r"\(([^)]*?[동읍면])(?:[,)\s]|$)", addr + ")")
-    if m:
-        dong = m.group(1).split(",")[0].strip()
-    else:
-        m = re.search(r"\s(\S+[읍면])\s", addr + " ")
-        dong = m.group(1) if m else ""
+    m = re.search(r"용인시\s*(?:\S+구\s+)?([가-힣]+[읍면])\s", addr + " ")   # 읍·면 지역은 읍·면 이름 우선
+    dong = m.group(1) if m else ""
+    if not dong:   # 도로명 주소 끝 괄호: (망포동, 건물이름) / (이의동1369-2, …)
+        for grp in re.findall(r"\(([^()]*)", detail + " " + addr):
+            for tok in re.split(r"[,\s]+", grp.replace("지번:", " ")):
+                t = DONG.match(re.sub(r"^\d+(?=[가-힣])", "", tok.strip()))   # (0당수동 …) 처럼 앞에 숫자가 잘못 붙은 경우
+                if t and t.group(1) not in NOT_DONG_EXACT and not NOT_DONG.search(t.group(1)):
+                    dong = t.group(1)
+                    break
+            if dong:
+                break
+    if dong in ("남사면", "이동면", "모현면", "양지면"):   # 읍으로 바뀐 곳은 지금 이름으로
+        dong = dong[:-1] + "읍"
     if not gu and dong.endswith(("읍", "면")):
         gu = "처인구"
     return gu, dong
