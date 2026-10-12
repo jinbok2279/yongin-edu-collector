@@ -61,6 +61,10 @@ def get(url):
             return b.decode("cp949", errors="replace")
         except Exception as e:
             print("  다시 시도:", url, e)
+            if "CERTIFICATE_VERIFY_FAILED" in str(e) and url.startswith("https://"):
+                url = "http://" + url[8:]   # 인증서 설정이 불완전한 사이트는 일반 주소로 다시
+                req = urllib.request.Request(url, headers=UA)
+                continue
             time.sleep(3 * (i + 1))
     return ""
 
@@ -163,8 +167,10 @@ def category(title, name):
     return ""
 
 
-def short_time(s):
+def short_time(s, keep_range=False):
     s = s.strip()
+    if keep_range:
+        return s if len(s) <= 40 else ""
     m = re.findall(r"(\d{1,2}:\d{2})\s*~\s*\d{1,2}:\d{2}", s)
     if m:
         return ", ".join(dict.fromkeys(m))
@@ -189,7 +195,7 @@ def parse_page(html, title, cid):
             if len(row) <= ci_price:
                 continue
             name = row[ci_name] if ci_name is not None and ci_name < len(row) else title
-            if not name or norm(name) in ("구분", "프로그램", "월정기", "일일입장") or len(name) > 30 or re.match(r"[\d(]", name):
+            if not name or norm(name) in ("구분", "프로그램", "월정기", "일일입장") or len(name) > 30 or re.match(r"[\d(]|성\s+인|성인\s*(청소년|/|$)", name):
                 continue
             price_cell = row[ci_price]
             if not re.search(r"\d{1,3},\d{3}", price_cell):
@@ -199,12 +205,14 @@ def parse_page(html, title, cid):
                 continue
             who = row[ci_who] if ci_who is not None and ci_who < len(row) else ""
             kid = bool(KID.search(name + " " + who)) and cat != "사우나"
+            name = re.sub(r"\s*[A-Z]$", "", name)          # 요가A·요가B… 는 한 강좌로 묶음
             key = (name, kid)
             e = progs.setdefault(key, {"c": cid, "cat": cat, "name": name, "who": who or "성인", "kid": 1 if kid else 0, "days": [], "times": [], "price": price_of(price_cell, kid)})
-            if ci_day is not None and ci_day < len(row) and row[ci_day] and row[ci_day] not in e["days"]:
-                e["days"].append(row[ci_day])
+            day = re.sub(r"\s*[,.]\s*", "·", row[ci_day]) if ci_day is not None and ci_day < len(row) else ""
+            if day and day not in e["days"]:
+                e["days"].append(day)
             if ci_time is not None and ci_time < len(row):
-                tm = short_time(row[ci_time])
+                tm = short_time(row[ci_time], keep_range=cat in ("헬스", "사우나") and "스피닝" not in name)
                 if tm and tm not in e["times"]:
                     e["times"].append(tm)
             if who and who not in e["who"]:
