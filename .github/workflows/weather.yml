@@ -1,0 +1,38 @@
+name: weather
+
+on:
+  schedule:
+    - cron: "40 20 * * *"   # 한국시간 05:40 (아침 체크용)
+    - cron: "50 22 * * *"   # 07:50
+    - cron: "20 2 * * *"    # 11:20
+    - cron: "20 8 * * *"    # 17:20
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weather
+  cancel-in-progress: false
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python weather.py
+        env:
+          WEATHER_KEY: ${{ secrets.WEATHER_KEY }}
+          CITY: 용인
+      - run: |
+          [ -f output/weather.json ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p docs/data && cp output/weather.json docs/data/
+          git add output/weather.json docs/data/weather.json
+          git diff --cached --quiet && exit 0
+          git commit -m "날씨 업데이트"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
