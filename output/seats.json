@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-13 12:46:40",
+  "updated_at": "2026-10-13 13:10:44",
   "source": "용인시도서관 좌석현황",
   "source_url": "https://lib.yongin.go.kr/yongin/seatStatusList.do",
   "libraries": [
@@ -13,8 +13,8 @@
         {
           "name": "열람실",
           "total": 140,
-          "used": 30,
-          "left": 110,
+          "used": 29,
+          "left": 111,
           "wait": 0
         }
       ]
@@ -29,8 +29,8 @@
         {
           "name": "일반열람실",
           "total": 148,
-          "used": 46,
-          "left": 100,
+          "used": 49,
+          "left": 97,
           "wait": 0
         }
       ]
@@ -45,15 +45,15 @@
         {
           "name": "열람실(일반)",
           "total": 156,
-          "used": 42,
-          "left": 114,
+          "used": 46,
+          "left": 110,
           "wait": 0
         },
         {
           "name": "열람실(청소년)",
           "total": 102,
-          "used": 9,
-          "left": 93,
+          "used": 10,
+          "left": 92,
           "wait": 0
         }
       ]
@@ -68,8 +68,8 @@
         {
           "name": "보라도서관 열람실",
           "total": 134,
-          "used": 33,
-          "left": 101,
+          "used": 34,
+          "left": 100,
           "wait": 0
         }
       ]
@@ -84,8 +84,8 @@
         {
           "name": "열람실",
           "total": 80,
-          "used": 42,
-          "left": 38,
+          "used": 45,
+          "left": 35,
           "wait": 0
         },
         {
@@ -130,8 +130,8 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 53,
-          "left": 127,
+          "used": 54,
+          "left": 126,
           "wait": 0
         },
         {
@@ -169,8 +169,8 @@
         {
           "name": "일반열람실",
           "total": 180,
-          "used": 37,
-          "left": 143,
+          "used": 36,
+          "left": 144,
           "wait": 0
         },
         {
