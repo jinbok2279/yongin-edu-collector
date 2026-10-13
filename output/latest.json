@@ -1,9 +1,9 @@
 {
   "region": "용인시",
-  "updated_at": "2026-10-13 18:09:42",
+  "updated_at": "2026-10-14 06:16:51",
   "period": {
-    "from": "20261013",
-    "to": "20261212"
+    "from": "20261014",
+    "to": "20261213"
   },
   "school_count": 196,
   "public_holidays": [
@@ -25,14 +25,6 @@
     }
   ],
   "highlights": [
-    {
-      "school": "한숲중학교",
-      "level": "중학교",
-      "gu": "처인구",
-      "date": "2026-10-13",
-      "name": "학부모상담주간",
-      "holiday": false
-    },
     {
       "school": "두창초등학교",
       "level": "초등학교",
@@ -1126,7 +1118,7 @@
       "level": "중학교",
       "gu": "처인구",
       "date": "2026-11-19",
-      "name": "대학수학능력시험",
+      "name": "재량휴업일",
       "holiday": true
     },
     {
@@ -1134,7 +1126,7 @@
       "level": "중학교",
       "gu": "처인구",
       "date": "2026-11-19",
-      "name": "재량휴업일",
+      "name": "대학수학능력시험",
       "holiday": true
     },
     {
@@ -1968,11 +1960,6 @@
       "dong": "",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "인권 교육 주간",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "인권 교육 주간",
           "holiday": false
@@ -2407,11 +2394,6 @@
       "gu": "수지구",
       "dong": "상현동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "알뜰장터",
-          "holiday": false
-        },
         {
           "date": "2026-10-19",
           "name": "독도사랑주간운영",
@@ -2942,11 +2924,6 @@
       "dong": "모현읍",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "장애이해교육",
-          "holiday": false
-        },
-        {
           "date": "2026-11-13",
           "name": "모현예술제",
           "holiday": false
@@ -2998,11 +2975,6 @@
       "gu": "처인구",
       "dong": "삼가동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "양성평등교육주간",
-          "holiday": false
-        },
         {
           "date": "2026-10-14",
           "name": "양성평등교육주간",
@@ -4903,11 +4875,6 @@
       "dong": "이동읍",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "2차 정기시험",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "합동소방훈련",
           "holiday": false
@@ -5159,12 +5126,12 @@
       "events": [
         {
           "date": "2026-11-19",
-          "name": "대학수학능력시험",
+          "name": "재량휴업일",
           "holiday": true
         },
         {
           "date": "2026-11-19",
-          "name": "재량휴업일",
+          "name": "대학수학능력시험",
           "holiday": true
         }
       ]
@@ -5242,11 +5209,6 @@
       "gu": "처인구",
       "dong": "원삼면",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "체육대회",
-          "holiday": false
-        },
         {
           "date": "2026-10-30",
           "name": "학교공개의날",
@@ -5408,11 +5370,6 @@
       "dong": "남사읍",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "학부모상담주간",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "학부모상담주간",
           "holiday": false
@@ -5522,11 +5479,6 @@
       "dong": "동백동",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "1차 정기시험",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "1차 정기시험",
           "holiday": false
@@ -5622,11 +5574,6 @@
       "dong": "보라동",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "1차 정기시험",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "1차 정기시험",
           "holiday": false
@@ -5687,11 +5634,6 @@
       "dong": "농서동",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "1차 정기시험",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "1차 정기시험",
           "holiday": false
@@ -5751,11 +5693,6 @@
       "gu": "기흥구",
       "dong": "구갈동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "1차 지필평가",
-          "holiday": false
-        },
         {
           "date": "2026-10-14",
           "name": "1차 지필평가",
@@ -5837,11 +5774,6 @@
       "dong": "동백동",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "2학기 정기시험 1차",
-          "holiday": false
-        },
-        {
           "date": "2026-10-16",
           "name": "현장체험학습(1,2)",
           "holiday": false
@@ -5891,11 +5823,6 @@
       "gu": "기흥구",
       "dong": "청덕동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "2학기 1차 지필평가",
-          "holiday": false
-        },
         {
           "date": "2026-10-20",
           "name": "전국연합학력평가",
@@ -5951,11 +5878,6 @@
       "gu": "기흥구",
       "dong": "중동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "1차 정기시험",
-          "holiday": false
-        },
         {
           "date": "2026-10-14",
           "name": "성적이의신청기간",
@@ -6062,23 +5984,18 @@
       "dong": "죽전동",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "1차정기시험",
-          "holiday": false
-        },
-        {
           "date": "2026-10-20",
           "name": "전국연합학력평가",
           "holiday": false
         },
         {
           "date": "2026-10-21",
-          "name": "학과탐색",
+          "name": "진로캠프",
           "holiday": false
         },
         {
           "date": "2026-10-21",
-          "name": "진로캠프",
+          "name": "학과탐색",
           "holiday": false
         },
         {
@@ -6207,11 +6124,6 @@
       "dong": "성복동",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "1차 지필평가",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "1차 지필평가",
           "holiday": false
@@ -6276,11 +6188,6 @@
       "gu": "수지구",
       "dong": "풍덕천동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "1차 정기시험",
-          "holiday": false
-        },
         {
           "date": "2026-10-14",
           "name": "1차 정기시험",
@@ -6537,11 +6444,6 @@
       "dong": "풍덕천동",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "1차 지필평가",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "1차 지필평가",
           "holiday": false
@@ -6647,11 +6549,6 @@
       "dong": "고림동",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "2학기 1차 정기시험",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "2학기 1차 정기시험",
           "holiday": false
@@ -6721,16 +6618,6 @@
       "gu": "처인구",
       "dong": "고림동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "재활용 분리수거/일반쓰레기 수거",
-          "holiday": false
-        },
-        {
-          "date": "2026-10-13",
-          "name": "1차 정기시험",
-          "holiday": false
-        },
         {
           "date": "2026-10-14",
           "name": "사이버보안 진단의날",
@@ -7022,11 +6909,6 @@
       "dong": "백암면",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "1차 지필평가",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "1차 지필평가",
           "holiday": false
@@ -7071,11 +6953,6 @@
       "gu": "처인구",
       "dong": "역북동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "1차 지필평가",
-          "holiday": false
-        },
         {
           "date": "2026-10-14",
           "name": "1차 지필평가",
@@ -7277,11 +7154,6 @@
       "dong": "모현읍",
       "events": [
         {
-          "date": "2026-10-13",
-          "name": "1차 정기시험",
-          "holiday": false
-        },
-        {
           "date": "2026-10-14",
           "name": "개교기념일",
           "holiday": false
@@ -7441,11 +7313,6 @@
       "gu": "처인구",
       "dong": "고림동",
       "events": [
-        {
-          "date": "2026-10-13",
-          "name": "정기시험",
-          "holiday": false
-        },
         {
           "date": "2026-10-14",
           "name": "정기시험",
