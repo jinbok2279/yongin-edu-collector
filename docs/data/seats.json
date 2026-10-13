@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-13 14:10:32",
+  "updated_at": "2026-10-13 14:44:45",
   "source": "용인시도서관 좌석현황",
   "source_url": "https://lib.yongin.go.kr/yongin/seatStatusList.do",
   "libraries": [
@@ -13,8 +13,8 @@
         {
           "name": "열람실",
           "total": 140,
-          "used": 35,
-          "left": 105,
+          "used": 36,
+          "left": 104,
           "wait": 0
         }
       ]
@@ -29,8 +29,8 @@
         {
           "name": "일반열람실",
           "total": 148,
-          "used": 59,
-          "left": 87,
+          "used": 62,
+          "left": 84,
           "wait": 0
         }
       ]
@@ -45,15 +45,15 @@
         {
           "name": "열람실(일반)",
           "total": 156,
-          "used": 55,
-          "left": 101,
+          "used": 54,
+          "left": 102,
           "wait": 0
         },
         {
           "name": "열람실(청소년)",
           "total": 102,
-          "used": 11,
-          "left": 91,
+          "used": 12,
+          "left": 90,
           "wait": 0
         }
       ]
@@ -84,15 +84,15 @@
         {
           "name": "열람실",
           "total": 80,
-          "used": 49,
-          "left": 31,
+          "used": 58,
+          "left": 22,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 32,
-          "used": 12,
-          "left": 20,
+          "used": 16,
+          "left": 16,
           "wait": 0
         }
       ]
@@ -107,8 +107,8 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 24,
-          "left": 156,
+          "used": 27,
+          "left": 153,
           "wait": 0
         },
         {
@@ -130,15 +130,15 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 63,
-          "left": 117,
+          "used": 70,
+          "left": 110,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 30,
-          "used": 23,
-          "left": 7,
+          "used": 22,
+          "left": 8,
           "wait": 0
         }
       ]
@@ -153,8 +153,8 @@
         {
           "name": "디지털존 노트북석",
           "total": 69,
-          "used": 51,
-          "left": 18,
+          "used": 48,
+          "left": 21,
           "wait": 0
         }
       ]
@@ -169,8 +169,8 @@
         {
           "name": "일반열람실",
           "total": 180,
-          "used": 40,
-          "left": 140,
+          "used": 46,
+          "left": 134,
           "wait": 0
         },
         {
