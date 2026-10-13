@@ -1,16 +1,8 @@
 {
-  "updated_at": "2026-10-12 22:56:40",
+  "updated_at": "2026-10-13 09:13:30",
   "source": "용인시도서관 좌석현황",
   "source_url": "https://lib.yongin.go.kr/yongin/seatStatusList.do",
   "libraries": [
-    {
-      "name": "중앙도서관",
-      "gu": "처인구",
-      "link": "https://lib.yongin.go.kr/seatmate_ce/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
-    },
     {
       "name": "포곡도서관",
       "gu": "처인구",
@@ -21,8 +13,8 @@
         {
           "name": "열람실",
           "total": 140,
-          "used": 0,
-          "left": 140,
+          "used": 15,
+          "left": 125,
           "wait": 0
         }
       ]
@@ -37,8 +29,8 @@
         {
           "name": "일반열람실",
           "total": 148,
-          "used": 0,
-          "left": 146,
+          "used": 27,
+          "left": 119,
           "wait": 0
         }
       ]
@@ -47,17 +39,40 @@
       "name": "동백도서관",
       "gu": "기흥구",
       "link": "https://lib.yongin.go.kr/seatmate_db/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실(일반)",
+          "total": 156,
+          "used": 23,
+          "left": 133,
+          "wait": 0
+        },
+        {
+          "name": "열람실(청소년)",
+          "total": 102,
+          "used": 1,
+          "left": 101,
+          "wait": 0
+        }
+      ]
     },
     {
       "name": "보라도서관",
       "gu": "기흥구",
       "link": "https://lib.yongin.go.kr/seatmate_bl/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "보라도서관 열람실",
+          "total": 134,
+          "used": 10,
+          "left": 124,
+          "wait": 0
+        }
+      ]
     },
     {
       "name": "서농도서관",
@@ -69,15 +84,15 @@
         {
           "name": "열람실",
           "total": 80,
-          "used": 0,
-          "left": 80,
+          "used": 21,
+          "left": 59,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 32,
-          "used": 0,
-          "left": 32,
+          "used": 7,
+          "left": 25,
           "wait": 0
         }
       ]
@@ -86,9 +101,24 @@
       "name": "흥덕도서관",
       "gu": "기흥구",
       "link": "https://lib.yongin.go.kr/seatmate_hd/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실",
+          "total": 180,
+          "used": 6,
+          "left": 174,
+          "wait": 0
+        },
+        {
+          "name": "노트북실",
+          "total": 56,
+          "used": 14,
+          "left": 42,
+          "wait": 0
+        }
+      ]
     },
     {
       "name": "상현도서관",
@@ -100,15 +130,15 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 0,
-          "left": 180,
+          "used": 22,
+          "left": 158,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 30,
-          "used": 0,
-          "left": 30,
+          "used": 17,
+          "left": 13,
           "wait": 0
         }
       ]
@@ -117,9 +147,17 @@
       "name": "수지도서관",
       "gu": "수지구",
       "link": "https://lib.yongin.go.kr/seatmate_sj/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "디지털존 노트북석",
+          "total": 69,
+          "used": 18,
+          "left": 51,
+          "wait": 0
+        }
+      ]
     },
     {
       "name": "죽전도서관",
@@ -131,15 +169,15 @@
         {
           "name": "일반열람실",
           "total": 180,
-          "used": 0,
-          "left": 180,
+          "used": 22,
+          "left": 158,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 54,
-          "used": 0,
-          "left": 54,
+          "used": 18,
+          "left": 36,
           "wait": 0
         }
       ]
