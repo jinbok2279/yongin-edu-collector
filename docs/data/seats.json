@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-15 11:57:35",
+  "updated_at": "2026-10-15 12:23:34",
   "source": "용인시도서관 좌석현황",
   "source_url": "https://lib.yongin.go.kr/yongin/seatStatusList.do",
   "libraries": [
@@ -45,15 +45,15 @@
         {
           "name": "열람실(일반)",
           "total": 156,
-          "used": 41,
-          "left": 115,
+          "used": 38,
+          "left": 118,
           "wait": 0
         },
         {
           "name": "열람실(청소년)",
           "total": 102,
-          "used": 3,
-          "left": 99,
+          "used": 4,
+          "left": 98,
           "wait": 0
         }
       ]
@@ -68,8 +68,8 @@
         {
           "name": "보라도서관 열람실",
           "total": 134,
-          "used": 34,
-          "left": 100,
+          "used": 33,
+          "left": 101,
           "wait": 0
         }
       ]
@@ -84,8 +84,8 @@
         {
           "name": "열람실",
           "total": 80,
-          "used": 41,
-          "left": 39,
+          "used": 45,
+          "left": 35,
           "wait": 0
         },
         {
@@ -107,15 +107,15 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 15,
-          "left": 165,
+          "used": 16,
+          "left": 164,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 56,
-          "used": 18,
-          "left": 38,
+          "used": 20,
+          "left": 36,
           "wait": 0
         }
       ]
@@ -130,8 +130,8 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 42,
-          "left": 138,
+          "used": 46,
+          "left": 134,
           "wait": 0
         },
         {
@@ -153,8 +153,8 @@
         {
           "name": "디지털존 노트북석",
           "total": 69,
-          "used": 46,
-          "left": 23,
+          "used": 43,
+          "left": 26,
           "wait": 0
         }
       ]
@@ -176,8 +176,8 @@
         {
           "name": "노트북실",
           "total": 54,
-          "used": 26,
-          "left": 28,
+          "used": 28,
+          "left": 26,
           "wait": 0
         }
       ]
