@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-15 06:52:26",
+ "updated_at": "2026-10-16 06:47:54",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
   {
@@ -14,19 +14,6 @@
    "free": true,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16903"
-  },
-  {
-   "id": "16899",
-   "title": "제5회 제이앤클라리넷앙상블 정기연주회(J&Clarinet ensemble)",
-   "start": "2026-10-15",
-   "end": "2026-10-15",
-   "place": "마루홀",
-   "time": "120분(인터미션 10분)",
-   "grade": "전체관람등급",
-   "price": "전석무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16899"
   },
   {
    "id": "16848",
@@ -343,25 +330,6 @@
  ],
  "lib": [
   {
-   "id": "L135223",
-   "title": "[동천] 2026년 10월 특성화 프로그램 「숲속 보물 탐험대」 (초등)",
-   "lib": "동천도서관",
-   "target": "초등 (초등 3~4학년)",
-   "place": "수지생태공원",
-   "start": "2026-10-22",
-   "end": "2026-10-22",
-   "period": "2026.10.22(목) 15:30 ~ 17:00 1회",
-   "applyStart": "2026-10-06",
-   "applyEnd": "2026-10-15",
-   "apply": "2026.10.06(화) 10:00 ~ 2026.10.15(목) 18:00",
-   "count": "11/12",
-   "status": "접수중",
-   "btn": "신청하기",
-   "free": true,
-   "src": "lib",
-   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=135223"
-  },
-  {
    "id": "L136221",
    "title": "(재능기부)경기도청년봉사단-알쏭달쏭 전통 이야기 :) 전통 문화 체험하기",
    "lib": "기흥도서관",
@@ -373,7 +341,7 @@
    "applyStart": "2026-10-12",
    "applyEnd": "2026-10-16",
    "apply": "2026.10.12(월) 10:00 ~ 2026.10.16(금) 18:00",
-   "count": "9/20",
+   "count": "10/20",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -430,7 +398,7 @@
    "applyStart": "2026-10-15",
    "applyEnd": "2026-11-02",
    "apply": "2026.10.15(목) 00:00 ~ 2026.11.02(월) 23:59",
-   "count": "0/10",
+   "count": "4/10",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -550,6 +518,25 @@
    "free": true,
    "src": "lib",
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136381"
+  },
+  {
+   "id": "L136461",
+   "title": "[구성] 11월 독서문화 프로그램 <그림책 공작소 시즌2> (2020~2021년생)",
+   "lib": "구성도서관",
+   "target": "유아 (2020~2021년생 10명)",
+   "place": "구성도서관 지하1층 커뮤니티실",
+   "start": "2026-11-06",
+   "end": "2026-11-27",
+   "period": "2026.11.06(금) ~ 2026.11.27(금) 15:30 ~ 17:00 4회",
+   "applyStart": "2026-10-26",
+   "applyEnd": "2026-11-04",
+   "apply": "2026.10.26(월) 10:00 ~ 2026.11.04(수) 23:00",
+   "count": "0/10",
+   "status": "접수전",
+   "btn": "",
+   "free": true,
+   "src": "lib",
+   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136461"
   },
   {
    "id": "L136321",
