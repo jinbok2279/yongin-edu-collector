@@ -31,14 +31,24 @@ MONEY = {
                         "link": "https://www.dailian.co.kr/news/view/1671167/"}]},
     "수원": {"name": "수원페이", "q": "수원페이 인센티브", "facts": []},
     "성남": {"name": "성남사랑상품권", "q": "성남사랑상품권 할인", "facts": []},
+    "안양": {"name": "안양사랑페이", "q": "안양사랑페이 인센티브", "facts": []},
+    "고양": {"name": "고양페이", "q": "고양페이 인센티브", "facts": []},
+    "화성": {"name": "행복화성지역화폐", "q": "화성 지역화폐 인센티브", "facts": []},
+    "부천": {"name": "부천페이", "q": "부천페이 인센티브", "facts": []},
 }
 STORES = {
     "용인": ["신세계백화점 경기점", "AK플라자 기흥", "롯데프리미엄아울렛 기흥점"],
     "수원": ["AK플라자 수원", "타임빌라스 수원", "갤러리아 광교"],
     "성남": ["현대백화점 판교점", "롯데백화점 분당점", "AK플라자 분당점", "NC백화점 야탑점"],
+    "안양": ["롯데백화점 평촌점", "NC백화점 평촌점"],
+    "고양": ["현대백화점 킨텍스점", "롯데백화점 일산점", "스타필드 고양"],
+    "화성": ["롯데백화점 동탄점"],
+    "부천": ["현대백화점 중동점", "롯데백화점 중동점"],
 }
 GOOD = re.compile(r"행사|세일|할인|특가|팝업|이벤트|사은|증정|키즈|어린이|아이|가족|체험|공연|페스티벌|축제|마켓|클래스|오픈")
-BAD = re.compile(r"채용|알바|구인|부동산|분양|매매|전세|주가|증권|실적|영업이익|사고|화재|폭행|경찰|사망|소송|노조|파업|대출|코인")
+BAD = re.compile(r"채용|알바|구인|부동산|분양|매매|전세|주가|증권|실적|영업이익|사고|화재|폭행|경찰|사망|소송|노조|파업|대출|코인"
+                 r"|나무위키|위키|인터뷰|시장에게|개봉|여행사|인플루언서|Image Library|섭외|제작|배송|택배|최저가|노사|개막"
+                 r"|아이폰|갤럭시|휴대폰|지원금|성지|동물병원|영양제|위스키|와인|골프|리뷰 모음", re.I)
 MONEY_GOOD = re.compile(r"인센티브|할인|충전|한도|캐시백|추가\s*지급|특별")
 
 
@@ -84,7 +94,7 @@ def money_items(today):
         for d in search(kind, m.get("q", CITY + " 지역화폐 인센티브")):
             ok, day = recent(d, since)
             title = clean(d.get("title"))
-            if not ok or not MONEY_GOOD.search(title) or m.get("name", "")[:2] not in title or title in seen:
+            if not ok or not MONEY_GOOD.search(title) or m.get("name", "")[:4] not in title or BAD.search(title) or title in seen:
                 continue
             seen.add(title)
             out.append({"id": "MS" + str(len(out)), "cat": "지역화폐", "title": title, "sub": clean(d.get("contents"))[:90],
@@ -106,9 +116,7 @@ def store_items(today):
                 ok, day = recent(d, since)
                 title, body = clean(d.get("title")), clean(d.get("contents"))
                 short = store.split()[0][:2]
-                if not ok or BAD.search(title) or not GOOD.search(title + " " + body[:80]):
-                    continue
-                if short not in title + body[:120]:
+                if not ok or BAD.search(title) or not GOOD.search(title) or short not in title:
                     continue
                 k = re.sub(r"\W", "", title)[:18]
                 if k in seen:
