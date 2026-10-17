@@ -1,7 +1,35 @@
 {
- "updated_at": "2026-10-17 12:25:15",
+ "updated_at": "2026-10-17 12:34:40",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
+  {
+   "id": "Cca3a9318b2",
+   "title": "[용인] 키즈인비또, 클래식 어드벤처: 음악 왕국으로 떠나는 대모험!",
+   "start": "2026-04-11",
+   "end": "2026-12-12",
+   "place": "용인문화예술원 마루홀",
+   "time": "20260411 ~ 20261212",
+   "grade": "",
+   "price": "",
+   "free": false,
+   "src": "culture",
+   "link": "https://www.mcst.go.kr/kor/s_culture/culture/cultureView.jsp?pSeq=70547",
+   "img": "http://www.culture.go.kr/upload/rdf/26/06/rdf_2026060921263578073.gif"
+  },
+  {
+   "id": "C8db18f7605",
+   "title": "[용인] 토요키즈클래식 (하반기)",
+   "start": "2026-09-19",
+   "end": "2026-11-28",
+   "place": "용인포은아트홀",
+   "time": "20260919 ~ 20261128",
+   "grade": "",
+   "price": "",
+   "free": false,
+   "src": "culture",
+   "link": "https://www.mcst.go.kr/kor/s_culture/culture/cultureView.jsp?pSeq=74956",
+   "img": "http://www.culture.go.kr/upload/rdf/26/08/rdf_202608252123873908.gif"
+  },
   {
    "id": "16903",
    "title": "[예술놀이터] 전시 < 경계인>",
@@ -14,6 +42,20 @@
    "free": true,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16903"
+  },
+  {
+   "id": "C95f0f66a9f",
+   "title": "미디어아트 뮤지컬 <파랑새>",
+   "start": "2026-10-16",
+   "end": "2026-10-18",
+   "place": "용인시평생학습관 큰어울마당",
+   "time": "20261016 ~ 20261018",
+   "grade": "",
+   "price": "",
+   "free": false,
+   "src": "culture",
+   "link": "https://www.mcst.go.kr/kor/s_culture/culture/cultureView.jsp?pSeq=73786",
+   "img": "http://www.culture.go.kr/upload/ucms/myRlyPerfInfo/2026/202608/9f2c3913a4c64cb483b2d760d1caad2f.png"
   },
   {
    "id": "16848",
