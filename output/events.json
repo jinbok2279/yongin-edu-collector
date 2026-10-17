@@ -1,35 +1,7 @@
 {
- "updated_at": "2026-10-17 12:34:40",
+ "updated_at": "2026-10-18 06:42:56",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
-  {
-   "id": "Cca3a9318b2",
-   "title": "[용인] 키즈인비또, 클래식 어드벤처: 음악 왕국으로 떠나는 대모험!",
-   "start": "2026-04-11",
-   "end": "2026-12-12",
-   "place": "용인문화예술원 마루홀",
-   "time": "20260411 ~ 20261212",
-   "grade": "",
-   "price": "",
-   "free": false,
-   "src": "culture",
-   "link": "https://www.mcst.go.kr/kor/s_culture/culture/cultureView.jsp?pSeq=70547",
-   "img": "http://www.culture.go.kr/upload/rdf/26/06/rdf_2026060921263578073.gif"
-  },
-  {
-   "id": "C8db18f7605",
-   "title": "[용인] 토요키즈클래식 (하반기)",
-   "start": "2026-09-19",
-   "end": "2026-11-28",
-   "place": "용인포은아트홀",
-   "time": "20260919 ~ 20261128",
-   "grade": "",
-   "price": "",
-   "free": false,
-   "src": "culture",
-   "link": "https://www.mcst.go.kr/kor/s_culture/culture/cultureView.jsp?pSeq=74956",
-   "img": "http://www.culture.go.kr/upload/rdf/26/08/rdf_202608252123873908.gif"
-  },
   {
    "id": "16903",
    "title": "[예술놀이터] 전시 < 경계인>",
@@ -42,20 +14,6 @@
    "free": true,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16903"
-  },
-  {
-   "id": "C95f0f66a9f",
-   "title": "미디어아트 뮤지컬 <파랑새>",
-   "start": "2026-10-16",
-   "end": "2026-10-18",
-   "place": "용인시평생학습관 큰어울마당",
-   "time": "20261016 ~ 20261018",
-   "grade": "",
-   "price": "",
-   "free": false,
-   "src": "culture",
-   "link": "https://www.mcst.go.kr/kor/s_culture/culture/cultureView.jsp?pSeq=73786",
-   "img": "http://www.culture.go.kr/upload/ucms/myRlyPerfInfo/2026/202608/9f2c3913a4c64cb483b2d760d1caad2f.png"
   },
   {
    "id": "16848",
@@ -71,19 +29,6 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16848"
   },
   {
-   "id": "16887",
-   "title": "용인어린이상상의숲 2026 문화의 날 기념 특별행사 < 상상가족 컬러링데이>",
-   "start": "2026-10-17",
-   "end": "2026-10-17",
-   "place": "용인어린이상상의숲",
-   "time": "10:00~17:00",
-   "grade": "전체관람등급",
-   "price": "무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16887"
-  },
-  {
    "id": "16908",
    "title": "숨은 그림 찾기",
    "start": "2026-10-18",
@@ -95,6 +40,19 @@
    "free": true,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16908"
+  },
+  {
+   "id": "16931",
+   "title": "제13회 대한민국 미르인 예술대전 < 미르인 선정작가 증서 수여식>",
+   "start": "2026-10-18",
+   "end": "2026-10-18",
+   "place": "국제회의실",
+   "time": "120분 내외(인터미션 없음)",
+   "grade": "전체관람등급",
+   "price": "전석무료",
+   "free": true,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16931"
   },
   {
    "id": "16922",
@@ -279,17 +237,43 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16925"
   },
   {
-   "id": "16809",
-   "title": "제15회 유지영 정기공연 < 오늘은 함께 신명나는 전통춤 추는날>",
-   "start": "2026-11-04",
-   "end": "2026-11-04",
-   "place": "큰어울마당",
-   "time": "100분",
+   "id": "16928",
+   "title": "춘몽, 소리로 남기다",
+   "start": "2026-10-30",
+   "end": "2026-10-30",
+   "place": "마루홀",
+   "time": "80분(인터미션 없음)",
    "grade": "전체관람등급",
-   "price": "무료",
+   "price": "전석무료",
    "free": true,
    "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16809"
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16928"
+  },
+  {
+   "id": "16927",
+   "title": "2026 가족음악회 더샵색소폰홀릭 열 두번째 이야기",
+   "start": "2026-10-31",
+   "end": "2026-10-31",
+   "place": "마루홀",
+   "time": "120분(인터미션 없음)",
+   "grade": "전체관람등급",
+   "price": "전석무료",
+   "free": true,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16927"
+  },
+  {
+   "id": "16929",
+   "title": "벨과 야수의 건강밥상",
+   "start": "2026-11-04",
+   "end": "2026-11-05",
+   "place": "마루홀",
+   "time": "40분(인터미션 없음)",
+   "grade": "전체관람등급",
+   "price": "사전초대",
+   "free": false,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16929"
   },
   {
    "id": "16879",
@@ -331,6 +315,19 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16909"
   },
   {
+   "id": "16930",
+   "title": "춤추듯 사뿐 돌아 2",
+   "start": "2026-11-15",
+   "end": "2026-11-15",
+   "place": "마루홀",
+   "time": "90분(인터미션 없음)",
+   "grade": "전체관람등급",
+   "price": "전석무료",
+   "free": true,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16930"
+  },
+  {
    "id": "16861",
    "title": "2026년 지역민간교향악단 지원육성사업 웨스턴심포니오케스트라 하반기 기획공연 < 콘서트 '11월'>",
    "start": "2026-11-18",
@@ -355,32 +352,6 @@
    "free": false,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16840"
-  },
-  {
-   "id": "16810",
-   "title": "뮤지컬 < 집사TV 시즌2 : 대저택 끝 없는 문>",
-   "start": "2026-11-28",
-   "end": "2026-11-29",
-   "place": "큰어울마당",
-   "time": "70분",
-   "grade": "만 24개월 이상",
-   "price": "대관단체문의",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16810"
-  },
-  {
-   "id": "16811",
-   "title": "블랙 스노우",
-   "start": "2026-12-09",
-   "end": "2026-12-09",
-   "place": "큰어울마당",
-   "time": "70분",
-   "grade": "만 7세 이상",
-   "price": "대관단체문의",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16811"
   }
  ],
  "lib": [
