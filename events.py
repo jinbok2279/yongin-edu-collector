@@ -163,7 +163,7 @@ def culture_events(today):
         periods = []
         for it in items:
             g = lambda k: " ".join((it.findtext(k) or "").split())
-            ds = re.findall(r"(\d{8})", g("period"))
+            ds = re.findall(r"(\d{8})", g("period") or g("eventPeriod"))   # 기간이 eventPeriod 에만 오는 경우가 많음
             if not ds:
                 continue
             start, end = ds[0], ds[-1]
