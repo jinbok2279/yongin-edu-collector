@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-18 06:34:16",
+  "updated_at": "2026-10-19 06:33:57",
   "source": "용인시도서관 · 도서관 정보나루",
   "lists": [
     {
@@ -39,30 +39,12 @@
           "title": "놓지 마 과학!",
           "author": "글·그림: 신태훈,나승훈",
           "publisher": "위즈덤하우스",
-          "cover": "https://image.aladin.co.kr/product/23416/73/cover/k962638285_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791190630184&searchLibrary=ALL",
+          "cover": "https://image.aladin.co.kr/product/34155/83/cover200/k032931590_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791171712267&searchLibrary=ALL",
           "series": 9
         },
         {
           "rank": 5,
-          "title": "슈뻘맨의 숨은 과학 찾기",
-          "author": "슈뻘맨 원작, 류수형 그림",
-          "publisher": "미래엔",
-          "cover": "https://image.aladin.co.kr/product/31331/11/cover/k812832794_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791168415171&searchLibrary=ALL",
-          "series": 4
-        },
-        {
-          "rank": 6,
-          "title": "고양이 해결사 깜냥",
-          "author": "홍민정 동화, 김재희 그림",
-          "publisher": "창비",
-          "cover": "https://image.aladin.co.kr/product/36670/38/cover200/8936448951_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9788936448950&searchLibrary=ALL",
-          "series": 4
-        },
-        {
-          "rank": 7,
           "title": "빨간내복야코 안 읽으면 완전 위험한 과학책",
           "author": "빨간내복야코 원작, 이영아 그림",
           "publisher": "위즈덤하우스",
@@ -71,52 +53,43 @@
           "series": 3
         },
         {
-          "rank": 8,
+          "rank": 6,
           "title": "흔한남매 과학 탐험대",
           "author": "원작: 흔한남매, 임혜영",
           "publisher": "김영사",
-          "cover": "https://image.aladin.co.kr/product/37906/10/cover200/k712033833_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791173324123&searchLibrary=ALL",
-          "series": 11
+          "cover": "https://image.aladin.co.kr/product/34553/89/cover200/8934935197_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9788934935193&searchLibrary=ALL",
+          "series": 12
+        },
+        {
+          "rank": 7,
+          "title": "고양이 해결사 깜냥",
+          "author": "홍민정 동화, 김재희 그림",
+          "publisher": "창비",
+          "cover": "https://image.aladin.co.kr/product/39375/36/cover200/8936450530_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9788936450533&searchLibrary=ALL",
+          "series": 3
+        },
+        {
+          "rank": 8,
+          "title": "슈뻘맨의 숨은 과학 찾기",
+          "author": "슈뻘맨 원작, 류수형 그림",
+          "publisher": "미래엔",
+          "cover": "https://image.aladin.co.kr/product/31331/11/cover/k812832794_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791168415171&searchLibrary=ALL",
+          "series": 5
         },
         {
           "rank": 9,
-          "title": "(흔한남매) 수수께끼 어드벤처",
-          "author": "원작: 흔한남매, 그림: 도니패밀리",
-          "publisher": "미래엔",
-          "cover": "https://image.aladin.co.kr/product/31966/80/cover/k562834162_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791168415591&searchLibrary=ALL",
-          "series": 1
-        },
-        {
-          "rank": 10,
           "title": "설민석의 한국사 대모험",
           "author": "글: 설민석,그림: 정현희",
           "publisher": "Dankkum i(단꿈아이)",
           "cover": "https://image.aladin.co.kr/product/39380/14/cover200/k682139776_2.jpg",
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791194616634&searchLibrary=ALL",
-          "series": 4
+          "series": 3
         },
         {
-          "rank": 11,
-          "title": "다판다 편의점",
-          "author": "강효미 글, 밤코 그림",
-          "publisher": "다산북스",
-          "cover": "https://image.aladin.co.kr/product/38361/19/cover200/k002135362_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791130673738&searchLibrary=ALL",
-          "series": 1
-        },
-        {
-          "rank": 12,
-          "title": "(흔한남매) 별난 세계 여행",
-          "author": "흔한남매 원작, 정주연 그림",
-          "publisher": "미래엔",
-          "cover": "https://image.aladin.co.kr/product/35632/70/cover200/k142036491_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791173470615&searchLibrary=ALL",
-          "series": 1
-        },
-        {
-          "rank": 13,
+          "rank": 10,
           "title": "에그박사",
           "author": "원작: 에그박사, 그림: 홍종현",
           "publisher": "미래엔",
@@ -125,52 +98,16 @@
           "series": 3
         },
         {
-          "rank": 14,
-          "title": "흔한남매 방방곡곡 한국사",
-          "author": "원작: 흔한남매, 그림: 유난희",
+          "rank": 11,
+          "title": "(흔한남매) 별난 세계 여행",
+          "author": "흔한남매 원작, 정주연 그림",
           "publisher": "미래엔",
-          "cover": "https://image.aladin.co.kr/product/38882/24/cover200/k102137303_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791175487468&searchLibrary=ALL",
+          "cover": "https://image.aladin.co.kr/product/35632/70/cover200/k142036491_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791173470615&searchLibrary=ALL",
           "series": 1
         },
         {
-          "rank": 15,
-          "title": "이상한 무인 아이스크림 가게",
-          "author": "서아람 글, 안병현 그림",
-          "publisher": "라곰스쿨",
-          "cover": "https://image.aladin.co.kr/product/31311/83/cover/k072832888_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791189686710&searchLibrary=ALL",
-          "series": 1
-        },
-        {
-          "rank": 16,
-          "title": "(설민석의) 그리스 로마 신화 대모험",
-          "author": "글: 설민석,스튜디오 담",
-          "publisher": "Dankkum i(단꿈아이)",
-          "cover": "https://image.aladin.co.kr/product/30841/64/cover/k382831374_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191496949&searchLibrary=ALL",
-          "series": 1
-        },
-        {
-          "rank": 17,
-          "title": "너구리 라면 가게",
-          "author": "글: 최설희, 그림: 김덕영",
-          "publisher": "다산북스",
-          "cover": "https://image.aladin.co.kr/product/38729/67/cover200/k392136846_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791130675268&searchLibrary=ALL",
-          "series": 2
-        },
-        {
-          "rank": 18,
-          "title": "의사 어벤저스",
-          "author": "글: 고희정, 그림: 조승연",
-          "publisher": "가나문화콘텐츠",
-          "cover": "https://image.aladin.co.kr/product/38581/37/cover200/k982135259_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791168091566&searchLibrary=ALL",
-          "series": 3
-        },
-        {
-          "rank": 19,
+          "rank": 12,
           "title": "똥볶이 할멈",
           "author": "글: 강효미, 그림: 김무연",
           "publisher": "따끈따끈책방",
@@ -179,13 +116,76 @@
           "series": 2
         },
         {
-          "rank": 20,
-          "title": "흔한남매 이무기",
+          "rank": 13,
+          "title": "다판다 편의점",
+          "author": "강효미 글, 밤코 그림",
+          "publisher": "다산북스",
+          "cover": "https://image.aladin.co.kr/product/38361/19/cover200/k002135362_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791130673738&searchLibrary=ALL",
+          "series": 1
+        },
+        {
+          "rank": 14,
+          "title": "너구리 라면 가게",
+          "author": "글: 최설희, 그림: 김덕영",
+          "publisher": "다산북스",
+          "cover": "https://image.aladin.co.kr/product/38729/67/cover200/k392136846_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791130675268&searchLibrary=ALL",
+          "series": 2
+        },
+        {
+          "rank": 15,
+          "title": "의사 어벤저스",
+          "author": "글: 고희정, 그림: 조승연",
+          "publisher": "가나문화콘텐츠",
+          "cover": "https://image.aladin.co.kr/product/38581/37/cover200/k982135259_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791168091566&searchLibrary=ALL",
+          "series": 3
+        },
+        {
+          "rank": 16,
+          "title": "이상한 무인 아이스크림 가게",
+          "author": "서아람 글, 안병현 그림",
+          "publisher": "라곰스쿨",
+          "cover": "https://image.aladin.co.kr/product/31311/83/cover/k072832888_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791189686710&searchLibrary=ALL",
+          "series": 1
+        },
+        {
+          "rank": 17,
+          "title": "(흔한남매) 수수께끼 어드벤처",
           "author": "원작: 흔한남매, 그림: 도니패밀리",
           "publisher": "미래엔",
-          "cover": "https://image.aladin.co.kr/product/32095/72/cover/k502834901_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791168415577&searchLibrary=ALL",
+          "cover": "https://image.aladin.co.kr/product/31966/80/cover/k562834162_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791168415591&searchLibrary=ALL",
           "series": 2
+        },
+        {
+          "rank": 18,
+          "title": "(설민석의) 그리스 로마 신화 대모험",
+          "author": "글: 설민석,스튜디오 담",
+          "publisher": "Dankkum i(단꿈아이)",
+          "cover": "https://image.aladin.co.kr/product/30841/64/cover/k382831374_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191496949&searchLibrary=ALL",
+          "series": 1
+        },
+        {
+          "rank": 19,
+          "title": "(마음을 이어 주는) 다잇소 잡화점",
+          "author": "박현숙 동화, 박혜림 그림",
+          "publisher": "창비교육",
+          "cover": "https://image.aladin.co.kr/product/39409/87/cover200/k142139091_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791165704230&searchLibrary=ALL",
+          "series": 1
+        },
+        {
+          "rank": 20,
+          "title": "흔한남매 오해요",
+          "author": "원작: 흔한남매, 그림: 유난희",
+          "publisher": "미래엔",
+          "cover": "https://image.aladin.co.kr/product/28926/99/cover/k602836219_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791168410930&searchLibrary=ALL",
+          "series": 1
         }
       ]
     },
@@ -196,20 +196,20 @@
       "books": [
         {
           "rank": 1,
-          "title": "소년이 온다",
-          "author": "한강",
-          "publisher": "창비",
-          "cover": "https://image.aladin.co.kr/product/4086/97/cover/8936434128_2.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9788936434120&searchLibrary=ALL",
-          "series": 1
-        },
-        {
-          "rank": 2,
           "title": "오늘 밤, 세계에서 이 사랑이 사라진다 해도",
           "author": "이치조 미사키 지음, 권영주 옮김",
           "publisher": "바이포엠",
           "cover": "https://image.aladin.co.kr/product/27407/79/cover/k362732558_1.jpg",
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191043297&searchLibrary=ALL",
+          "series": 1
+        },
+        {
+          "rank": 2,
+          "title": "소년이 온다",
+          "author": "한강",
+          "publisher": "창비",
+          "cover": "https://image.aladin.co.kr/product/4086/97/cover/8936434128_2.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9788936434120&searchLibrary=ALL",
           "series": 1
         },
         {
@@ -250,15 +250,6 @@
         },
         {
           "rank": 7,
-          "title": "정의란 무엇인가",
-          "author": "마이클 샌델, 옮긴이: 김명철",
-          "publisher": "미래엔",
-          "cover": "https://image.aladin.co.kr/product/10826/23/cover/k742530554_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9788937834790&searchLibrary=ALL",
-          "series": 1
-        },
-        {
-          "rank": 8,
           "title": "아몬드",
           "author": "손원평",
           "publisher": "창비",
@@ -267,7 +258,7 @@
           "series": 1
         },
         {
-          "rank": 9,
+          "rank": 8,
           "title": "선량한 차별주의자",
           "author": "김지혜 지음",
           "publisher": "창비",
@@ -276,16 +267,16 @@
           "series": 1
         },
         {
-          "rank": 10,
-          "title": "지구 끝의 온실",
-          "author": "김초엽",
-          "publisher": "Giant Books(자이언트북스)",
-          "cover": "https://image.aladin.co.kr/product/27692/63/cover/k082733434_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191824001&searchLibrary=ALL",
+          "rank": 9,
+          "title": "정의란 무엇인가",
+          "author": "마이클 샌델, 옮긴이: 김명철",
+          "publisher": "미래엔",
+          "cover": "https://image.aladin.co.kr/product/10826/23/cover/k742530554_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9788937834790&searchLibrary=ALL",
           "series": 1
         },
         {
-          "rank": 11,
+          "rank": 10,
           "title": "당연하게도 나는 너를",
           "author": "이꽃님",
           "publisher": "우리학교",
@@ -294,16 +285,16 @@
           "series": 1
         },
         {
-          "rank": 12,
-          "title": "도둑맞은 집중력",
-          "author": "요한 하리 지음, 김하현 옮김",
-          "publisher": "어크로스(어크로스출판그룹)",
-          "cover": "https://image.aladin.co.kr/product/31559/97/cover/k682832859_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791167740984&searchLibrary=ALL",
+          "rank": 11,
+          "title": "지구 끝의 온실",
+          "author": "김초엽",
+          "publisher": "Giant Books(자이언트북스)",
+          "cover": "https://image.aladin.co.kr/product/27692/63/cover/k082733434_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191824001&searchLibrary=ALL",
           "series": 1
         },
         {
-          "rank": 13,
+          "rank": 12,
           "title": "종의 기원 =정유정 장편소설 /The origin of species",
           "author": "정유정",
           "publisher": "은행나무",
@@ -312,7 +303,7 @@
           "series": 1
         },
         {
-          "rank": 14,
+          "rank": 13,
           "title": "죽이고 싶은 아이",
           "author": "이꽃님",
           "publisher": "우리학교",
@@ -321,25 +312,25 @@
           "series": 1
         },
         {
+          "rank": 14,
+          "title": "도둑맞은 집중력",
+          "author": "요한 하리 지음, 김하현 옮김",
+          "publisher": "어크로스(어크로스출판그룹)",
+          "cover": "https://image.aladin.co.kr/product/31559/97/cover/k682832859_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791167740984&searchLibrary=ALL",
+          "series": 1
+        },
+        {
           "rank": 15,
-          "title": "세상의 마지막 기차역",
-          "author": "무라세 다케시 지음, 김지연 옮김",
-          "publisher": "바이포엠 스튜디오",
-          "cover": "https://image.aladin.co.kr/product/29442/51/cover/k762837520_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191043754&searchLibrary=ALL",
+          "title": "트로피컬 나이트 =조예은 소설집 /Tropical night",
+          "author": "조예은",
+          "publisher": "한겨레엔",
+          "cover": "https://image.aladin.co.kr/product/29946/7/cover/k962838741_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791160408331&searchLibrary=ALL",
           "series": 1
         },
         {
           "rank": 16,
-          "title": "오늘 밤, 세계에서 이 눈물이 사라진다 해도",
-          "author": "이치조 미사키 지음, 김윤경 옮김",
-          "publisher": "바이포엠 스튜디오",
-          "cover": "https://bookthumb-phinf.pstatic.net/cover/225/848/22584874.jpg?type=m1&udate=20220714",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191043976&searchLibrary=ALL",
-          "series": 1
-        },
-        {
-          "rank": 17,
           "title": "수학이 필요한 순간",
           "author": "김민형",
           "publisher": "인플루엔셜",
@@ -348,21 +339,30 @@
           "series": 1
         },
         {
+          "rank": 17,
+          "title": "어느 날, 내 죽음에 네가 들어왔다",
+          "author": "세이카 료겐 지음, 김윤경 옮김",
+          "publisher": "바이포엠 스튜디오",
+          "cover": "https://image.aladin.co.kr/product/29396/69/cover/k402837513_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191043723&searchLibrary=ALL",
+          "series": 1
+        },
+        {
           "rank": 18,
-          "title": "자몽살구클럽",
-          "author": "한로로 (HANRORO) (지은이)",
-          "publisher": "어센틱",
-          "cover": "https://image.aladin.co.kr/product/36808/37/cover200/k082030009_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791199305304&searchLibrary=ALL",
+          "title": "세상의 마지막 기차역",
+          "author": "무라세 다케시 지음, 김지연 옮김",
+          "publisher": "바이포엠 스튜디오",
+          "cover": "https://image.aladin.co.kr/product/29442/51/cover/k762837520_1.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191043754&searchLibrary=ALL",
           "series": 1
         },
         {
           "rank": 19,
-          "title": "이기적 유전자",
-          "author": "리처드 도킨스 지음, 이상임 옮김",
-          "publisher": "을유문화사",
-          "cover": "https://image.aladin.co.kr/product/17048/25/cover/8932473900_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9788932473901&searchLibrary=ALL",
+          "title": "오늘 밤, 세계에서 이 눈물이 사라진다 해도",
+          "author": "이치조 미사키 지음, 김윤경 옮김",
+          "publisher": "바이포엠 스튜디오",
+          "cover": "https://bookthumb-phinf.pstatic.net/cover/225/848/22584874.jpg?type=m1&udate=20220714",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultList.do?searchType=ISBN&searchIsbn=9791191043976&searchLibrary=ALL",
           "series": 1
         },
         {
@@ -399,14 +399,6 @@
         },
         {
           "rank": 3,
-          "title": "(흔한남매의) 흔한 호기심. 7",
-          "author": "흔한남매 원작, 안치현 글, 유난희 그림",
-          "publisher": "아이세움",
-          "cover": "https://shopping-phinf.pstatic.net/main_3494252/34942520626.20260408083011.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=399759742&bookKey=399759744&publishFormCode=BO"
-        },
-        {
-          "rank": 4,
           "title": "(흔한남매) 이상한 나라의 고전 읽기. 2, 전우치전·콩쥐팥쥐전·금오신화",
           "author": "최재훈 글, 정주연 그림",
           "publisher": "MiraeN아이세움",
@@ -414,7 +406,7 @@
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=401777892&bookKey=401777894&publishFormCode=BO"
         },
         {
-          "rank": 5,
+          "rank": 4,
           "title": "(채사장의) 지대넓얕: 지적 대화를 위한 넓고 얕은 지식. 06, 성장 vs 분배",
           "author": "채사장, 마케마케 [공]글, 정용환 그림",
           "publisher": "돌핀북",
@@ -422,12 +414,20 @@
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=417645394&bookKey=417645396&publishFormCode=BO"
         },
         {
-          "rank": 6,
+          "rank": 5,
           "title": "파뿌리24. 15",
           "author": "파뿌리 원작, 백승하 글, 이정태 그림",
           "publisher": "겜툰",
           "cover": "https://shopping-phinf.pstatic.net/main_4405821/44058215618.20260331121437.jpg",
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=431132147&bookKey=431132149&publishFormCode=BO"
+        },
+        {
+          "rank": 6,
+          "title": "101가지 수행평가 주제 글쓰기: 수행평가 글쓰기가 대학을 결정한다!",
+          "author": "이현주, 이현옥 [공]지음",
+          "publisher": "Book Star",
+          "cover": "https://shopping-phinf.pstatic.net/main_3636344/36363446627.20260331123052.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=431799659&bookKey=431799661&publishFormCode=BO"
         },
         {
           "rank": 7,
@@ -455,14 +455,6 @@
         },
         {
           "rank": 10,
-          "title": "천재 의사 시건방. 2, 새우등 마을을 탈출하라!",
-          "author": "강효미 지음, 유영근 그림",
-          "publisher": "머스트비",
-          "cover": "https://shopping-phinf.pstatic.net/main_5164953/51649537618.20260331105432.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=461858988&bookKey=464318053&publishFormCode=BO"
-        },
-        {
-          "rank": 11,
           "title": "(11-1)커다란 것을 좋아하는 임금님",
           "author": "안노 미쓰마사 글·그림, 송해정 옮김",
           "publisher": "시공주니어",
@@ -470,7 +462,7 @@
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390050&bookKey=465390052&publishFormCode=BO"
         },
         {
-          "rank": 12,
+          "rank": 11,
           "title": "(11-2)팥빙수의 전설",
           "author": "이지은 글·그림",
           "publisher": "웅진주니어",
@@ -478,7 +470,7 @@
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390053&bookKey=465390055&publishFormCode=BO"
         },
         {
-          "rank": 13,
+          "rank": 12,
           "title": "(11-3)나무 모자",
           "author": "장준영 글·그림",
           "publisher": "계수나무",
@@ -486,7 +478,7 @@
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390056&bookKey=465390058&publishFormCode=BO"
         },
         {
-          "rank": 14,
+          "rank": 13,
           "title": "(11-4)쉬잇! 다 생각이 있다고",
           "author": "크리스 호튼 글·그림, 노은정 옮김",
           "publisher": "비룡소",
@@ -494,7 +486,7 @@
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390059&bookKey=465390061&publishFormCode=BO"
         },
         {
-          "rank": 15,
+          "rank": 14,
           "title": "(11-5)도토리 마을의 1년",
           "author": "나카야 미와 글·그림, 김난주 옮김",
           "publisher": "웅진주니어",
@@ -502,44 +494,52 @@
           "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390062&bookKey=465390064&publishFormCode=BO"
         },
         {
+          "rank": 15,
+          "title": "(20-1)늪 100층짜리 집",
+          "author": "이와이 도시오 글·그림, 김숙 옮김",
+          "publisher": "북뱅크",
+          "cover": "https://shopping-phinf.pstatic.net/main_4657255/46572558618.20260401091102.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390186&bookKey=465390188&publishFormCode=BO"
+        },
+        {
           "rank": 16,
-          "title": "(53-1)숲으로 보낸 편지",
-          "author": "가타야마 레이코 글, 가타야마 켄 그림, 김누리 옮김",
-          "publisher": "상추쌈",
-          "cover": "https://shopping-phinf.pstatic.net/main_3246551/32465514918.20260331102801.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390693&bookKey=465390695&publishFormCode=BO"
+          "title": "(20-2)생김치 파이브: 생명을 살린 기적의 배 이야기",
+          "author": "임서경 글, 허구 그림",
+          "publisher": "봄개울",
+          "cover": "https://shopping-phinf.pstatic.net/main_5183720/51837207619.20260331095932.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390189&bookKey=465390191&publishFormCode=BO"
         },
         {
           "rank": 17,
-          "title": "(53-2)아모스와 보리스",
-          "author": "윌리엄 스타이그 글·그림, 김경미 옮김",
-          "publisher": "비룡소",
-          "cover": "https://shopping-phinf.pstatic.net/main_3243601/32436016655.20260331112950.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390696&bookKey=465390698&publishFormCode=BO"
+          "title": "(20-3)진짜 엄마 찾기",
+          "author": "유명금 지음",
+          "publisher": "키큰도토리",
+          "cover": "https://shopping-phinf.pstatic.net/main_3249564/32495645145.20260331121859.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390192&bookKey=465390194&publishFormCode=BO"
         },
         {
           "rank": 18,
-          "title": "(53-3)코우펜짱과 여름 친구",
-          "author": "루루테아 글·그림, 고향옥 옮김",
-          "publisher": "노란돼지",
-          "cover": "https://shopping-phinf.pstatic.net/main_4748640/47486400618.20260331103810.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390699&bookKey=465390701&publishFormCode=BO"
+          "title": "(20-4)에란디의 생일 선물",
+          "author": "안토니오 에르난데스 마드리갈 글, 토미 드 파올라 그림, 엄혜숙 옮김",
+          "publisher": "문학동네",
+          "cover": "https://shopping-phinf.pstatic.net/main_3249333/32493331770.20260331110827.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390195&bookKey=465390197&publishFormCode=BO"
         },
         {
           "rank": 19,
-          "title": "(53-4)바람 도둑: 고전 그림책-욕심, 후회에 대한 이야기",
-          "author": "안영현 글, 어성자 그림",
-          "publisher": "꿈터",
-          "cover": "https://image.aladin.co.kr/product/5004/65/cover200/1185801073_1.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390702&bookKey=465390704&publishFormCode=BO"
+          "title": "(20-5)아빠를 찾아요",
+          "author": "장수경 지음",
+          "publisher": "뜨인돌어린이",
+          "cover": "https://shopping-phinf.pstatic.net/main_4055276/40552761621.20260331123636.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390198&bookKey=465390200&publishFormCode=BO"
         },
         {
           "rank": 20,
-          "title": "(53-5)아기는 어디서 오는 걸까요?",
-          "author": "소피 블랙올 글·그림, 서소영 옮김",
-          "publisher": "키즈엠",
-          "cover": "https://shopping-phinf.pstatic.net/main_3255936/32559369862.20260331094634.jpg",
-          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390705&bookKey=465390707&publishFormCode=BO"
+          "title": "(21-1)무지개 물고기",
+          "author": "마르쿠스 피스터 글·그림, 공경희 옮김",
+          "publisher": "시공주니어",
+          "cover": "https://shopping-phinf.pstatic.net/main_3251119/32511198659.20260520083429.jpg",
+          "link": "https://lib.yongin.go.kr/yongin/plusSearchResultDetail.do?recKey=465390201&bookKey=465390203&publishFormCode=BO"
         }
       ]
     }
