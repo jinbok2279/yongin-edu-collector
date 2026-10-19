@@ -15,7 +15,7 @@ import re
 import time
 import urllib.parse
 import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 
 KST = timezone(timedelta(hours=9))
 CITY = os.environ.get("CITY", "용인").strip()
@@ -77,6 +77,24 @@ def search(kind, query, size=10):
     return []
 
 
+
+def ended(title, today):
+    """제목에 끝나는 날짜가 있고 이미 지났으면 True. 예: '~10월 18일', '10월 18일까지', '10/18까지', '~10.18'"""
+    t = title.replace(" ", "")
+    pats = [r"~(\d{1,2})월(\d{1,2})일", r"(\d{1,2})월(\d{1,2})일까지", r"(\d{1,2})[./](\d{1,2})까지", r"~(\d{1,2})[./](\d{1,2})(?!\d)"]
+    for pat in pats:
+        for mo, d in re.findall(pat, t):
+            mo, d = int(mo), int(d)
+            if not (1 <= mo <= 12 and 1 <= d <= 31):
+                continue
+            y = today.year - (1 if mo - today.month > 6 else 0)   # 12월 글을 1월에 보는 경우
+            try:
+                if date(y, mo, d) < today:
+                    return True
+            except ValueError:
+                pass
+    return False
+
 def recent(doc, since):
     d = (doc.get("datetime") or "")[:10]
     return d >= since, d
@@ -94,7 +112,7 @@ def money_items(today):
         for d in search(kind, m.get("q", CITY + " 지역화폐 인센티브")):
             ok, day = recent(d, since)
             title = clean(d.get("title"))
-            if not ok or not MONEY_GOOD.search(title) or m.get("name", "")[:4] not in title or BAD.search(title) or title in seen:
+            if not ok or not MONEY_GOOD.search(title) or m.get("name", "")[:4] not in title or BAD.search(title) or title in seen or ended(title, today):
                 continue
             seen.add(title)
             out.append({"id": "MS" + str(len(out)), "cat": "지역화폐", "title": title, "sub": clean(d.get("contents"))[:90],
@@ -116,7 +134,7 @@ def store_items(today):
                 ok, day = recent(d, since)
                 title, body = clean(d.get("title")), clean(d.get("contents"))
                 short = store.split()[0][:2]
-                if not ok or BAD.search(title) or not GOOD.search(title) or short not in title:
+                if not ok or BAD.search(title) or not GOOD.search(title) or short not in title or ended(title, today):
                     continue
                 k = re.sub(r"\W", "", title)[:18]
                 if k in seen:
