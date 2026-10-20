@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-19 23:07:56",
+  "updated_at": "2026-10-20 09:21:06",
   "source": "용인시도서관 좌석현황",
   "source_url": "https://lib.yongin.go.kr/yongin/seatStatusList.do",
   "libraries": [
@@ -13,27 +13,27 @@
         {
           "name": "열람실",
           "total": 140,
-          "used": 0,
-          "left": 140,
+          "used": 14,
+          "left": 126,
           "wait": 0
         }
       ]
     },
     {
-      "name": "구성도서관",
-      "gu": "기흥구",
-      "link": "https://lib.yongin.go.kr/seatmate_gs/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
-    },
-    {
       "name": "기흥도서관",
       "gu": "기흥구",
       "link": "https://lib.yongin.go.kr/seatmate_gh/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "일반열람실",
+          "total": 148,
+          "used": 23,
+          "left": 123,
+          "wait": 0
+        }
+      ]
     },
     {
       "name": "동백도서관",
@@ -45,8 +45,8 @@
         {
           "name": "열람실(일반)",
           "total": 156,
-          "used": 0,
-          "left": 156,
+          "used": 28,
+          "left": 128,
           "wait": 0
         },
         {
@@ -68,8 +68,8 @@
         {
           "name": "보라도서관 열람실",
           "total": 134,
-          "used": 0,
-          "left": 134,
+          "used": 18,
+          "left": 116,
           "wait": 0
         }
       ]
@@ -78,9 +78,24 @@
       "name": "서농도서관",
       "gu": "기흥구",
       "link": "https://lib.yongin.go.kr/sn/",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실",
+          "total": 80,
+          "used": 29,
+          "left": 51,
+          "wait": 0
+        },
+        {
+          "name": "노트북실",
+          "total": 32,
+          "used": 5,
+          "left": 27,
+          "wait": 0
+        }
+      ]
     },
     {
       "name": "흥덕도서관",
@@ -92,15 +107,15 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 0,
-          "left": 180,
+          "used": 17,
+          "left": 163,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 56,
-          "used": 0,
-          "left": 56,
+          "used": 14,
+          "left": 42,
           "wait": 0
         }
       ]
@@ -109,9 +124,24 @@
       "name": "상현도서관",
       "gu": "수지구",
       "link": "https://lib.yongin.go.kr/seatmate_sh/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실",
+          "total": 180,
+          "used": 28,
+          "left": 152,
+          "wait": 0
+        },
+        {
+          "name": "노트북실",
+          "total": 30,
+          "used": 14,
+          "left": 16,
+          "wait": 0
+        }
+      ]
     },
     {
       "name": "수지도서관",
@@ -123,8 +153,8 @@
         {
           "name": "디지털존 노트북석",
           "total": 69,
-          "used": 0,
-          "left": 69,
+          "used": 22,
+          "left": 47,
           "wait": 0
         }
       ]
@@ -133,9 +163,24 @@
       "name": "죽전도서관",
       "gu": "수지구",
       "link": "https://lib.yongin.go.kr/seatmate_jj/seatmate.php",
-      "status": "closed",
-      "message": "휴관일입니다.",
-      "rooms": []
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "일반열람실",
+          "total": 180,
+          "used": 30,
+          "left": 150,
+          "wait": 0
+        },
+        {
+          "name": "노트북실",
+          "total": 54,
+          "used": 18,
+          "left": 36,
+          "wait": 0
+        }
+      ]
     }
   ]
 }
