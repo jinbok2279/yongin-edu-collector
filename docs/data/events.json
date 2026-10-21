@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-21 06:49:34",
+ "updated_at": "2026-10-22 06:52:30",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
   {
@@ -55,32 +55,6 @@
    "free": true,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16917"
-  },
-  {
-   "id": "16921",
-   "title": "용인전통춤 예인의 향 < 조선 춤 판타지>",
-   "start": "2026-10-21",
-   "end": "2026-10-21",
-   "place": "마루홀",
-   "time": "60분(인터미션 없음)",
-   "grade": "전체관람등급",
-   "price": "전석무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16921"
-  },
-  {
-   "id": "16894",
-   "title": "현과 건반의 선율",
-   "start": "2026-10-21",
-   "end": "2026-10-21",
-   "place": "처인홀",
-   "time": "60분",
-   "grade": "만 7세 이상",
-   "price": "전석 초대",
-   "free": false,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16894"
   },
   {
    "id": "16880",
@@ -146,6 +120,19 @@
    "free": true,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16900"
+  },
+  {
+   "id": "16942",
+   "title": "[예술놀이터] 숲속의 기억_나무 그늘 아래",
+   "start": "2026-10-27",
+   "end": "2026-11-29",
+   "place": "용인어린이상상의숲",
+   "time": "10:00 ~ 17:00",
+   "grade": "전체관람등급",
+   "price": "무료",
+   "free": true,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16942"
   },
   {
    "id": "16923",
@@ -341,6 +328,19 @@
    "free": false,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16840"
+  },
+  {
+   "id": "16941",
+   "title": "[공연놀이터] 매직컬 스크루지",
+   "start": "2026-11-25",
+   "end": "2026-11-28",
+   "place": "용인어린이상상의숲",
+   "time": "주말(토): 11:10, 13:30, 15:30 주말(일) 13:00, 15:00 평일(11,25/12.23) 10:10, 11:10",
+   "grade": "만 36개월 이상",
+   "price": "15,000",
+   "free": false,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16941"
   }
  ],
  "lib": [
@@ -356,7 +356,7 @@
    "applyStart": "2026-10-12",
    "applyEnd": "2026-10-25",
    "apply": "2026.10.12(월) 10:00 ~ 2026.10.25(일) 18:00",
-   "count": "1/8",
+   "count": "2/8",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -394,12 +394,31 @@
    "applyStart": "2026-10-20",
    "applyEnd": "2026-10-27",
    "apply": "2026.10.20(화) 10:00 ~ 2026.10.27(화) 23:59",
-   "count": "1/12",
+   "count": "5/12",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
    "src": "lib",
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136721"
+  },
+  {
+   "id": "L136264",
+   "title": "[독서문화] 2026년 서농도서관 경기도 어린이 독서코칭 <도서관 뉴스랩 : 읽고, 엮고, 말하라!> (초등 3학년)",
+   "lib": "서농도서관",
+   "target": "초등 (초등학교 3학년 15명)",
+   "place": "다목적실",
+   "start": "2026-11-04",
+   "end": "2026-11-25",
+   "period": "2026.11.04(수) ~ 2026.11.25(수) 16:20 ~ 17:50 4회",
+   "applyStart": "2026-10-21",
+   "applyEnd": "2026-10-30",
+   "apply": "2026.10.21(수) 10:00 ~ 2026.10.30(금) 17:00",
+   "count": "5/15",
+   "status": "접수중",
+   "btn": "신청하기",
+   "free": true,
+   "src": "lib",
+   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136264"
   },
   {
    "id": "L136581",
@@ -413,7 +432,7 @@
    "applyStart": "2026-10-20",
    "applyEnd": "2026-10-30",
    "apply": "2026.10.20(화) 10:00 ~ 2026.10.30(금) 18:00",
-   "count": "8/15",
+   "count": "10/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -451,7 +470,7 @@
    "applyStart": "2026-10-20",
    "applyEnd": "2026-11-02",
    "apply": "2026.10.20(화) 10:00 ~ 2026.11.02(월) 18:00",
-   "count": "10/15",
+   "count": "12/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -470,7 +489,7 @@
    "applyStart": "2026-10-20",
    "applyEnd": "2026-11-02",
    "apply": "2026.10.20(화) 10:00 ~ 2026.11.02(월) 18:00",
-   "count": "12/15",
+   "count": "14/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -497,6 +516,25 @@
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136583"
   },
   {
+   "id": "L136881",
+   "title": "[포곡_특성화] 토요 글라스 아트 클래스",
+   "lib": "포곡도서관",
+   "target": "초등 (초등 1 ~ 4학년 12명)",
+   "place": "포곡도서관 B1층 시청각실",
+   "start": "2026-11-14",
+   "end": "2026-11-14",
+   "period": "2026.11.14(토) 14:00 ~ 16:00 1회",
+   "applyStart": "2026-10-21",
+   "applyEnd": "2026-11-11",
+   "apply": "2026.10.21(수) 10:00 ~ 2026.11.11(수) 18:00",
+   "count": "3/12",
+   "status": "접수중",
+   "btn": "신청하기",
+   "free": true,
+   "src": "lib",
+   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136881"
+  },
+  {
    "id": "L136222",
    "title": "성복도서관 11월 재능기부 프로그램 「영어스토리텔링 Fun to Read」- (1~3주 일) 15:00 (초1-3학년)",
    "lib": "성복도서관",
@@ -514,25 +552,6 @@
    "free": true,
    "src": "lib",
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136222"
-  },
-  {
-   "id": "L136264",
-   "title": "[독서문화] 2026년 서농도서관 경기도 어린이 독서코칭 <도서관 뉴스랩 : 읽고, 엮고, 말하라!> (초등 3학년)",
-   "lib": "서농도서관",
-   "target": "초등 (초등학교 3학년 15명)",
-   "place": "다목적실",
-   "start": "2026-11-04",
-   "end": "2026-11-25",
-   "period": "2026.11.04(수) ~ 2026.11.25(수) 16:20 ~ 17:50 4회",
-   "applyStart": "2026-10-21",
-   "applyEnd": "2026-10-30",
-   "apply": "2026.10.21(수) 10:00 ~ 2026.10.30(금) 17:00",
-   "count": "0/15",
-   "status": "접수전",
-   "btn": "",
-   "free": true,
-   "src": "lib",
-   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136264"
   },
   {
    "id": "L136642",
@@ -573,6 +592,25 @@
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136461"
   },
   {
+   "id": "L136961",
+   "title": "[동백] 11월 재능기부 프로그램 <동화야, 떡이랑 놀아요>",
+   "lib": "동백도서관",
+   "target": "유아 가족 (6~7세 가족 10팀)",
+   "place": "지하1층 시청각실",
+   "start": "2026-11-12",
+   "end": "2026-11-26",
+   "period": "2026.11.12(목) ~ 2026.11.26(목) 16:00 ~ 17:00 3회",
+   "applyStart": "2026-10-26",
+   "applyEnd": "2026-11-04",
+   "apply": "2026.10.26(월) 10:00 ~ 2026.11.04(수) 18:00",
+   "count": "0/10",
+   "status": "접수전",
+   "btn": "",
+   "free": true,
+   "src": "lib",
+   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136961"
+  },
+  {
    "id": "L136821",
    "title": "11월 독서문화 프로그램 「그림책과 함께하는 가을 숲 나들이」",
    "lib": "기흥도서관",
@@ -611,25 +649,6 @@
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136621"
   },
   {
-   "id": "L136881",
-   "title": "[포곡_특성화] 토요 글라스 아트 클래스",
-   "lib": "포곡도서관",
-   "target": "초등 (초등 1 ~ 4학년 12명)",
-   "place": "포곡도서관 B1층 시청각실",
-   "start": "2026-11-14",
-   "end": "2026-11-14",
-   "period": "2026.11.14(토) 14:00 ~ 16:00 1회",
-   "applyStart": "2026-10-21",
-   "applyEnd": "2026-11-11",
-   "apply": "2026.10.21(수) 10:00 ~ 2026.11.11(수) 18:00",
-   "count": "0/12",
-   "status": "접수전",
-   "btn": "",
-   "free": true,
-   "src": "lib",
-   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136881"
-  },
-  {
    "id": "L136741",
    "title": "[수지] 11월 독서문화 프로그램(아동) 「생각이 자라는 그림책 토론 교실」",
    "lib": "수지도서관",
@@ -652,7 +671,7 @@
    "id": "L136781",
    "title": "[동백] 11월 특성화 프로그램 <더 캔들(The Candle) 가족음악회>",
    "lib": "동백도서관",
-   "target": "가족 (가족 동반 60명 내외)",
+   "target": "가족 (가족 30팀(가족 동반 60명 내외))",
    "place": "지하 1층 시청각실",
    "start": "2026-11-21",
    "end": "2026-11-21",
