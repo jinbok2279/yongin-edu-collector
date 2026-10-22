@@ -149,13 +149,46 @@ def store_items(today):
     return out
 
 
+
+LOCAL_URL = "https://raw.githubusercontent.com/jinbok2279/airang-cities/main/deals/local.json"
+
+
+def local_items(today):
+    """동네 가게가 직접 보내 준 할인 (deals/local.json). 기간 안에 있고 이 도시에 해당하는 것만"""
+    data = None
+    here = os.path.join(os.path.dirname(os.path.abspath(__file__)), "deals", "local.json")
+    try:
+        if os.path.exists(here):
+            data = json.load(open(here, encoding="utf-8"))
+        else:
+            with urllib.request.urlopen(urllib.request.Request(LOCAL_URL, headers={"Cache-Control": "no-cache"}), timeout=20) as r:
+                data = json.loads(r.read().decode("utf-8"))
+    except Exception as e:
+        print("  동네 가게 할인 읽기 실패:", e)
+        return []
+    out, t = [], today.isoformat()
+    for s in (data or {}).get("stores", []):
+        if CITY not in (s.get("cities") or []) or not s.get("title"):
+            continue
+        if (s.get("start") or "0") > t or (s.get("end") or "9") < t:
+            continue
+        out.append({"id": "G" + str(s.get("id", len(out))), "cat": "동네 가게", "src": "store", "title": s["title"],
+                    "sub": s.get("detail", ""), "cond": s.get("cond", ""), "store": s.get("store", ""), "kind": s.get("kind", ""),
+                    "area": s.get("area", ""), "tel": s.get("tel", ""), "link": s.get("link", ""), "paid": bool(s.get("paid")),
+                    "start": s.get("start", ""), "end": s.get("end", ""), "date": s.get("start", ""),
+                    "meta": " · ".join(x for x in (s.get("store", ""), s.get("area", "")) if x)})
+    out.sort(key=lambda x: x["end"] or "9")
+    print(f"  동네 가게 할인 {len(out)}건")
+    return out
+
 def main():
     today = datetime.now(KST).date()
     if CITY not in MONEY:
         raise SystemExit("모르는 도시: " + CITY)
     if not KEY:
         print("KAKAO_KEY 없음: 확인된 지역화폐 혜택만 저장해요.")
-    items = money_items(today) + store_items(today)
+    money = money_items(today)
+    items = [x for x in money if x.get("pin")] + local_items(today) + [x for x in money if not x.get("pin")] + store_items(today)
     result = {"city": CITY, "updated": datetime.now(KST).strftime("%Y-%m-%d %H:%M"), "search": bool(KEY),
               "money": (MONEY[CITY] or {}).get("name", ""), "stores": STORES.get(CITY, []), "items": items}
     os.makedirs("output", exist_ok=True)
