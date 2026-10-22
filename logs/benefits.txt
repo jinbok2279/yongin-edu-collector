@@ -1,4 +1,6 @@
+    (서버 전체 461건, 한 번에 100건)
   나라 혜택 461건 중 아이·가족 106건
+    (서버 전체 22건, 한 번에 22건)
   시 혜택 칸: ['aplyMtdNm', 'bizChrDeptNm', 'ctpvNm', 'inqNum', 'lastModYmd', 'lifeNmArray', 'servDgst', 'servDtlLink', 'servId', 'servNm', 'sggNm', 'sprtCycNm', 'srvPvsnNm', 'trgterIndvdlNmArray']
   용인시 혜택 22건 중 아이·가족 6건
   저장: 67 KB, 112 건
