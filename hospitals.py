@@ -1,4 +1,4 @@
-"""동네 병원 — 의원 / 병원·종합병원 / 응급실 목록을 모은다 (공공데이터포털).
+"""동네 병원 (아이랑 7개 도시 같은 파일, CITY 로 도시를 고른다) — 의원 / 병원·종합병원 / 응급실 목록을 모은다 (공공데이터포털).
 
 쓰는 서비스 (공공데이터포털 '활용신청', 인증키는 WEATHER_KEY 와 같은 것):
   1) 국립중앙의료원_전국 병·의원 찾기 서비스        → 종류·주소·전화·위치·진료시간·응급실 운영 여부 (기본)
@@ -24,7 +24,14 @@ KST = timezone(timedelta(hours=9))
 CITY = os.environ.get("CITY", "용인").strip()
 KEY = os.environ.get("WEATHER_KEY", "").strip()
 SIDO, SIDO_CD = "경기도", "310000"          # 심평원 시도 코드 (경기)
-GU = ["수지구", "기흥구", "처인구"]
+GU_BY_CITY = {"용인": ["수지구", "기흥구", "처인구"], "수원": ["장안구", "권선구", "팔달구", "영통구"]}
+try:   # airang-cities 저장소: 도시 설정(city.py)의 구 목록·읍면동 규칙을 그대로 쓴다 (화성·부천처럼 주소에 구가 없는 곳)
+    import city as _city
+    GU = [g for g in _city.GUS if g]
+    _city_gu = _city.gu_of
+except (ImportError, SystemExit):
+    GU = GU_BY_CITY.get(CITY, [])
+    _city_gu = None
 SGGU_ENV = os.environ.get("HOSP_SGGU", "").strip()   # 예: "수지구=310402,기흥구=310403,처인구=310401" (자동으로 못 찾을 때만)
 
 HIRA = "https://apis.data.go.kr/B551182/hospInfoServicev2/getHospBasisList"
@@ -100,6 +107,9 @@ def nmc(url, params):
 
 
 def gu_of(addr):
+    if _city_gu:
+        g = _city_gu(addr or "")
+        return "" if g == "기타" else g
     for g in GU:
         if g in (addr or ""):
             return g
@@ -108,7 +118,7 @@ def gu_of(addr):
 
 def short_addr(addr):
     a = re.sub(r"^\s*경기도\s*", "", addr or "")
-    a = re.sub(r"^용인시\s*", "", a)
+    a = re.sub(r"^" + CITY + r"시\s*", "", a)
     a = re.sub(r"\s*\(.*?\)", "", a)   # (동, 건물 이름) 은 뺀다
     return re.sub(r"\s+", " ", a).strip()[:60]
 
