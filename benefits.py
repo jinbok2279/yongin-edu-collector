@@ -77,7 +77,7 @@ def row(it, scope):
     life = split(it.get("lifeArray") or it.get("lifeNmArray"))
     tgt = split(it.get("trgterIndvdlArray") or it.get("trgterIndvdlNmArray"))
     theme = split(it.get("intrsThemaArray") or it.get("intrsThemaNmArray"))
-    tel = it.get("rprsCtadr") or it.get("inqNum") or ""
+    tel = it.get("rprsCtadr") or ""   # 시 혜택의 inqNum 은 조회수라 쓰지 않음
     link = it.get("servDtlLink") or ""
     if not link.startswith("http") and it.get("servId"):
         link = "https://www.bokjiro.go.kr/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=" + it["servId"]
@@ -86,11 +86,20 @@ def row(it, scope):
             "life": [x.replace(" · ", "·") for x in life], "tgt": tgt, "theme": theme,
             "cyc": (it.get("sprtCycNm") or "").strip(), "kind": (it.get("srvPvsnNm") or "").strip(),
             "tel": clean_tel(tel), "telTxt": tel.strip()[:40],
-            "online": (it.get("onapPsbltYn") or "") == "Y", "link": link, "scope": scope}
+            "online": (it.get("onapPsbltYn") or "") == "Y" or "온라인" in (it.get("aplyMtdNm") or ""),
+            "apply": (it.get("aplyMtdNm") or "").strip()[:40], "link": link, "scope": scope}
+
+
+KID_WORDS = re.compile(r"출산|출생|임산|임신|난임|산모|신생아|영유아|아이|아동|어린이|자녀|육아|보육|돌봄|다자녀|청소년|입학|학생|교복|급식|방과후")
 
 
 def for_kids(r):
-    return (any(k in "".join(r["life"]) for k in KIDS_LIFE) or any(k in "".join(r["tgt"]) for k in KIDS_TGT)) and not SKIP.search(r["n"])
+    """아이·가족 대상인 것만: 임신·출산·영유아·아동이 대상이거나, 다자녀·한부모, 또는 대상이 아동·청소년뿐인 것.
+    이름·요약에 아이 관련 말이 있어야 함(장애인활동지원·청년 일자리처럼 대상에 아동이 끼어 있는 일반 사업은 뺌)."""
+    life = set(r["life"])
+    kid_life = life & {"임신·출산", "영유아", "아동"} or (life and life <= {"임신·출산", "영유아", "아동", "청소년"})
+    fam = any(k in "".join(r["tgt"]) for k in KIDS_TGT)
+    return bool((kid_life or fam) and KID_WORDS.search(r["n"] + " " + r["sum"]) and not SKIP.search(r["n"]))
 
 
 def main():
@@ -110,7 +119,7 @@ def main():
         if raw:
             print("  시 혜택 칸:", sorted(raw[0]))
         loc = [row(it, "local") for it in raw]
-        kid = [r for r in loc if r["n"] and (for_kids(r) or re.search(r"출산|출생|임산|임신|아이|아동|자녀|육아|보육|돌봄|다자녀|청소년|입학", r["n"] + r["sum"]))]
+        kid = [r for r in loc if r["n"] and (for_kids(r) or (KID_WORDS.search(r["n"]) and not SKIP.search(r["n"])))]
         res["items"] = kid + res["items"]
         res["src"]["local"] = len(kid)
         print(f"  {CITY}시 혜택 {len(loc)}건 중 아이·가족 {len(kid)}건")
