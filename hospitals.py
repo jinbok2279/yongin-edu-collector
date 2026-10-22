@@ -4,7 +4,7 @@
   1) 국립중앙의료원_전국 병·의원 찾기 서비스        → 종류·주소·전화·위치·진료시간·응급실 운영 여부 (기본)
   2) 국립중앙의료원_전국 응급의료기관 정보 조회 서비스 → 응급실 등급·응급실 직통 전화 (있으면 더 정확)
   (심평원 병원정보서비스 함수 hira() 는 나중에 쓸 수 있게 남겨 둠)
-진료과는 코드표를 외우지 않고, 코드마다 불러 본 뒤 병원 이름과 맞춰 스스로 정한다(기록에 남김).
+진료과 코드는 7개 도시 실제 데이터로 확인해 고정(NMC_DEPT). 실행할 때마다 이름과 맞는지 기록에 남긴다.
 
 개인정보는 모으지 않는다. 병원 이름·종류·진료과·주소·대표 전화·위치·진료시간(공개 정보)만.
 출처: 공공누리 제1유형(출처표시) — 앱 화면 아래에 출처를 적는다.
@@ -179,33 +179,27 @@ def nmc_row(it, kind):
     return r
 
 
+# 국립중앙의료원 진료과 코드 (QD). 2026-10-22 7개 도시 실제 데이터로 확인:
+# 이름에 그 과가 들어간 의원의 85~100%가 이 코드에 들어 있었음 (도시마다 자동 판정이 흔들려서 고정)
+NMC_DEPT = {"내과": "D001", "소아청소년과": "D002", "피부과": "D005", "정형외과": "D008", "산부인과": "D011",
+            "안과": "D012", "이비인후과": "D013", "가정의학과": "D022"}
+
+
 def nmc_depts(items_by_id):
-    """진료과 코드(QD)를 하나씩 불러 보고 스스로 과를 정한다 (코드표를 외워 쓰지 않음).
-    어떤 과 이름(예: '소아')이 들어간 의원 거의 전부를 담고 있는 코드 = 그 과. 점수 = 담은 비율 × 코드 안 비율."""
-    named = {dept: {i for i, r in items_by_id.items() if re.search(hint, r["n"])} for dept, hint in DEPT_NAME_HINT.items()}
-    codes = {}
-    for n in range(1, 35):
-        code = f"D{n:03d}"
+    """진료과마다 그 코드로 불러서 붙인다. 이름과 많이 어긋나면 기록에 '확인 필요'를 남긴다."""
+    for dept, code in NMC_DEPT.items():
         try:
             ids = {it.get("hpid") for it in nmc(HOURS, {"Q0": SIDO, "Q1": CITY + "시", "QD": code})} & set(items_by_id)
         except Exception as e:
-            print(f"  {code} 실패:", e)
+            print(f"  진료과 {dept}({code}) 실패:", e)
             continue
-        if len(ids) >= 5:
-            codes[code] = ids
-        time.sleep(0.3)
-    for dept, nm in named.items():
-        if len(nm) < 5:
-            continue
-        best = max(((len(ids & nm) / len(nm)) * (len(ids & nm) / len(ids)), len(ids & nm) / len(nm), c) for c, ids in codes.items()) if codes else None
-        if not best or best[1] < 0.6:
-            print(f"  진료과 {dept}: 맞는 코드 없음 (이름 {len(nm)}곳)")
-            continue
-        _, recall, code = best
-        print(f"  진료과 {dept} = {code} (이름에 과가 있는 {len(nm)}곳 중 {recall:.0%} 포함, 이 코드 {len(codes[code])}곳)")
-        for i in codes[code]:
+        named = {i for i, r in items_by_id.items() if re.search(DEPT_NAME_HINT[dept], r["n"])}
+        cover = len(ids & named) / len(named) if named else 1
+        print(f"  진료과 {dept} {code}: {len(ids)}곳 (이름에 과가 있는 {len(named)}곳 중 {cover:.0%} 포함){'  ← 확인 필요' if named and cover < 0.6 else ''}")
+        for i in ids:
             if dept not in items_by_id[i]["d"]:
                 items_by_id[i]["d"].append(dept)
+        time.sleep(0.3)
 
 
 def main():
