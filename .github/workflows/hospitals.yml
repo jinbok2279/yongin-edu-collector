@@ -1,0 +1,36 @@
+name: hospitals
+
+on:
+  schedule:
+    - cron: "40 19 * * 0"   # 매주 월요일 04:40 (한국시간)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hospitals
+  cancel-in-progress: false
+
+jobs:
+  hospitals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -u hospitals.py
+        env:
+          CITY: 용인
+          WEATHER_KEY: ${{ secrets.WEATHER_KEY }}
+          HOSP_SGGU: ${{ vars.HOSP_SGGU }}
+      - run: |
+          [ -f output/hospitals.json ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p docs/data && cp output/hospitals.json docs/data/
+          git add output/hospitals.json docs/data/hospitals.json
+          git diff --cached --quiet && exit 0
+          git commit -m "동네 병원 업데이트"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
