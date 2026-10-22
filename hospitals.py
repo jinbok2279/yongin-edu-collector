@@ -109,6 +109,7 @@ def gu_of(addr):
 def short_addr(addr):
     a = re.sub(r"^\s*경기도\s*", "", addr or "")
     a = re.sub(r"^용인시\s*", "", a)
+    a = re.sub(r"\s*\(.*?\)", "", a)   # (동, 건물 이름) 은 뺀다
     return re.sub(r"\s+", " ", a).strip()[:60]
 
 
@@ -250,6 +251,7 @@ def main():
         for it in nmc_all:
             if str(it.get("dutyEryn", "")).strip() == "1":
                 r = nmc_row(it, (it.get("dutyEmclsName") or "").strip() or "응급실 운영")
+                r["t"] = (it.get("dutyTel3") or "").strip() or r["t"]   # 응급실 직통
                 r.pop("h", None)
                 result["er"].append(r)
         result["src"]["er"] = "list" if result["er"] else False
