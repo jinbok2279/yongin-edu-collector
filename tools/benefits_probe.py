@@ -2,9 +2,9 @@
 import json, os, urllib.parse, urllib.request
 KEY = os.environ.get("WEATHER_KEY", "").strip()
 kq = KEY if "%" in KEY else urllib.parse.quote(KEY, safe="")
-def get(url, timeout=60):
+def get(url, timeout=60, hdr=None):
     try:
-        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "airang/1.0"}), timeout=timeout) as r:
+        with urllib.request.urlopen(urllib.request.Request(url, headers=dict({"User-Agent": "airang/1.0"}, **(hdr or {}))), timeout=timeout) as r:
             return r.status, r.read().decode("utf-8", "replace")
     except urllib.error.HTTPError as e:
         return e.code, e.read().decode("utf-8", "replace")[:300]
@@ -27,6 +27,12 @@ for city in ["용인시", "수원시"]:
             print("  -", d.get("서비스명"), "|", d.get("소관기관명"), "|", d.get("서비스분야"), "|", d.get("사용자구분"), "|", (d.get("지원내용") or "")[:50].replace("\n", " "))
     except Exception as e:
         print("  ", txt[:300])
+print("키 모양:", "인코딩 키(%포함)" if "%" in KEY else "디코딩 키", "길이", len(KEY))
+dec = urllib.parse.unquote(KEY)
+st, txt = get(base + "serviceList?page=1&perPage=3&returnType=JSON", hdr={"Authorization": "Infuser " + dec})
+print("헤더 방식(Authorization: Infuser) 상태", st, txt[:300])
+st, txt = get(base + "serviceList?page=1&perPage=3&returnType=JSON&serviceKey=" + urllib.parse.quote(dec, safe=""))
+print("디코딩 키를 다시 인코딩해 보낸 방식 상태", st, txt[:200])
 st, txt = get(base + "supportConditions?serviceKey=" + kq + "&page=1&perPage=2&returnType=JSON")
 print("supportConditions 상태", st, txt[:700])
 
