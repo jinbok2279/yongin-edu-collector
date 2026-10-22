@@ -169,33 +169,32 @@ def nmc_row(it, kind):
 
 
 def nmc_depts(items_by_id):
-    """진료과 코드(QD)를 하나씩 불러 보고, 이름에 그 과가 들어간 곳이 많은 코드를 그 과로 정한다 (코드표를 외워 쓰지 않음)."""
-    found = {}
+    """진료과 코드(QD)를 하나씩 불러 보고 스스로 과를 정한다 (코드표를 외워 쓰지 않음).
+    어떤 과 이름(예: '소아')이 들어간 의원 거의 전부를 담고 있는 코드 = 그 과. 점수 = 담은 비율 × 코드 안 비율."""
+    named = {dept: {i for i, r in items_by_id.items() if re.search(hint, r["n"])} for dept, hint in DEPT_NAME_HINT.items()}
+    codes = {}
     for n in range(1, 35):
         code = f"D{n:03d}"
         try:
-            ids = {it.get("hpid") for it in nmc(HOURS, {"Q0": SIDO, "Q1": CITY + "시", "QD": code})}
+            ids = {it.get("hpid") for it in nmc(HOURS, {"Q0": SIDO, "Q1": CITY + "시", "QD": code})} & set(items_by_id)
         except Exception as e:
             print(f"  {code} 실패:", e)
             continue
-        names = [items_by_id[i]["n"] for i in ids if i in items_by_id]
-        if len(names) < 3:
-            continue
-        best, share = None, 0.0
-        for dept, hint in DEPT_NAME_HINT.items():
-            v = sum(1 for nm in names if re.search(hint, nm)) / len(names)
-            if v > share:
-                best, share = dept, v
-        print(f"  {code}: {len(names)}곳, 이름 맞음 {best} {share:.0%}")
-        if best and share >= 0.3 and (best not in found or found[best][1] < share):
-            found[best] = (ids, share, code)
+        if len(ids) >= 5:
+            codes[code] = ids
         time.sleep(0.3)
-    for dept, (ids, share, code) in found.items():
-        print(f"  진료과 {dept} = {code} ({share:.0%})")
-        for i in ids:
-            r = items_by_id.get(i)
-            if r is not None and dept not in r["d"]:
-                r["d"].append(dept)
+    for dept, nm in named.items():
+        if len(nm) < 5:
+            continue
+        best = max(((len(ids & nm) / len(nm)) * (len(ids & nm) / len(ids)), len(ids & nm) / len(nm), c) for c, ids in codes.items()) if codes else None
+        if not best or best[1] < 0.6:
+            print(f"  진료과 {dept}: 맞는 코드 없음 (이름 {len(nm)}곳)")
+            continue
+        _, recall, code = best
+        print(f"  진료과 {dept} = {code} (이름에 과가 있는 {len(nm)}곳 중 {recall:.0%} 포함, 이 코드 {len(codes[code])}곳)")
+        for i in codes[code]:
+            if dept not in items_by_id[i]["d"]:
+                items_by_id[i]["d"].append(dept)
 
 
 def main():
