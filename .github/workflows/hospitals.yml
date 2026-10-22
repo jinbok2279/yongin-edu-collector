@@ -23,6 +23,7 @@ jobs:
       - run: |
           mkdir -p logs
           set -o pipefail
+          python -u benefits.py 2>&1 | tee logs/benefits.txt || true   # 놓치기 쉬운 혜택 (실패해도 병원은 저장)
           python -u hospitals.py 2>&1 | tee logs/hospitals.txt
         env:
           CITY: 용인
@@ -32,8 +33,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add logs/hospitals.txt
+          git add logs/hospitals.txt logs/benefits.txt
+          if [ -f output/benefits.json ]; then mkdir -p docs/data && cp output/benefits.json docs/data/ && git add output/benefits.json docs/data/benefits.json; fi
           if [ -f output/hospitals.json ]; then mkdir -p docs/data && cp output/hospitals.json docs/data/ && git add output/hospitals.json docs/data/hospitals.json; fi
           git diff --cached --quiet && exit 0
-          git commit -m "동네 병원 업데이트"
+          git commit -m "동네 병원·혜택 업데이트"
           for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

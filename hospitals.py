@@ -37,6 +37,7 @@ SGGU_ENV = os.environ.get("HOSP_SGGU", "").strip()   # 예: "수지구=310402,�
 HIRA = "https://apis.data.go.kr/B551182/hospInfoServicev2/getHospBasisList"
 ER_LIST = "https://apis.data.go.kr/B552657/ErmctInfoInqireService/getEgytListInfoInqire"
 HOURS = "https://apis.data.go.kr/B552657/HsptlAsembySearchService/getHsptlMdcncListInfoInqire"
+PHARM = "https://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire"   # 약국 (국립중앙의료원)
 
 # 의원 칸에서 고를 수 있는 진료과 (심평원 진료과목 코드)
 DEPTS = [("11", "소아청소년과"), ("13", "이비인후과"), ("01", "내과"), ("14", "피부과"), ("12", "안과"),
@@ -207,7 +208,7 @@ def main():
         raise SystemExit("WEATHER_KEY 없음")
     today = datetime.now(KST)
     result = {"city": CITY, "updated": today.strftime("%Y-%m-%d %H:%M"), "depts": [d for _, d in DEPTS] + ["치과"],
-              "src": {"nmc": False, "er": False}, "clinics": [], "hospitals": [], "er": []}
+              "src": {"nmc": False, "er": False, "pharm": False}, "clinics": [], "hospitals": [], "er": [], "pharm": []}
 
     # 1) 국립중앙의료원 병·의원 찾기 — 종류·주소·전화·위치·진료시간·응급실 운영 여부
     nmc_all = []
@@ -265,7 +266,33 @@ def main():
     result["er"].sort(key=lambda r: (rank.get(r["k"], 3), r["n"]))
     print(f"  응급실 {len(result['er'])}곳")
 
-    for r in result["clinics"] + result["hospitals"] + result["er"]:
+    # 3) 약국 — 가짜 번호(031-000-0000 등)는 빼고, 같은 이름·주소는 하나로. 실패하면 지난번 약국 목록을 그대로 둔다
+    try:
+        seen = {}
+        for it in nmc(PHARM, {"Q0": SIDO, "Q1": CITY + "시"}):
+            r = nmc_row(it, "약국")
+            if not r["n"]:
+                continue
+            if re.search(r"-0{3,4}-0{4}$|^0{2,3}-|^\D*$", r["t"] or "x"):
+                r["t"] = ""
+            k = (re.sub(r"\s", "", r["n"]), re.sub(r"\s", "", r["a"]))
+            if k in seen:
+                if not seen[k]["t"] and r["t"]:
+                    seen[k]["t"] = r["t"]
+                continue
+            seen[k] = r
+        result["pharm"] = sorted(seen.values(), key=lambda r: (r["g"], r["n"]))
+        result["src"]["pharm"] = bool(result["pharm"])
+        print(f"  약국 {len(result['pharm'])}곳 (전화 있는 곳 {sum(1 for r in result['pharm'] if r['t'])})")
+    except Exception as e:
+        print("  약국 실패:", e)
+        try:
+            result["pharm"] = json.load(open("output/hospitals.json", encoding="utf-8")).get("pharm", [])
+            result["src"]["pharm"] = "prev" if result["pharm"] else False
+        except (OSError, ValueError):
+            pass
+
+    for r in result["clinics"] + result["hospitals"] + result["er"] + result["pharm"]:
         r.pop("id", None)
     if not result["src"]["nmc"] and not result["src"]["er"]:
         raise SystemExit("병원 정보를 못 받음 — 저장하지 않음 (활용신청 확인)")
