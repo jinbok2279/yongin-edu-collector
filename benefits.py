@@ -129,6 +129,20 @@ def main():
         print(f"  {CITY}시 혜택 {len(loc)}건 중 아이·가족 {len(kid)}건")
     except Exception as e:
         print("  지자체 복지(시 혜택) 건너뜀:", e)
+    # 서버가 가끔 빈 목록·시간 초과를 돌려줌 → 이번에 못 받은 쪽은 지난번 것을 그대로 둔다
+    try:
+        prev = json.load(open("output/benefits.json", encoding="utf-8"))
+        old = prev.get("items", [])
+        if not res["src"]["local"] and any(x.get("scope") == "local" for x in old):
+            res["items"] = [x for x in old if x.get("scope") == "local"] + res["items"]
+            res["src"]["local"] = "prev"
+            print("  시 혜택: 이번엔 0건이라 지난번 목록 유지")
+        if not res["src"]["nat"] and any(x.get("scope") == "nat" for x in old):
+            res["items"] += [x for x in old if x.get("scope") == "nat"]
+            res["src"]["nat"] = "prev"
+            print("  나라 혜택: 지난번 목록 유지")
+    except (OSError, ValueError):
+        pass
     if not res["src"]["nat"] and not res["src"]["local"]:
         raise SystemExit("혜택 정보를 못 받음 — 저장하지 않음")
     os.makedirs("output", exist_ok=True)
