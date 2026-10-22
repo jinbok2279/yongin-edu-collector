@@ -49,16 +49,20 @@ def items(txt, tag):
     return [dict(re.findall(r"<(\w+)>([^<]*)</\1>", m)) for m in re.findall(rf"<{tag}>(.*?)</{tag}>", txt, re.S)]
 
 
-def all_pages(url, params, tag="servList"):
+def all_pages(url, params, tag="servList", rows=100):
     out, page = [], 1
     while True:
-        txt = get(url, dict(params, pageNo=page, numOfRows=100))
+        txt = get(url, dict(params, pageNo=page, numOfRows=rows))
         if "SERVICE_KEY_IS_NOT_REGISTERED" in txt or "<resultCode>3" in txt:
             raise RuntimeError("활용신청 안 됨: " + re.sub(r"\s+", " ", txt)[:120])
         its = items(txt, tag)
         out += its
         m = re.search(r"<totalCount>(\d+)</totalCount>", txt)
-        if not its or not m or page * 100 >= int(m.group(1)):
+        if page == 1:
+            print(f"    (서버 전체 {m.group(1) if m else '?'}건, 한 번에 {len(its)}건)")
+        if len(its) < rows and m and len(out) < int(m.group(1)) and page == 1:
+            rows = len(its)          # 서버가 한 번에 주는 수가 더 적으면 그 크기로 다시 넘긴다
+        if not its or not m or len(out) >= int(m.group(1)):
             return out
         page += 1
         time.sleep(0.4)
