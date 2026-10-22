@@ -3,6 +3,11 @@
   총 None 건, 이번 None
 수원시 상태 401
   총 None 건, 이번 None
+키 모양: 디코딩 키 길이 64
+헤더 방식(Authorization: Infuser) 상태 401 {"code":-4,"msg":"등록되지 않은 인증키 입니다."}
+
+디코딩 키를 다시 인코딩해 보낸 방식 상태 401 {"code":-4,"msg":"등록되지 않은 인증키 입니다."}
+
 supportConditions 상태 401 {"code":-4,"msg":"등록되지 않은 인증키 입니다."}
 
 
