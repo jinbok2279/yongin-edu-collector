@@ -222,7 +222,10 @@ def main():
             elif div in DIV_HOSP:
                 hosps[nmc_row(it, DIV_HOSP[div])["id"]] = nmc_row(it, DIV_HOSP[div])
         nmc_depts(clinics)
-        for c in clinics.values():   # 이름에 과가 있으면 그 과를 맨 앞에
+        for c in clinics.values():   # 이름에 과가 있으면 그 과를 맨 앞에 (치과는 '소아치과'처럼 이름이 겹쳐서 빼고)
+            if c["k"] == "치과의원":
+                c["d"] = ["치과"]
+                continue
             for dept, hint in DEPT_HINT.items():
                 if re.search(hint, c["n"]):
                     if dept in c["d"]:
