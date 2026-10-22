@@ -1,0 +1,22 @@
+name: benefits-probe (혜택 데이터 시험 — 한 번 쓰고 지움)
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: |
+          mkdir -p logs
+          python -u tools/benefits_probe.py 2>&1 | tee logs/benefits-probe.txt
+        env:
+          WEATHER_KEY: ${{ secrets.WEATHER_KEY }}
+      - if: always()
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logs/benefits-probe.txt; git diff --cached --quiet && exit 0
+          git commit -m "혜택 데이터 시험 기록"; for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
