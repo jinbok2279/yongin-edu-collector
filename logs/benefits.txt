@@ -1,0 +1,4 @@
+  나라 혜택 461건 중 아이·가족 185건
+  시 혜택 칸: ['aplyMtdNm', 'bizChrDeptNm', 'ctpvNm', 'inqNum', 'lastModYmd', 'lifeNmArray', 'servDgst', 'servDtlLink', 'servId', 'servNm', 'sggNm', 'sprtCycNm', 'srvPvsnNm', 'trgterIndvdlNmArray']
+  용인시 혜택 22건 중 아이·가족 9건
+  저장: 115 KB, 194 건
