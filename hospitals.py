@@ -49,7 +49,7 @@ def get(url, params, tries=3):
     last = None
     for i in range(tries):
         try:
-            with urllib.request.urlopen(urllib.request.Request(url + "?" + q, headers={"User-Agent": "airang/1.0"}), timeout=30) as r:
+            with urllib.request.urlopen(urllib.request.Request(url + "?" + q, headers={"User-Agent": "airang/1.0"}), timeout=60) as r:
                 return r.read().decode("utf-8", "replace")
         except Exception as e:
             last = e
