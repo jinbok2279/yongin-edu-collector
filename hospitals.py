@@ -1,9 +1,10 @@
 """동네 병원 — 의원 / 병원·종합병원 / 응급실 목록을 모은다 (공공데이터포털).
 
-쓰는 서비스 (공공데이터포털에서 '활용신청' 필요, 인증키는 WEATHER_KEY 와 같은 것):
-  1) 건강보험심사평가원_병원정보서비스            → 병원 종류·진료과·주소·전화·위치   (필수)
-  2) 국립중앙의료원_전국 응급의료기관 정보 조회 서비스 → 응급실 목록·응급실 전화         (없으면 응급실 칸 비움)
-  3) 국립중앙의료원_전국 병·의원 찾기 서비스        → 요일별 진료시간                  (없으면 시간 없이 저장)
+쓰는 서비스 (공공데이터포털 '활용신청', 인증키는 WEATHER_KEY 와 같은 것):
+  1) 국립중앙의료원_전국 병·의원 찾기 서비스        → 종류·주소·전화·위치·진료시간·응급실 운영 여부 (기본)
+  2) 국립중앙의료원_전국 응급의료기관 정보 조회 서비스 → 응급실 등급·응급실 직통 전화 (있으면 더 정확)
+  (심평원 병원정보서비스 함수 hira() 는 나중에 쓸 수 있게 남겨 둠)
+진료과는 코드표를 외우지 않고, 코드마다 불러 본 뒤 병원 이름과 맞춰 스스로 정한다(기록에 남김).
 
 개인정보는 모으지 않는다. 병원 이름·종류·진료과·주소·대표 전화·위치·진료시간(공개 정보)만.
 출처: 공공누리 제1유형(출처표시) — 앱 화면 아래에 출처를 적는다.
@@ -16,6 +17,7 @@ import time
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 
 KST = timezone(timedelta(hours=9))
@@ -147,43 +149,80 @@ def row(it, kind):
     return r
 
 
+DIV_CLINIC = {"의원": "의원", "치과의원": "치과의원", "보건소": "보건소", "보건지소": "보건소", "보건진료소": "보건소"}
+DIV_HOSP = {"상급종합병원": "상급종합병원", "종합병원": "종합병원", "병원": "병원", "치과병원": "치과병원"}
+DEPT_NAME_HINT = dict(DEPT_HINT, 내과="내과", 가정의학과="가정의학", 치과="치과")
+
+
+def nmc_row(it, kind):
+    try:
+        y, x = round(float(it.get("wgs84Lat")), 5), round(float(it.get("wgs84Lon")), 5)
+    except (TypeError, ValueError):
+        y = x = None
+    addr = it.get("dutyAddr", "")
+    r = {"n": it.get("dutyName", "").strip(), "k": kind, "g": gu_of(addr), "a": short_addr(addr),
+         "t": (it.get("dutyTel1") or "").strip(), "y": y, "x": x, "id": it.get("hpid", "")}
+    h = [[it.get(f"dutyTime{i}s", ""), it.get(f"dutyTime{i}c", "")] for i in range(1, 9)]  # 월~일, 공휴일
+    if any(a for a, _ in h):
+        r["h"] = ["".join(p) if p[0] and p[1] else "" for p in h]
+    return r
+
+
+def nmc_depts(items_by_id):
+    """진료과 코드(QD)를 하나씩 불러 보고, 이름에 그 과가 들어간 곳이 많은 코드를 그 과로 정한다 (코드표를 외워 쓰지 않음)."""
+    found = {}
+    for n in range(1, 35):
+        code = f"D{n:03d}"
+        try:
+            ids = {it.get("hpid") for it in nmc(HOURS, {"Q0": SIDO, "Q1": CITY + "시", "QD": code})}
+        except Exception as e:
+            print(f"  {code} 실패:", e)
+            continue
+        names = [items_by_id[i]["n"] for i in ids if i in items_by_id]
+        if len(names) < 3:
+            continue
+        best, share = None, 0.0
+        for dept, hint in DEPT_NAME_HINT.items():
+            v = sum(1 for nm in names if re.search(hint, nm)) / len(names)
+            if v > share:
+                best, share = dept, v
+        print(f"  {code}: {len(names)}곳, 이름 맞음 {best} {share:.0%}")
+        if best and share >= 0.3 and (best not in found or found[best][1] < share):
+            found[best] = (ids, share, code)
+        time.sleep(0.3)
+    for dept, (ids, share, code) in found.items():
+        print(f"  진료과 {dept} = {code} ({share:.0%})")
+        for i in ids:
+            r = items_by_id.get(i)
+            if r is not None and dept not in r["d"]:
+                r["d"].append(dept)
+
+
 def main():
     if not KEY:
         raise SystemExit("WEATHER_KEY 없음")
     today = datetime.now(KST)
     result = {"city": CITY, "updated": today.strftime("%Y-%m-%d %H:%M"), "depts": [d for _, d in DEPTS] + ["치과"],
-              "src": {"hira": False, "er": False, "hours": False}, "clinics": [], "hospitals": [], "er": []}
+              "src": {"nmc": False, "er": False}, "clinics": [], "hospitals": [], "er": []}
 
-    # 1) 심평원 — 의원·병원
+    # 1) 국립중앙의료원 병·의원 찾기 — 종류·주소·전화·위치·진료시간·응급실 운영 여부
+    nmc_all = []
     try:
-        codes = sggu_codes()
-        print("  시군구 코드:", codes)
-        if not codes:
-            raise RuntimeError("용인 구 코드를 못 찾음 (HOSP_SGGU 로 직접 넣기)")
+        nmc_all = nmc(HOURS, {"Q0": SIDO, "Q1": CITY + "시"})
+        print(f"  병·의원 {len(nmc_all)}곳 받음. 종류:", dict(Counter(it.get("dutyDivNam", "") for it in nmc_all).most_common(15)))
+        if nmc_all:
+            print("  칸:", sorted(nmc_all[0].keys()))
         clinics, hosps = {}, {}
-        for g, sc in codes.items():
-            for cl, kind in CLINIC_CL.items():
-                for it in hira({"sidoCd": SIDO_CD, "sgguCd": sc, "clCd": cl}):
-                    r = row(it, kind)
-                    if r["n"]:
-                        r["d"] = ["치과"] if cl == "51" else []
-                        clinics[it.get("ykiho") or r["n"] + r["t"]] = r
-            for code, dept in DEPTS:
-                n = 0
-                for it in hira({"sidoCd": SIDO_CD, "sgguCd": sc, "clCd": "31", "dgsbjtCd": code}):
-                    c = clinics.get(it.get("ykiho") or "")
-                    if c is not None and dept not in c["d"]:
-                        c["d"].append(dept)
-                        n += 1
-                print(f"  {g} {dept} {n}곳")
-                time.sleep(0.3)
-            for cl, kind in HOSP_CL.items():
-                for it in hira({"sidoCd": SIDO_CD, "sgguCd": sc, "clCd": cl}):
-                    r = row(it, kind)
-                    if r["n"]:
-                        hosps[it.get("ykiho") or r["n"] + r["t"]] = r
-        # 이름이 진료과와 어긋나면(예: 'OO피부과의원'이 소아청소년과로 잡힘) 이름 쪽 과를 맨 앞에
-        for c in clinics.values():
+        for it in nmc_all:
+            div = (it.get("dutyDivNam") or "").strip()
+            if div in DIV_CLINIC:
+                r = nmc_row(it, DIV_CLINIC[div])
+                r["d"] = ["치과"] if "치과" in div else []
+                clinics[r["id"]] = r
+            elif div in DIV_HOSP:
+                hosps[nmc_row(it, DIV_HOSP[div])["id"]] = nmc_row(it, DIV_HOSP[div])
+        nmc_depts(clinics)
+        for c in clinics.values():   # 이름에 과가 있으면 그 과를 맨 앞에
             for dept, hint in DEPT_HINT.items():
                 if re.search(hint, c["n"]):
                     if dept in c["d"]:
@@ -193,59 +232,35 @@ def main():
         order = {"상급종합병원": 0, "종합병원": 1, "병원": 2, "치과병원": 3}
         result["clinics"] = sorted(clinics.values(), key=lambda r: (r["g"], r["n"]))
         result["hospitals"] = sorted(hosps.values(), key=lambda r: (order.get(r["k"], 9), r["g"], r["n"]))
-        result["src"]["hira"] = True
-        print(f"  의원 {len(result['clinics'])}곳, 병원 {len(result['hospitals'])}곳")
+        result["src"]["nmc"] = bool(clinics or hosps)
+        print(f"  의원 {len(clinics)}곳, 병원 {len(hosps)}곳")
     except Exception as e:
-        print("  심평원 병원정보 실패:", e)
+        print("  병·의원 찾기 실패:", e)
 
-    # 2) 국립중앙의료원 — 응급실
+    # 2) 응급실 — 응급의료기관 서비스(응급실 전화 포함)가 되면 그것, 아니면 병·의원 목록의 '응급실 운영' 표시
+    rank = {"권역응급의료센터": 0, "지역응급의료센터": 1, "지역응급의료기관": 2}
     try:
-        ers = nmc(ER_LIST, {"Q0": SIDO, "Q1": CITY + "시"})
-        for it in ers:
-            try:
-                y, x = round(float(it.get("wgs84Lat")), 5), round(float(it.get("wgs84Lon")), 5)
-            except (TypeError, ValueError):
-                y = x = None
-            result["er"].append({"n": it.get("dutyName", ""), "k": it.get("dutyEmclsName", "") or "응급실",
-                                 "g": gu_of(it.get("dutyAddr", "")), "a": short_addr(it.get("dutyAddr", "")),
-                                 "t": it.get("dutyTel3") or it.get("dutyTel1", ""), "t1": it.get("dutyTel1", ""), "y": y, "x": x})
-        rank = {"권역응급의료센터": 0, "지역응급의료센터": 1, "지역응급의료기관": 2}
-        result["er"].sort(key=lambda r: (rank.get(r["k"], 3), r["n"]))
-        result["src"]["er"] = True
-        print(f"  응급실 {len(result['er'])}곳")
+        for it in nmc(ER_LIST, {"Q0": SIDO, "Q1": CITY + "시"}):
+            r = nmc_row(it, it.get("dutyEmclsName", "") or "응급실")
+            r["t"] = it.get("dutyTel3") or r["t"]
+            r.pop("h", None)
+            result["er"].append(r)
+        result["src"]["er"] = "er"
     except Exception as e:
-        print("  응급실 목록 실패:", e)
+        print("  응급의료기관 서비스 실패 → 병·의원 목록에서 응급실 운영 기관을 씀:", e)
+        for it in nmc_all:
+            if str(it.get("dutyEryn", "")).strip() == "1":
+                r = nmc_row(it, (it.get("dutyEmclsName") or "").strip() or "응급실 운영")
+                r.pop("h", None)
+                result["er"].append(r)
+        result["src"]["er"] = "list" if result["er"] else False
+    result["er"].sort(key=lambda r: (rank.get(r["k"], 3), r["n"]))
+    print(f"  응급실 {len(result['er'])}곳")
 
-    # 3) 국립중앙의료원 — 요일별 진료시간 (전화번호로 맞춰 붙임). 없어도 된다.
-    try:
-        hrs = nmc(HOURS, {"Q0": SIDO, "Q1": CITY + "시"})
-        by_tel = {}
-        for it in hrs:
-            h = [[it.get(f"dutyTime{i}s", ""), it.get(f"dutyTime{i}c", "")] for i in range(1, 9)]  # 월~일, 공휴일
-            if any(a for a, _ in h):
-                by_tel[digits(it.get("dutyTel1"))] = ["".join(p) if p[0] else "" for p in h]
-        hit = 0
-        for r in result["clinics"] + result["hospitals"]:
-            h = by_tel.get(digits(r["t"]))
-            if h:
-                r["h"] = h
-                hit += 1
-        result["src"]["hours"] = hit > 0
-        print(f"  진료시간 붙임 {hit}곳 (받은 것 {len(by_tel)}곳)")
-    except Exception as e:
-        print("  진료시간 실패(없이 저장):", e)
-
-    if not any(result["src"].values()):
-        raise SystemExit("세 서비스 모두 실패 — 저장하지 않음 (활용신청 확인)")
-    # 이번에 실패한 칸은 지난번 것을 그대로 둔다 (빈 목록으로 덮어쓰지 않게)
-    try:
-        prev = json.load(open("output/hospitals.json", encoding="utf-8"))
-        if not result["src"]["hira"] and prev.get("clinics"):
-            result["clinics"], result["hospitals"], result["src"]["hira"] = prev["clinics"], prev.get("hospitals", []), "prev"
-        if not result["src"]["er"] and prev.get("er"):
-            result["er"], result["src"]["er"] = prev["er"], "prev"
-    except (OSError, ValueError):
-        pass
+    for r in result["clinics"] + result["hospitals"] + result["er"]:
+        r.pop("id", None)
+    if not result["src"]["nmc"] and not result["src"]["er"]:
+        raise SystemExit("병원 정보를 못 받음 — 저장하지 않음 (활용신청 확인)")
     os.makedirs("output", exist_ok=True)
     with open("output/hospitals.json", "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, separators=(",", ":"))
