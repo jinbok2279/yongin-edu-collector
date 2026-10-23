@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-23 06:52:19",
+ "updated_at": "2026-10-24 06:50:41",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
   {
@@ -328,6 +328,19 @@
    "free": false,
    "src": "city",
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16941"
+  },
+  {
+   "id": "16943",
+   "title": "2026 플라이투더스카이 콘서트 - 용인",
+   "start": "2026-12-19",
+   "end": "2026-12-20",
+   "place": "용인포은아트홀",
+   "time": "120분",
+   "grade": "만 7세 이상",
+   "price": "VIP석 143,000원/ R석 132,000원/ S석 110,000원",
+   "free": false,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16943"
   }
  ],
  "lib": [
@@ -343,7 +356,7 @@
    "applyStart": "2026-10-12",
    "applyEnd": "2026-10-25",
    "apply": "2026.10.12(월) 10:00 ~ 2026.10.25(일) 18:00",
-   "count": "2/8",
+   "count": "4/8",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -381,7 +394,7 @@
    "applyStart": "2026-10-20",
    "applyEnd": "2026-10-27",
    "apply": "2026.10.20(화) 10:00 ~ 2026.10.27(화) 23:59",
-   "count": "5/12",
+   "count": "6/12",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -400,7 +413,7 @@
    "applyStart": "2026-10-21",
    "applyEnd": "2026-10-30",
    "apply": "2026.10.21(수) 10:00 ~ 2026.10.30(금) 17:00",
-   "count": "5/15",
+   "count": "9/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -419,7 +432,7 @@
    "applyStart": "2026-10-20",
    "applyEnd": "2026-10-30",
    "apply": "2026.10.20(화) 10:00 ~ 2026.10.30(금) 18:00",
-   "count": "11/15",
+   "count": "12/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -457,7 +470,7 @@
    "applyStart": "2026-10-20",
    "applyEnd": "2026-11-02",
    "apply": "2026.10.20(화) 10:00 ~ 2026.11.02(월) 18:00",
-   "count": "12/15",
+   "count": "14/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -484,6 +497,25 @@
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136381"
   },
   {
+   "id": "L136642",
+   "title": "11월 특성화 프로그램 「나의 꿈을 담은 90초 북트레일러」 (온라인 ZOOM 수업)",
+   "lib": "기흥도서관",
+   "target": "초등 (초등학교 4~6학년 15명)",
+   "place": "온라인 ZOOM",
+   "start": "2026-11-07",
+   "end": "2026-11-28",
+   "period": "2026.11.07(토) ~ 2026.11.28(토) 10:00 ~ 12:00 4회",
+   "applyStart": "2026-10-23",
+   "applyEnd": "2026-11-02",
+   "apply": "2026.10.23(금) 10:00 ~ 2026.11.02(월) 18:00",
+   "count": "3/15",
+   "status": "접수중",
+   "btn": "신청하기",
+   "free": true,
+   "src": "lib",
+   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136642"
+  },
+  {
    "id": "L136583",
    "title": "[독서문화] 찾아가는 AI 아카데미 - 어린이 AI 아카데미(*노트북 또는 태블릿, Canva 계정 필수 준비)",
    "lib": "모현도서관",
@@ -503,25 +535,6 @@
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136583"
   },
   {
-   "id": "L136881",
-   "title": "[포곡_특성화] 토요 글라스 아트 클래스",
-   "lib": "포곡도서관",
-   "target": "초등 (초등 1 ~ 4학년 12명)",
-   "place": "포곡도서관 B1층 시청각실",
-   "start": "2026-11-14",
-   "end": "2026-11-14",
-   "period": "2026.11.14(토) 14:00 ~ 16:00 1회",
-   "applyStart": "2026-10-21",
-   "applyEnd": "2026-11-11",
-   "apply": "2026.10.21(수) 10:00 ~ 2026.11.11(수) 18:00",
-   "count": "10/12",
-   "status": "접수중",
-   "btn": "신청하기",
-   "free": true,
-   "src": "lib",
-   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136881"
-  },
-  {
    "id": "L136222",
    "title": "성복도서관 11월 재능기부 프로그램 「영어스토리텔링 Fun to Read」- (1~3주 일) 15:00 (초1-3학년)",
    "lib": "성복도서관",
@@ -539,25 +552,6 @@
    "free": true,
    "src": "lib",
    "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136222"
-  },
-  {
-   "id": "L136642",
-   "title": "11월 특성화 프로그램 「나의 꿈을 담은 90초 북트레일러」 (온라인 ZOOM 수업)",
-   "lib": "기흥도서관",
-   "target": "초등 (초등학교 4~6학년 15명)",
-   "place": "온라인 ZOOM",
-   "start": "2026-11-07",
-   "end": "2026-11-28",
-   "period": "2026.11.07(토) ~ 2026.11.28(토) 10:00 ~ 12:00 4회",
-   "applyStart": "2026-10-23",
-   "applyEnd": "2026-11-02",
-   "apply": "2026.10.23(금) 10:00 ~ 2026.11.02(월) 18:00",
-   "count": "0/15",
-   "status": "접수전",
-   "btn": "",
-   "free": true,
-   "src": "lib",
-   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136642"
   },
   {
    "id": "L136461",
