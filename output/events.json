@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-25 06:48:06",
+ "updated_at": "2026-10-26 06:46:52",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
   {
@@ -304,6 +304,19 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16979"
   },
   {
+   "id": "16985",
+   "title": "전국풍류자랑 < 오작교 아리랑>",
+   "start": "2026-11-26",
+   "end": "2026-11-26",
+   "place": "큰어울마당",
+   "time": "19:30",
+   "grade": "전체관람등급",
+   "price": "전석 무료",
+   "free": true,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16985"
+  },
+  {
    "id": "16981",
    "title": "용인시민과 함께하는 묵빛여행",
    "start": "2026-12-01",
@@ -383,25 +396,6 @@
   }
  ],
  "lib": [
-  {
-   "id": "L136121",
-   "title": "(재능기부) Read for Fun",
-   "lib": "모현도서관",
-   "target": "초등 (초등 4~6학년 8명)",
-   "place": "모현도서관 2층 시청각실",
-   "start": "2026-11-05",
-   "end": "2026-11-26",
-   "period": "2026.11.05(목) ~ 2026.11.26(목) 16:00 ~ 18:00 4회",
-   "applyStart": "2026-10-12",
-   "applyEnd": "2026-10-25",
-   "apply": "2026.10.12(월) 10:00 ~ 2026.10.25(일) 18:00",
-   "count": "4/8",
-   "status": "접수중",
-   "btn": "신청하기",
-   "free": true,
-   "src": "lib",
-   "link": "https://lib.yongin.go.kr/yongin/menu/10264/program/30027/lectureDetail.do?lectureIdx=136121"
-  },
   {
    "id": "L135562",
    "title": "[상현] 「어린이 AI 독서토론 아카데미」 *추가 모집 / 중간 참여 가능*",
@@ -577,7 +571,7 @@
    "id": "L136461",
    "title": "[구성] 11월 독서문화 프로그램 <그림책 공작소 시즌2> (2020~2021년생)",
    "lib": "구성도서관",
-   "target": "유아 (2020~2021년생 10명)",
+   "target": "유아 (2020~2021년생 12명)",
    "place": "구성도서관 지하1층 커뮤니티실",
    "start": "2026-11-06",
    "end": "2026-11-27",
@@ -585,7 +579,7 @@
    "applyStart": "2026-10-26",
    "applyEnd": "2026-11-04",
    "apply": "2026.10.26(월) 10:00 ~ 2026.11.04(수) 23:00",
-   "count": "0/10",
+   "count": "0/12",
    "status": "접수전",
    "btn": "",
    "free": true,
