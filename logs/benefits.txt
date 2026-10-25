@@ -1,6 +1,5 @@
-    (서버 전체 461건, 한 번에 100건)
-  나라 혜택 461건 중 아이·가족 106건
-    (서버 전체 22건, 한 번에 22건)
-  시 혜택 칸: ['aplyMtdNm', 'bizChrDeptNm', 'ctpvNm', 'inqNum', 'lastModYmd', 'lifeNmArray', 'servDgst', 'servDtlLink', 'servId', 'servNm', 'sggNm', 'sprtCycNm', 'srvPvsnNm', 'trgterIndvdlNmArray']
-  용인시 혜택 22건 중 아이·가족 6건
+  중앙부처 복지 실패: <urlopen error timed out>
+  지자체 복지(시 혜택) 건너뜀: <urlopen error timed out>
+  시 혜택: 이번엔 0건이라 지난번 목록 유지
+  나라 혜택: 지난번 목록 유지
   저장: 67 KB, 112 건
