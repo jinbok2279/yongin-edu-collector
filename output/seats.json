@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27 19:11:02",
+  "updated_at": "2026-10-27 20:04:21",
   "source": "용인시도서관 좌석현황",
   "source_url": "https://lib.yongin.go.kr/yongin/seatStatusList.do",
   "libraries": [
@@ -29,8 +29,8 @@
         {
           "name": "일반열람실",
           "total": 148,
-          "used": 44,
-          "left": 102,
+          "used": 43,
+          "left": 103,
           "wait": 0
         }
       ]
@@ -45,15 +45,15 @@
         {
           "name": "열람실(일반)",
           "total": 156,
-          "used": 31,
-          "left": 125,
+          "used": 22,
+          "left": 134,
           "wait": 0
         },
         {
           "name": "열람실(청소년)",
           "total": 102,
-          "used": 13,
-          "left": 89,
+          "used": 11,
+          "left": 91,
           "wait": 0
         }
       ]
@@ -84,8 +84,8 @@
         {
           "name": "열람실",
           "total": 80,
-          "used": 33,
-          "left": 47,
+          "used": 32,
+          "left": 48,
           "wait": 0
         },
         {
@@ -107,15 +107,15 @@
         {
           "name": "열람실",
           "total": 180,
-          "used": 29,
-          "left": 151,
+          "used": 24,
+          "left": 156,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 56,
-          "used": 14,
-          "left": 42,
+          "used": 13,
+          "left": 43,
           "wait": 0
         }
       ]
@@ -153,8 +153,8 @@
         {
           "name": "디지털존 노트북석",
           "total": 69,
-          "used": 25,
-          "left": 44,
+          "used": 23,
+          "left": 46,
           "wait": 0
         }
       ]
@@ -169,15 +169,15 @@
         {
           "name": "일반열람실",
           "total": 180,
-          "used": 44,
-          "left": 136,
+          "used": 38,
+          "left": 142,
           "wait": 0
         },
         {
           "name": "노트북실",
           "total": 54,
-          "used": 22,
-          "left": 32,
+          "used": 19,
+          "left": 35,
           "wait": 0
         }
       ]
