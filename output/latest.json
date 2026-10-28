@@ -1,9 +1,9 @@
 {
   "region": "용인시",
-  "updated_at": "2026-10-28 18:38:22",
+  "updated_at": "2026-10-29 06:27:05",
   "period": {
-    "from": "20261028",
-    "to": "20261227"
+    "from": "20261029",
+    "to": "20261228"
   },
   "school_count": 196,
   "public_holidays": [
@@ -2388,6 +2388,118 @@
       "date": "2026-12-27",
       "name": "겨울방학",
       "holiday": true
+    },
+    {
+      "school": "동천초등학교",
+      "level": "초등학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "상갈초등학교",
+      "level": "초등학교",
+      "gu": "기흥구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "서원고등학교",
+      "level": "고등학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "서원중학교",
+      "level": "중학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "성복중학교",
+      "level": "중학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "손곡초등학교",
+      "level": "초등학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "솔개초등학교",
+      "level": "초등학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "역북초등학교",
+      "level": "초등학교",
+      "gu": "처인구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "용인신촌중학교",
+      "level": "중학교",
+      "gu": "기흥구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "죽전고등학교",
+      "level": "고등학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "죽전중학교",
+      "level": "중학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "청곡초등학교",
+      "level": "초등학교",
+      "gu": "기흥구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
+    },
+    {
+      "school": "태성중학교",
+      "level": "중학교",
+      "gu": "처인구",
+      "date": "2026-12-28",
+      "name": "졸업식",
+      "holiday": false
+    },
+    {
+      "school": "홍천초등학교",
+      "level": "초등학교",
+      "gu": "수지구",
+      "date": "2026-12-28",
+      "name": "겨울방학",
+      "holiday": true
     }
   ],
   "schools": [
@@ -2664,6 +2776,11 @@
         },
         {
           "date": "2026-12-27",
+          "name": "겨울방학",
+          "holiday": true
+        },
+        {
+          "date": "2026-12-28",
           "name": "겨울방학",
           "holiday": true
         }
@@ -2998,6 +3115,11 @@
           "date": "2026-12-27",
           "name": "겨울방학",
           "holiday": true
+        },
+        {
+          "date": "2026-12-28",
+          "name": "겨울방학",
+          "holiday": true
         }
       ]
     },
@@ -3117,6 +3239,11 @@
           "date": "2026-12-27",
           "name": "겨울방학",
           "holiday": true
+        },
+        {
+          "date": "2026-12-28",
+          "name": "겨울방학",
+          "holiday": true
         }
       ]
     },
@@ -3194,11 +3321,6 @@
       "gu": "수지구",
       "dong": "상현동",
       "events": [
-        {
-          "date": "2026-10-28",
-          "name": "지진대피훈련",
-          "holiday": false
-        },
         {
           "date": "2026-11-02",
           "name": "친구사랑주간운영",
@@ -3283,6 +3405,11 @@
           "date": "2026-12-27",
           "name": "겨울방학",
           "holiday": true
+        },
+        {
+          "date": "2026-12-28",
+          "name": "겨울방학",
+          "holiday": true
         }
       ]
     },
@@ -3361,6 +3488,11 @@
         },
         {
           "date": "2026-12-27",
+          "name": "겨울방학",
+          "holiday": true
+        },
+        {
+          "date": "2026-12-28",
           "name": "겨울방학",
           "holiday": true
         }
@@ -3456,17 +3588,17 @@
         },
         {
           "date": "2026-11-11",
-          "name": "친구 사랑의 날",
-          "holiday": false
-        },
-        {
-          "date": "2026-11-11",
           "name": "정보통신예절주간",
           "holiday": false
         },
         {
           "date": "2026-11-11",
           "name": "가정폭력 및 아동학대 예방교육주간",
+          "holiday": false
+        },
+        {
+          "date": "2026-11-11",
+          "name": "친구 사랑의 날",
           "holiday": false
         },
         {
@@ -3680,6 +3812,11 @@
         },
         {
           "date": "2026-12-25",
+          "name": "겨울방학",
+          "holiday": true
+        },
+        {
+          "date": "2026-12-28",
           "name": "겨울방학",
           "holiday": true
         }
@@ -4076,6 +4213,11 @@
           "date": "2026-12-27",
           "name": "겨울방학",
           "holiday": true
+        },
+        {
+          "date": "2026-12-28",
+          "name": "겨울방학",
+          "holiday": true
         }
       ]
     },
@@ -4150,16 +4292,6 @@
       "gu": "처인구",
       "dong": "이동읍",
       "events": [
-        {
-          "date": "2026-10-28",
-          "name": "재난대응훈련주간",
-          "holiday": false
-        },
-        {
-          "date": "2026-10-28",
-          "name": "소방훈련",
-          "holiday": false
-        },
         {
           "date": "2026-11-18",
           "name": "자치동아리활동",
@@ -4333,11 +4465,6 @@
       "dong": "하갈동",
       "events": [
         {
-          "date": "2026-10-28",
-          "name": "1차 정기시험",
-          "holiday": false
-        },
-        {
           "date": "2026-10-29",
           "name": "1차 정기시험",
           "holiday": false
@@ -4360,6 +4487,11 @@
         {
           "date": "2026-12-16",
           "name": "2차 정기시험",
+          "holiday": false
+        },
+        {
+          "date": "2026-12-28",
+          "name": "교육공동체 대토론회",
           "holiday": false
         }
       ]
@@ -5000,6 +5132,11 @@
           "date": "2026-12-27",
           "name": "겨울방학",
           "holiday": true
+        },
+        {
+          "date": "2026-12-28",
+          "name": "겨울방학",
+          "holiday": true
         }
       ]
     },
@@ -5314,6 +5451,11 @@
           "date": "2026-12-27",
           "name": "겨울방학",
           "holiday": true
+        },
+        {
+          "date": "2026-12-28",
+          "name": "겨울방학",
+          "holiday": true
         }
       ]
     },
@@ -5397,6 +5539,11 @@
         },
         {
           "date": "2026-12-27",
+          "name": "겨울방학",
+          "holiday": true
+        },
+        {
+          "date": "2026-12-28",
           "name": "겨울방학",
           "holiday": true
         }
@@ -5849,6 +5996,11 @@
           "date": "2026-12-27",
           "name": "겨울방학",
           "holiday": true
+        },
+        {
+          "date": "2026-12-28",
+          "name": "겨울방학",
+          "holiday": true
         }
       ]
     },
@@ -6160,16 +6312,6 @@
       "dong": "이동읍",
       "events": [
         {
-          "date": "2026-10-28",
-          "name": "성매매예방교육",
-          "holiday": false
-        },
-        {
-          "date": "2026-10-28",
-          "name": "장애인식개선교육주간",
-          "holiday": false
-        },
-        {
           "date": "2026-10-29",
           "name": "장애인식개선교육주간",
           "holiday": false
@@ -6232,6 +6374,11 @@
         {
           "date": "2026-12-17",
           "name": "2차 정기시험",
+          "holiday": false
+        },
+        {
+          "date": "2026-12-28",
+          "name": "학생자치회선거",
           "holiday": false
         }
       ]
@@ -6602,6 +6749,16 @@
         {
           "date": "2026-12-24",
           "name": "동아리16,17",
+          "holiday": false
+        },
+        {
+          "date": "2026-12-28",
+          "name": "졸업식",
+          "holiday": false
+        },
+        {
+          "date": "2026-12-28",
+          "name": "종업식",
           "holiday": false
         }
       ]
@@ -7077,6 +7234,11 @@
           "date": "2026-12-16",
           "name": "2학기 정기시험 2차(1,2)",
           "holiday": false
+        },
+        {
+          "date": "2026-12-28",
+          "name": "학교주도활동",
+          "holiday": false
         }
       ]
     },
@@ -7186,6 +7348,11 @@
         {
           "date": "2026-12-24",
           "name": "동아리발표회",
+          "holiday": false
+        },
+        {
+          "date": "2026-12-28",
+          "name": "진급성적사정회",
           "holiday": false
         }
       ]
@@ -7467,6 +7634,11 @@
           "date": "2026-12-27",
           "name": "겨울방학",
           "holiday": true
+        },
+        {
+          "date": "2026-12-28",
+          "name": "겨울방학",
+          "holiday": true
         }
       ]
     },
@@ -7677,6 +7849,11 @@
           "date": "2026-12-22",
           "name": "깨끗한 환경만들기",
           "holiday": false
+        },
+        {
+          "date": "2026-12-28",
+          "name": "SLAT(정서적지원프로그램)",
+          "holiday": false
         }
       ]
     },
@@ -7810,6 +7987,11 @@
         },
         {
           "date": "2026-12-26",
+          "name": "겨울방학",
+          "holiday": true
+        },
+        {
+          "date": "2026-12-28",
           "name": "겨울방학",
           "holiday": true
         }
@@ -8008,21 +8190,6 @@
       "gu": "처인구",
       "dong": "고림동",
       "events": [
-        {
-          "date": "2026-10-28",
-          "name": "도서관 독서의 달 행사",
-          "holiday": false
-        },
-        {
-          "date": "2026-10-28",
-          "name": "학교 도서관 과학 독서 주간",
-          "holiday": false
-        },
-        {
-          "date": "2026-10-28",
-          "name": "탄소중립 기본 교육",
-          "holiday": false
-        },
         {
           "date": "2026-10-29",
           "name": "도서관 독서의 달 행사",
@@ -8471,6 +8638,11 @@
         {
           "date": "2026-12-24",
           "name": "Zesty Concert",
+          "holiday": false
+        },
+        {
+          "date": "2026-12-28",
+          "name": "드라마 나이트",
           "holiday": false
         }
       ]
