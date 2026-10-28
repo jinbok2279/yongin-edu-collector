@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-10-28 06:53:53",
+ "updated_at": "2026-10-29 07:00:20",
  "source": "용인시청 문화달력 · 용인시도서관 문화행사",
  "city": [
   {
@@ -70,32 +70,6 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16910"
   },
   {
-   "id": "16897",
-   "title": "2026 해외 우수 공연 초청 무용극 < 신(新) 공작동남비>",
-   "start": "2026-10-28",
-   "end": "2026-10-28",
-   "place": "큰어울마당",
-   "time": "총 80분",
-   "grade": "전체관람등급",
-   "price": "전석무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16897"
-  },
-  {
-   "id": "16920",
-   "title": "[무료 관람] 중국 전통 음악극 < 매화꽃 피다>",
-   "start": "2026-10-28",
-   "end": "2026-10-28",
-   "place": "큰어울마당",
-   "time": "총 76분",
-   "grade": "전체관람등급",
-   "price": "전석무료",
-   "free": true,
-   "src": "city",
-   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16920"
-  },
-  {
    "id": "16925",
    "title": "2026 찾아가는 문화야시장 < 처인구>",
    "start": "2026-10-30",
@@ -110,7 +84,7 @@
   },
   {
    "id": "16989",
-   "title": "[북그라운드] 2026 가을 북큐레이션 < 그림책은 튼튼해>",
+   "title": "[북그라운드] 2026 가을 북큐레이션 < 그림책은 튼튼해!>",
    "start": "2026-10-30",
    "end": "2026-12-13",
    "place": "용인어린이상상의숲",
@@ -294,9 +268,9 @@
    "id": "16941",
    "title": "[공연놀이터] 매직컬 스크루지",
    "start": "2026-11-25",
-   "end": "2026-11-28",
+   "end": "2026-12-27",
    "place": "용인어린이상상의숲",
-   "time": "주말(토): 11:10, 13:30, 15:30 주말(일) 13:00, 15:00 평일(11,25/12.23) 10:10, 11:10",
+   "time": "주말(토): 11:10, 13:30, 15:30 주말(일) 13:00, 15:00 평일(11.25/12.23) 10:10, 11:10",
    "grade": "만 36개월 이상",
    "price": "15,000",
    "free": false,
@@ -421,6 +395,19 @@
    "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16943"
   },
   {
+   "id": "16991",
+   "title": "창작뮤지컬 < 바둑이와 세리>",
+   "start": "2026-12-19",
+   "end": "2026-12-19",
+   "place": "마루홀",
+   "time": "15시, 18시",
+   "grade": "초등학생 이상",
+   "price": "전석 20,000원",
+   "free": false,
+   "src": "city",
+   "link": "https://www.yongin.go.kr/partInfo/cultureArt/BD_selectCultureArt.do?q_showIdx=16991"
+  },
+  {
    "id": "16984",
    "title": "제2회 처인묵우회 수묵화, 사군자",
    "start": "2026-12-22",
@@ -523,7 +510,7 @@
    "applyStart": "2026-10-20",
    "applyEnd": "2026-11-02",
    "apply": "2026.10.20(화) 10:00 ~ 2026.11.02(월) 18:00",
-   "count": "14/15",
+   "count": "11/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
@@ -542,7 +529,7 @@
    "applyStart": "2026-10-23",
    "applyEnd": "2026-11-02",
    "apply": "2026.10.23(금) 10:00 ~ 2026.11.02(월) 18:00",
-   "count": "9/15",
+   "count": "10/15",
    "status": "접수중",
    "btn": "신청하기",
    "free": true,
