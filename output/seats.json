@@ -1,6 +1,186 @@
 {
-  "updated_at": "2026-10-29 13:35:14",
+  "updated_at": "2026-10-29 14:32:55",
   "source": "용인시도서관 좌석현황",
   "source_url": "https://lib.yongin.go.kr/yongin/seatStatusList.do",
-  "libraries": []
+  "libraries": [
+    {
+      "name": "포곡도서관",
+      "gu": "처인구",
+      "link": "https://lib.yongin.go.kr/pg/",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실",
+          "total": 140,
+          "used": 27,
+          "left": 113,
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "name": "기흥도서관",
+      "gu": "기흥구",
+      "link": "https://lib.yongin.go.kr/seatmate_gh/seatmate.php",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "일반열람실",
+          "total": 148,
+          "used": 45,
+          "left": 101,
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "name": "동백도서관",
+      "gu": "기흥구",
+      "link": "https://lib.yongin.go.kr/seatmate_db/seatmate.php",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실(일반)",
+          "total": 156,
+          "used": 42,
+          "left": 114,
+          "wait": 0
+        },
+        {
+          "name": "열람실(청소년)",
+          "total": 102,
+          "used": 1,
+          "left": 101,
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "name": "보라도서관",
+      "gu": "기흥구",
+      "link": "https://lib.yongin.go.kr/seatmate_bl/seatmate.php",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "보라도서관 열람실",
+          "total": 134,
+          "used": 36,
+          "left": 98,
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "name": "서농도서관",
+      "gu": "기흥구",
+      "link": "https://lib.yongin.go.kr/sn/",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실",
+          "total": 80,
+          "used": 37,
+          "left": 43,
+          "wait": 0
+        },
+        {
+          "name": "노트북실",
+          "total": 32,
+          "used": 12,
+          "left": 20,
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "name": "흥덕도서관",
+      "gu": "기흥구",
+      "link": "https://lib.yongin.go.kr/seatmate_hd/seatmate.php",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실",
+          "total": 180,
+          "used": 29,
+          "left": 151,
+          "wait": 0
+        },
+        {
+          "name": "노트북실",
+          "total": 56,
+          "used": 20,
+          "left": 36,
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "name": "상현도서관",
+      "gu": "수지구",
+      "link": "https://lib.yongin.go.kr/seatmate_sh/seatmate.php",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "열람실",
+          "total": 180,
+          "used": 40,
+          "left": 140,
+          "wait": 0
+        },
+        {
+          "name": "노트북실",
+          "total": 30,
+          "used": 21,
+          "left": 9,
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "name": "수지도서관",
+      "gu": "수지구",
+      "link": "https://lib.yongin.go.kr/seatmate_sj/seatmate.php",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "디지털존 노트북석",
+          "total": 69,
+          "used": 39,
+          "left": 30,
+          "wait": 0
+        }
+      ]
+    },
+    {
+      "name": "죽전도서관",
+      "gu": "수지구",
+      "link": "https://lib.yongin.go.kr/seatmate_jj/seatmate.php",
+      "status": "open",
+      "message": "",
+      "rooms": [
+        {
+          "name": "일반열람실",
+          "total": 180,
+          "used": 57,
+          "left": 123,
+          "wait": 0
+        },
+        {
+          "name": "노트북실",
+          "total": 54,
+          "used": 37,
+          "left": 17,
+          "wait": 0
+        }
+      ]
+    }
+  ]
 }
